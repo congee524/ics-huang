@@ -62,12 +62,14 @@ static inline long load_img() {
   long size;
   if (img_file == NULL) {
     size = load_default_img();
+    // set the default value
   }
   else {
     int ret;
 
     FILE *fp = fopen(img_file, "rb");
     Assert(fp, "Can not open '%s'", img_file);
+    //open and read the file
 
     Log("The image is %s", img_file);
 
@@ -77,6 +79,8 @@ static inline long load_img() {
     fseek(fp, 0, SEEK_SET);
     ret = fread(guest_to_host(ENTRY_START), size, 1, fp);
     assert(ret == 1);
+    // move the pointer to the end of img_file to get the length of the file
+    // and then write the file to the guest_to_host
 
     fclose(fp);
   }
@@ -86,6 +90,7 @@ static inline long load_img() {
 static inline void restart() {
   /* Set the initial instruction pointer. */
   cpu.eip = ENTRY_START;
+  // ENTRY_START is the position 0x100000
 }
 
 static inline void parse_args(int argc, char *argv[]) {
