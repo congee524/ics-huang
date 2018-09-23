@@ -30,7 +30,7 @@ static struct rule {
   {"\\(", '('},            // left bracket
   {"\\)", ')'},            // right bracket
   {"==", TK_EQ},           // equal
-  {"\\d+", DEC},           // decimal number
+  {"[0-9]+", DEC},           // decimal number
 };
 
 #define NR_REGEX (sizeof(rules) / sizeof(rules[0]) )
