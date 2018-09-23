@@ -79,6 +79,18 @@ static int cmd_x(char *args) {
     return 0;
 }
 
+static int cmd_p(char *args) {
+    bool success = true;
+    int ans = 0;
+    ans = expr(args, &success);
+    if (!success) {
+        printf("expression is none!\n");
+    } else {
+        printf("the value is %d", ans);
+    }
+    return 0;
+}
+
 static int cmd_help(char *args);
 
 static struct {
@@ -92,6 +104,7 @@ static struct {
   { "si", "excute the same command for n times", cmd_si },
   { "info", "print the state of the program", cmd_info },
   { "x", "examine the memory", cmd_x },
+  { "p", "solve the value of the expression", cmd_p },
   /* TODO: Add more commands */
 
 };
