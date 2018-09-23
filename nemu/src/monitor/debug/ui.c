@@ -68,11 +68,11 @@ static int cmd_x(char *args) {
     sscanf(n, "%d", &i);
     sscanf(expr, "%x", &addr);
     for (; i > 0; i--) {
-        //for (int j = 0; j < 4; j++) {
-        //    printf(%02
-        //}
-        printf("%08x", pmem[addr]);
-        addr++;
+        for (int j = 0; j < 4; j++) {
+            printf("%02x", pmem[addr]);
+            addr++;
+        }
+        printf("\n");
     }
     printf("\n");
     return 0;
