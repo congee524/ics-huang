@@ -36,6 +36,31 @@ static int cmd_q(char *args) {
   return -1;
 }
 
+static int cmd_si(char *args) {
+    int i = 0;
+    if (args == NULL) {
+        i = 1;
+    } else {
+        sscanf(args, "%d", &i);
+    }
+    cpu_exec(i);
+    return 0;    
+}
+
+static int cmd_info(char *args) {
+    if (args[0] == 'r') {
+        printf("EAX:%x %d\n", cpu.eax, cpu.eax);
+        printf("ECX:%x %d\n", cpu.ecx, cpu.ecx);
+        printf("EDX:%x %d\n", cpu.edx, cpu.edx);
+        printf("EBX:%x %d\n", cpu.ebx, cpu.ebx);
+        printf("ESP:%x %d\n", cpu.esp, cpu.esp);
+        printf("EBP:%x %d\n", cpu.ebp, cpu.ebp);
+        printf("ESI:%x %d\n", cpu.esi, cpu.esi);
+        printf("EDI:%x %d\n", cpu.edi, cpu.edi);
+    }
+    return 0;
+}
+
 static int cmd_help(char *args);
 
 static struct {
@@ -46,7 +71,8 @@ static struct {
   { "help", "Display informations about all supported commands", cmd_help },
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
-
+  { "si", "excute the same command for n times", cmd_si },
+  { "info", "print the state of the program", cmd_info },
   /* TODO: Add more commands */
 
 };
@@ -85,7 +111,6 @@ void ui_mainloop(int is_batch_mode) {
   while (1) {
     char *str = rl_gets();
     char *str_end = str + strlen(str);
-
     /* extract the first token as the command */
     char *cmd = strtok(str, " ");
     if (cmd == NULL) { continue; }
