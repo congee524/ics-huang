@@ -61,6 +61,20 @@ static int cmd_info(char *args) {
     return 0;
 }
 
+static int cmd_x(char *args) {
+    char *n = strtok(args, " ");
+    char *expr = n + strlen(n) + 1;
+    int i = 0, addr = 0;
+    sscanf(n, "%d", &i);
+    sscanf(expr, "%x", &addr);
+    for (; i > 0; i--) {
+        printf("%x ", pmem[addr]);
+        expr += 16;
+    }
+    printf("\n");
+    return 0;
+}
+
 static int cmd_help(char *args);
 
 static struct {
@@ -73,6 +87,7 @@ static struct {
   { "q", "Exit NEMU", cmd_q },
   { "si", "excute the same command for n times", cmd_si },
   { "info", "print the state of the program", cmd_info },
+  { "x", "examine the memory", cmd_x },
   /* TODO: Add more commands */
 
 };
