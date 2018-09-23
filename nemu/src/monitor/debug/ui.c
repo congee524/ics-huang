@@ -68,13 +68,15 @@ static int cmd_x(char *args) {
     sscanf(n, "%d", &i);
     sscanf(expr, "%x", &addr);
     for (; i > 0; i--) {
-        printf("%x", pmem[addr]);
+        printf("%02x", pmem[addr]);
         addr++;
-        printf("%x", pmem[addr]);
+        printf("%02x", pmem[addr]);
         addr++;
-        printf("%x", pmem[addr]);
+        printf("%02x", pmem[addr]);
         addr++;
-        printf("%x\n", pmem[addr]);
+        printf("%02x", pmem[addr]);
+        addr++;
+        printf("%02x\n", pmem[addr]);
         addr++;
     }
     printf("\n");
