@@ -67,6 +67,7 @@ static int cmd_x(char *args) {
     int i = 0, addr = 0;
     sscanf(n, "%d", &i);
     sscanf(expr, "%x", &addr);
+    printf("%x: 0x", addr);
     for (; i > 0; i--) {
         for (int j = 0; j < 4; j++) {
             printf("%02x", pmem[addr]);
