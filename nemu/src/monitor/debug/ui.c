@@ -86,7 +86,7 @@ static int cmd_p(char *args) {
     if (!success) {
         printf("expression is none!\n");
     } else {
-        printf("the value is %d", ans);
+        printf("the value is %d\n", ans);
     }
     return 0;
 }
