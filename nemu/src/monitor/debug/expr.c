@@ -90,6 +90,10 @@ static bool make_token(char *e) {
 
                 switch (rules[i].token_type) {
                     case DEC:
+                        if (substr_len > 31) {
+                            printf("the number is overflow!\n");
+                            assert(0);
+                        }
                         strncpy(tokens[nr_token].str, substr_start, substr_len);
                     case '+':
                     case '-':
@@ -98,7 +102,7 @@ static bool make_token(char *e) {
                     case '(':
                     case ')':
                     case TK_EQ:
-                        printf("nr_token: %d\n", nr_token);
+                        // printf("nr_token: %d\n", nr_token);
                         tokens[nr_token].type = rules[i].token_type;
                         nr_token++;
                 }
