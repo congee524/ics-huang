@@ -30,7 +30,7 @@ static struct rule {
     {"\\(", '('},            // left bracket
     {"\\)", ')'},            // right bracket
     {"==", TK_EQ},           // equal
-    {"[0-9]+", DEC},           // decimal number
+    {"[0-9]+", DEC},         // decimal number
     // firstly, i use \\d but error, and then i modify to [0-9]
 };
 
@@ -140,12 +140,13 @@ bool check_parentheses(int p, int q) {
 uint32_t eval(int p, int q) {
     if (p > q) {
         printf("Bad expression!\n");
+        assert(0);
         return 0;
     } else if (p == q) {
         int operand = 0;
         if (tokens[p].type == DEC) {
             sscanf(tokens[p].str, "%d", &operand);
-            printf("%d~%d, operand: %d\n", p, q, operand);
+            // printf("%d~%d, operand: %d\n", p, q, operand);
             return operand;
         } else {
             printf("operand loss!\n");
