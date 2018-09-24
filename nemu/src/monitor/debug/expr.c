@@ -143,10 +143,10 @@ uint32_t eval(int p, int q) {
         assert(0);
         return 0;
     } else if (p == q) {
-        int operand = 0;
+        uint32_t operand = 0;
         if (tokens[p].type == DEC) {
             sscanf(tokens[p].str, "%d", &operand);
-             printf("%d~%d, operand: %d\n", p, q, operand);
+            // printf("%d~%d, operand: %d\n", p, q, operand);
             return operand;
         } else {
             printf("operand loss!\n");
@@ -191,6 +191,7 @@ uint32_t eval(int p, int q) {
             }    
         }
         uint32_t val1, val2;
+        printf("%d~%d, op_posi: %d\n", p, q, op_posi);
         val1 = eval(p, op_posi - 1);
         val2 = eval(p, op_posi + 1);
         switch (op_type) {
