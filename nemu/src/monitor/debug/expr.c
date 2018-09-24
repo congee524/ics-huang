@@ -98,9 +98,9 @@ static bool make_token(char *e) {
                     case '(':
                     case ')':
                     case TK_EQ:
+                        printf("nr_token: %d\n", nr_token);
                         tokens[nr_token].type = rules[i].token_type;
                         nr_token++;
-                        printf("nr_token: %d", nr_token);
                 }
                 break;
             }
