@@ -145,6 +145,7 @@ uint32_t eval(int p, int q) {
         int operand = 0;
         if (tokens[p].type == DEC) {
             sscanf(tokens[p].str, "%d", &operand);
+            printf("%d~%d, operand: %d\n", p, q, operand);
             return operand;
         } else {
             printf("operand loss!\n");
