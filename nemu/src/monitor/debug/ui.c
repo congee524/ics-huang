@@ -105,6 +105,7 @@ static void test_expr(void) {
         char *exp = res + strlen(res) + 1;
         bool succ = true;
         int ans = expr(exp, &succ);
+        printf("pause!\n");
         if(!succ) {
             printf("expression is none!\n");
         } else {
