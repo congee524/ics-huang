@@ -91,32 +91,6 @@ static int cmd_p(char *args) {
     return 0;
 }
 
-static void test_expr(void) {
-    FILE *fp = popen("/home/congee/ics2018/nemu/tools/gen-expr/input", "r");
-    if (fp == NULL) {
-        printf("empty input!\n");
-        assert(0);
-    }
-    char str_tmp[65530];
-    while (!feof(fp)) {
-        str_tmp[0] = '\0';
-        fgets(str_tmp, 65530, fp);
-        printf("str_tmp is %s\n", str_tmp);
-        char *res = strtok(str_tmp, " ");
-        printf("res is %s\n", res);
-        char *exp = res + strlen(res) + 1;
-        printf("exp is %s\n", exp);
-        bool succ = true;
-        int ans = expr(exp, &succ);
-        if(!succ) {
-            printf("expression is none!\n");
-        } else {
-            printf("the value is %d.\n the result is %s.\n", ans, res);
-        }
-    }
-    fclose(fp);
-}
-
     static int cmd_help(char *args);
 
     static struct {
@@ -165,8 +139,6 @@ static void test_expr(void) {
             cmd_c(NULL);
             return;
         }
-
-        test_expr();
 
         while (1) {
             char *str = rl_gets();
