@@ -20,11 +20,9 @@ int main(int argc, char *argv[]) {
         fscanf(fp, "%u", &res);
         fgets(str_tmp, 65530, fp);
         bool success = true;
-        if (res == expr(str_tmp, &success)) {
-            printf("right!\n");
-        } else {
-            printf("wrong!\n");
-        }
+        uint32_t ans;
+        ans = expr(str_tmp, &success);
+        printf("the true answer is %u. the ans of expr is %u.\n", res, ans);
     }
     fclose(fp);
     /* Receive commands from user. */
