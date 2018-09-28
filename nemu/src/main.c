@@ -8,7 +8,6 @@ int main(int argc, char *argv[]) {
     int is_batch_mode = init_monitor(argc, argv);
 
     /* test the expr.c */
-    /*
     char str_tmp[65530];
     FILE *fp;
     if ((fp = fopen("/home/congee/ics2018/nemu/tools/gen-expr/input", "r")) == NULL) {
@@ -28,7 +27,6 @@ int main(int argc, char *argv[]) {
         }
     }
     fclose(fp);
-    */
     /* Receive commands from user. */
     ui_mainloop(is_batch_mode);
 
