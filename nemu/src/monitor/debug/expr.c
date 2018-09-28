@@ -98,6 +98,7 @@ static bool make_token(char *e) {
                         //    long long tmp = 0;
                         //    sscanf(tokens[p].str, "%d", &operand);
                         //}
+                        tokens[nr_token].str[0] = '\0';
                         strncpy(tokens[nr_token].str, substr_start, substr_len);
                     case '+':
                     case '-':
@@ -202,11 +203,11 @@ uint32_t eval(int p, int q) {
                 printf("p = %d, q = %d, i = %d, op_type = %d\n ", p, q, i, op_type);
             }    
         }
-        int val1 = 0, val2 = 0;
+        uint32_t val1 = 0, val2 = 0;
         // printf("%d~%d, op_posi: %d\n", p, q, op_posi);
         val1 = eval(p, op_posi - 1);
         val2 = eval(op_posi + 1, q);
-        printf("val1 = %d, val2 = %d\n", val1, val2);
+        printf("val1 = %u, val2 = %u\n", val1, val2);
         switch (op_type) {
             case '*':
                 return val1 * val2;
