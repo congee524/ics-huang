@@ -206,6 +206,7 @@ uint32_t eval(int p, int q) {
         // printf("%d~%d, op_posi: %d\n", p, q, op_posi);
         val1 = eval(p, op_posi - 1);
         val2 = eval(op_posi + 1, q);
+        printf("val1 = %d, val2 = %d\n", val1, val2);
         switch (op_type) {
             case '*':
                 return val1 * val2;
