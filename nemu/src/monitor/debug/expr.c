@@ -98,7 +98,9 @@ static bool make_token(char *e) {
                         //    long long tmp = 0;
                         //    sscanf(tokens[p].str, "%d", &operand);
                         //}
-                        tokens[nr_token].str[0] = '\0';
+                        for (int i = 0; i < 32; i++) {
+                            tokens[nr_token].str[i] = '\0';
+                        }
                         strncpy(tokens[nr_token].str, substr_start, substr_len);
                     case '+':
                     case '-':
