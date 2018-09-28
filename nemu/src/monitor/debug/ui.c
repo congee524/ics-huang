@@ -101,6 +101,7 @@ static void test_expr(void) {
     while (!feof(fp)) {
         str_tmp[0] = '\0';
         fgets(str_tmp, 65530, fp);
+        printf("str_tmp is %s\n", str_tmp);
         char *res = strtok(str_tmp, " ");
         printf("res is %s\n", res);
         char *exp = res + strlen(res) + 1;
