@@ -102,10 +102,11 @@ static void test_expr(void) {
         str_tmp[0] = '\0';
         fgets(str_tmp, 65530, fp);
         char *res = strtok(str_tmp, " ");
+        printf("res is %s\n", res);
         char *exp = res + strlen(res) + 1;
+        printf("exp is %s\n", exp);
         bool succ = true;
         int ans = expr(exp, &succ);
-        printf("pause!\n");
         if(!succ) {
             printf("expression is none!\n");
         } else {
