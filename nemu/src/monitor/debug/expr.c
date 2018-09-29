@@ -79,9 +79,10 @@ static bool make_token(char *e) {
                 char *substr_start = e + position;
                 int substr_len = pmatch.rm_eo;
 
+                /*
                 Log("match rules[%d] = \"%s\" at position %d with len %d: %.*s",
                         i, rules[i].regex, position, substr_len, substr_len, substr_start);
-
+                */
                 position += substr_len;
 
                 /* TODO: Now a new token is recognized with rules[i]. Add codes
@@ -95,10 +96,6 @@ static bool make_token(char *e) {
                             printf("the number is overflow!\n");
                             assert(0);
                         } 
-                        //else if (substr_len == 10) {
-                        //    long long tmp = 0;
-                        //    sscanf(tokens[p].str, "%d", &operand);
-                        //}
                         for (int i = 0; i < 32; i++) {
                             tokens[nr_token].str[i] = '\0';
                         }
@@ -158,17 +155,17 @@ uint32_t eval(int p, int q) {
         uint32_t operand = 0;
         if (tokens[p].type == DEC) {
             sscanf(tokens[p].str, "%d", &operand);
-            // printf("%d~%d, operand: %d\n", p, q, operand);
+             printf("%d~%d, operand: %d\n", p, q, operand);
             return operand;
         } else {
             printf("operand loss!\n");
             assert(0);
         }
     } else if (check_parentheses(p, q)) {
-        // the expression is surrounded by a matched pair of parentheses. 
+         // the expression is surrounded by a matched pair of parentheses. 
         return eval(p + 1, q - 1);
     } else {
-        // remember that the main operation is the right one
+        //  remember that the main operation is the right one
         int op_type = 0, op_posi = 0, op_prio = 15; // the priority of the operation
         for (int i = p; i <= q; i++) {
             if (tokens[i].type == '(') {
@@ -188,29 +185,29 @@ uint32_t eval(int p, int q) {
                 op_type = '*';
                 op_posi = i;
                 op_prio = 3;            
-                // printf("p = %d, q = %d, i = %d, op_type = %d\n ", p, q, i, op_type);
+                 printf("p = %d, q = %d, i = %d, op_type = %d\n ", p, q, i, op_type);
             } else if (tokens[i].type == '/' && op_prio >= 3) {
                 op_type = '/';
                 op_posi = i;
                 op_prio = 3;
-                // printf("p = %d, q = %d, i = %d, op_type = %d\n ", p, q, i, op_type);
+                 printf("p = %d, q = %d, i = %d, op_type = %d\n ", p, q, i, op_type);
             } else if (tokens[i].type == '+' && op_prio >= 2) {
                 op_type = '+';
                 op_posi = i;
                 op_prio = 2;
-                // printf("p = %d, q = %d, i = %d, op_type = %d\n ", p, q, i, op_type);
+                 printf("p = %d, q = %d, i = %d, op_type = %d\n ", p, q, i, op_type);
             } else if (tokens[i].type == '-' && op_prio >= 2) {
                 op_type = '-';
                 op_posi = i;
                 op_prio = 2;
-                // printf("p = %d, q = %d, i = %d, op_type = %d\n ", p, q, i, op_type);
+                 printf("p = %d, q = %d, i = %d, op_type = %d\n ", p, q, i, op_type);
             }    
         }
         uint32_t val1 = 0, val2 = 0;
-        // printf("%d~%d, op_posi: %d\n", p, q, op_posi);
+         printf("%d~%d, op_posi: %d\n", p, q, op_posi);
         val1 = eval(p, op_posi - 1);
         val2 = eval(op_posi + 1, q);
-        // printf("val1 = %u, val2 = %u\n", val1, val2);
+         printf("val1 = %u, val2 = %u\n", val1, val2);
         switch (op_type) {
             case '*':
                 return val1 * val2;
