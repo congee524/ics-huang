@@ -32,7 +32,9 @@ WP* new_wp(char *expr, uint32_t value) {
     free_ = free_->next;
     printf("#2.5\n"); 
     n_wp->next = NULL;
+    printf("#2.6\n");
     n_wp->nv = value;
+    printf("#2.7\n");
     strcpy(n_wp->expr, expr);
     
     printf("#3\n");
