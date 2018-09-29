@@ -62,7 +62,7 @@ typedef struct token {
     char str[32];
 } Token;
 
-Token tokens[32];
+Token tokens[50005];
 int nr_token;
 
 static bool make_token(char *e) {
@@ -171,7 +171,7 @@ uint32_t eval(int p, int q) {
             if (tokens[i].type == '(') {
                 int cnt = 0;
                 cnt++;
-                while(cnt) {
+                while(cnt && i <= q) {
                     i++;
                     if (tokens[i].type == '(') {
                         cnt++;
