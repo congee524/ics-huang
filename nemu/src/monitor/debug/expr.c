@@ -223,11 +223,7 @@ uint32_t eval(int p, int q) {
             case '+':
                 return val1 + val2;
             case '-':
-                if (val1 < val2) {
-                    return val2 - val1;
-                } else {
                     return val1 - val2;
-                }
             default:
                 printf("wrong op_type!\n");
                 assert(0);
