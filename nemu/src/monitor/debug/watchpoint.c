@@ -28,6 +28,7 @@ WP* new_wp(char *expr, uint32_t value) {
     }
     printf("#2\n");
     WP* n_wp = NULL;
+    n_wp = (WP*)malloc(sizeof(WP));
     n_wp = free_;
     free_ = free_->next;
     printf("#2.5\n"); 
