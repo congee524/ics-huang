@@ -31,6 +31,7 @@ static struct rule {
     {"\\)", ')'},            // right bracket
     {"==", TK_EQ},           // equal
     {"[0-9]+", DEC},         // decimal number
+    //{"0x[0-9a-fA-F]+", HEX}  // hexadecimal number
     // firstly, i use \\d but error, and then i modify to [0-9]
 };
 
@@ -154,7 +155,7 @@ uint32_t eval(int p, int q) {
     } else if (p == q) {
         uint32_t operand = 0;
         if (tokens[p].type == DEC) {
-            sscanf(tokens[p].str, "%d", &operand);
+            sscanf(tokens[p].str, "%u", &operand);
             // printf("%d~%d, operand: %d\n", p, q, operand);
             return operand;
         } else {
