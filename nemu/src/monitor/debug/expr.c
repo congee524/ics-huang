@@ -74,6 +74,16 @@ void empty_token_str(void) {
     }
 }
 
+bool check_DEREF(int i) {
+    int t = tokens[i].type;
+    if (t == '+' || t == '-' || t == '*' || t == '/' || t == '(' 
+            || t == AND || t == OR || t == DEREF) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 static bool make_token(char *e) {
     int position = 0;
     int i;
@@ -140,9 +150,7 @@ static bool make_token(char *e) {
                     case TK_NOTYPE:
                         nr_token--;
                 }
-                if (tokens[nr_token].type == '*' && (nr_token == 0 
-                            || ((tokens[nr_token - 1].type != DEC) 
-                            && (tokens[nr_token - 1].type != HEX)))) {
+                if (tokens[nr_token].type == '*' && check_DEREF(nr_token - 1)) {
                     tokens[nr_token].type = DEREF;
                 }
                 nr_token++;
