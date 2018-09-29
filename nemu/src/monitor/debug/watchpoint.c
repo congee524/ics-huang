@@ -27,7 +27,7 @@ WP* new_wp(char *expr, uint32_t value) {
         assert(0);
     }
     printf("#2\n");
-    WP* n_wp;
+    WP* n_wp = NULL;
     n_wp = free_;
     free_ = free_->next;
     
