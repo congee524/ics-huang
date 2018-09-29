@@ -200,7 +200,7 @@ uint32_t eval(int p, int q) {
             sscanf(tokens[p].str, "%u", &operand);
             // printf("%d~%d, operand: %d\n", p, q, operand);
         } else if (tokens[p].type == HEX) {
-            sscanf(tokens[p].str, "%x", &operand);
+            sscanf(tokens[p].str + 2, "%x", &operand);
         } else if (tokens[p].type == REG) {
             if (!strcmp(tokens[p].str, "eax")) {
                 return cpu.eax;
