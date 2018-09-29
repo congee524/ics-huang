@@ -132,8 +132,8 @@ static bool make_token(char *e) {
                         empty_token_str();
                         strncpy(tokens[nr_token].str, substr_start + 1, substr_len - 1);
                         // remember that it is the length, not the end position!
-                        printf("the name is %s\n", tokens[nr_token].str);
-                        tokens[nr_token].str[substr_len] = '\0';
+                        // printf("the name is %s\n", tokens[nr_token].str);
+                        tokens[nr_token].str[substr_len - 1] = '\0';
                         tokens[nr_token].type = rules[i].token_type;
                         break;
                     case '+':
@@ -193,7 +193,7 @@ bool check_parentheses(int p, int q) {
 }
 
 uint32_t eval(int p, int q) {
-    printf("%d~%d\n", p, q);
+    // printf("%d~%d\n", p, q);
     if (p > q) {
         printf("Bad expression!\n");
         assert(0);
@@ -206,7 +206,7 @@ uint32_t eval(int p, int q) {
         } else if (tokens[p].type == HEX) {
             sscanf(tokens[p].str + 2, "%x", &operand);
         } else if (tokens[p].type == REG) {
-            printf("the name of register is %s\n", tokens[p].str);
+            // printf("the name of register is %s\n", tokens[p].str);
             if (!strcmp(tokens[p].str, "eax")) {
                 return cpu.eax;
             } else if (!strcmp(tokens[p].str, "ecx")) {
@@ -237,12 +237,12 @@ uint32_t eval(int p, int q) {
     } else if ((tokens[p].type == DEREF) && 
                 ((p + 1 == q) || check_parentheses(p + 1, q))) {
         uint32_t addr;
-        printf("#1\n");
+        // printf("#1\n");
         addr = eval(p + 1, q);
         return vaddr_read(addr, 4);
     } else if (check_parentheses(p, q)) {
         // the expression is surrounded by a matched pair of parentheses. 
-        printf("#2\n");
+        // printf("#2\n");
         return eval(p + 1, q - 1);
     } else {
         //  remember that the main operation is the right one
@@ -263,7 +263,7 @@ uint32_t eval(int p, int q) {
                     i++;
                 }
             }
-            printf("tokens'type is %d, i = %d\n", tokens[i].type, i);
+            // printf("tokens'type is %d, i = %d\n", tokens[i].type, i);
             if (tokens[i].type == '*' && op_prio >= 3) {
                 op_type = '*';
                 op_posi = i;
@@ -304,9 +304,9 @@ uint32_t eval(int p, int q) {
         }
         uint32_t val1 = 0, val2 = 0;
         // printf("%d~%d, op_posi: %d\n", p, q, op_posi);
-        printf("#3\n");
+        // printf("#3\n");
         val1 = eval(p, op_posi - 1);
-        printf("#4\n");
+        // printf("#4\n");
         val2 = eval(op_posi + 1, q);
         // printf("val1 = %u, val2 = %u\n", val1, val2);
         switch (op_type) {
@@ -338,15 +338,18 @@ uint32_t eval(int p, int q) {
 } 
 
 uint32_t expr(char *e, bool *success) {
+    /*
     for (int i = 0; i < nr_token; i++) {
         printf("%d ", tokens[i].type);
     }
     printf("\n");
+    */
+
     if (!make_token(e)) {
         *success = false;
         return 0;
     } else {
-        printf("#5\n");
+        // printf("#5\n");
         return eval(0, nr_token - 1);
     }
 

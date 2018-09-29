@@ -84,90 +84,113 @@ static int cmd_p(char *args) {
     uint32_t ans = 0;
     ans = expr(args, &success);
     if (!success) {
-        printf("expression is none!\n");
+        printf("correct expression is needed!\n");
     } else {
         printf("the value is %u\n", ans);
     }
     return 0;
 }
 
-    static int cmd_help(char *args);
+static int cmd_w(char *args) {
+    if (args == NULL) {
+        printf("please write the expression!\n");
+        return 0;
+    } else {
+        bool success = true;
+        uint32_t ans = expr(args, &success);
 
-    static struct {
-        char *name;
-        char *description;
-        int (*handler) (char *);
-    } cmd_table [] = {
-        { "help", "Display informations about all supported commands", cmd_help },
-        { "c", "Continue the execution of the program", cmd_c },
-        { "q", "Exit NEMU", cmd_q },
-        { "si", "excute the same command for n times", cmd_si },
-        { "info", "print the state of the program", cmd_info },
-        { "x", "examine the memory", cmd_x },
-        { "p", "solve the value of the expression", cmd_p },
-        /* TODO: Add more commands */
+        if (!success) {
+            printf("correct expression is needed!\n");
+        } else {
+            WP* n_wp = new_wp(args, ans);
+            printf("the %d-th watchpoint was added, expression '%s' store the value: %d", 
+                    n_wp->NO, n_wp->expr, n_wp->nv);
+        }
+    }
+    return 0;
+}
 
-    };
+static int cmd_help(char *args);
+
+static struct {
+    char *name;
+    char *description;
+    int (*handler) (char *);
+} cmd_table [] = {
+    { "help", "Display informations about all supported commands", cmd_help },
+    { "c", "Continue the execution of the program", cmd_c },
+    { "q", "Exit NEMU", cmd_q },
+    { "si", "excute the same command for n times", cmd_si },
+    { "info", "print the state of the program", cmd_info },
+    { "x", "examine the memory", cmd_x },
+    { "p", "solve the value of the expression", cmd_p },
+    { "w", "set the watchpoint", cmd_w },
+    // { "d", "delete the watchpoint", cmd_d },
+    /* TODO: Add more commands */
+
+};
 
 #define NR_CMD (sizeof(cmd_table) / sizeof(cmd_table[0]))
 
-    static int cmd_help(char *args) {
-        /* extract the first argument */
-        char *arg = strtok(NULL, " ");
-        int i;
+static int cmd_help(char *args) {
+    /* extract the first argument */
+    char *arg = strtok(NULL, " ");
+    int i;
 
-        if (arg == NULL) {
-            /* no argument given */
-            for (i = 0; i < NR_CMD; i ++) {
-                printf("%s - %s\n", cmd_table[i].name, cmd_table[i].description);
-            }
+    if (arg == NULL) {
+        /* no argument given */
+        for (i = 0; i < NR_CMD; i ++) {
+            printf("%s - %s\n", cmd_table[i].name, cmd_table[i].description);
         }
-        else {
-            for (i = 0; i < NR_CMD; i ++) {
-                if (strcmp(arg, cmd_table[i].name) == 0) {
-                    printf("%s - %s\n", cmd_table[i].name, cmd_table[i].description);
-                    return 0;
-                }
-            }
-            printf("Unknown command '%s'\n", arg);
-        }
-        return 0;
     }
-
-    void ui_mainloop(int is_batch_mode) {
-        if (is_batch_mode) {
-            cmd_c(NULL);
-            return;
-        }
-
-        while (1) {
-            char *str = rl_gets();
-            char *str_end = str + strlen(str);
-            /* extract the first token as the command */
-            char *cmd = strtok(str, " ");
-            if (cmd == NULL) { continue; }
-
-            /* treat the remaining string as the arguments,
-             * which may need further parsing
-             */
-            char *args = cmd + strlen(cmd) + 1;
-            if (args >= str_end) {
-                args = NULL;
+    else {
+        for (i = 0; i < NR_CMD; i ++) {
+            if (strcmp(arg, cmd_table[i].name) == 0) {
+                printf("%s - %s\n", cmd_table[i].name, cmd_table[i].description);
+                return 0;
             }
+        }
+        printf("Unknown command '%s'\n", arg);
+    }
+    return 0;
+}
+
+void ui_mainloop(int is_batch_mode) {
+    if (is_batch_mode) {
+        cmd_c(NULL);
+        return;
+    }
+    
+    init_wp_pool();
+
+    while (1) {
+        char *str = rl_gets();
+        char *str_end = str + strlen(str);
+        /* extract the first token as the command */
+        char *cmd = strtok(str, " ");
+        if (cmd == NULL) { continue; }
+
+        /* treat the remaining string as the arguments,
+         * which may need further parsing
+         */
+        char *args = cmd + strlen(cmd) + 1;
+        if (args >= str_end) {
+            args = NULL;
+        }
 
 #ifdef HAS_IOE
-            extern void sdl_clear_event_queue(void);
-            sdl_clear_event_queue();
+        extern void sdl_clear_event_queue(void);
+        sdl_clear_event_queue();
 #endif
 
-            int i;
-            for (i = 0; i < NR_CMD; i ++) {
-                if (strcmp(cmd, cmd_table[i].name) == 0) {
-                    if (cmd_table[i].handler(args) < 0) { return; }
-                    break;
-                }
+        int i;
+        for (i = 0; i < NR_CMD; i ++) {
+            if (strcmp(cmd, cmd_table[i].name) == 0) {
+                if (cmd_table[i].handler(args) < 0) { return; }
+                break;
             }
-
-            if (i == NR_CMD) { printf("Unknown command '%s'\n", cmd); }
         }
+
+        if (i == NR_CMD) { printf("Unknown command '%s'\n", cmd); }
     }
+}
