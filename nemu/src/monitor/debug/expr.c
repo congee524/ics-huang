@@ -225,10 +225,12 @@ uint32_t eval(int p, int q) {
     } else if ((tokens[p].type == DEREF) && 
                 ((p + 1 == q) || check_parentheses(p + 1, q))) {
         uint32_t addr;
+        printf("#1\n");
         addr = eval(p + 1, q);
         return vaddr_read(addr, 4);
     } else if (check_parentheses(p, q)) {
         // the expression is surrounded by a matched pair of parentheses. 
+        printf("#2\n");
         return eval(p + 1, q - 1);
     } else {
         //  remember that the main operation is the right one
@@ -289,7 +291,9 @@ uint32_t eval(int p, int q) {
         }
         uint32_t val1 = 0, val2 = 0;
         // printf("%d~%d, op_posi: %d\n", p, q, op_posi);
+        printf("#3\n");
         val1 = eval(p, op_posi - 1);
+        printf("#4\n");
         val2 = eval(op_posi + 1, q);
         // printf("val1 = %u, val2 = %u\n", val1, val2);
         switch (op_type) {
@@ -325,6 +329,7 @@ uint32_t expr(char *e, bool *success) {
         *success = false;
         return 0;
     } else {
+        printf("#5\n");
         return eval(0, nr_token - 1);
     }
 
