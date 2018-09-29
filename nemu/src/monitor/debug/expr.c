@@ -32,7 +32,7 @@ static struct rule {
     {"==", TK_EQ},           // equal
     {"!=", TK_NEQ},          // not equal
     {"[0-9]+", DEC},         // decimal number
-    {"0x[0-9a-fA-F]+", HEX}, // hexadecimal number
+    {"0[xX][0-9a-fA-F]+", HEX}, // hexadecimal number
     {"&&", AND},             // logical and
     {"\\|\\|", OR},          // logical or
     {"\\$\\w{3}", REG},      // register
