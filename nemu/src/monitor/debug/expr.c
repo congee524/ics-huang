@@ -204,6 +204,7 @@ uint32_t eval(int p, int q) {
         } else if (tokens[p].type == HEX) {
             sscanf(tokens[p].str + 2, "%x", &operand);
         } else if (tokens[p].type == REG) {
+            printf("the name of register is %s\n", tokens[p].str);
             if (!strcmp(tokens[p].str, "eax")) {
                 return cpu.eax;
             } else if (!strcmp(tokens[p].str, "ecx")) {
