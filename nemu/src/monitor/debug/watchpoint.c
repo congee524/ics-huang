@@ -30,7 +30,7 @@ WP* new_wp(char *expr, uint32_t value) {
     WP* n_wp = NULL;
     n_wp = free_;
     free_ = free_->next;
-    
+    printf("#2.5\n"); 
     n_wp->next = NULL;
     n_wp->nv = value;
     strcpy(n_wp->expr, expr);
