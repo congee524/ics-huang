@@ -216,6 +216,7 @@ uint32_t eval(int p, int q) {
             case '/':
                 if (val2 == 0) {
                     printf("warning! '/0' has happened.\n");
+                    return 1;
                 }
                 return val1 / val2;
             case '+':
