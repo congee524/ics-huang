@@ -81,12 +81,12 @@ static int cmd_x(char *args) {
 
 static int cmd_p(char *args) {
     bool success = true;
-    int ans = 0;
+    uint32_t ans = 0;
     ans = expr(args, &success);
     if (!success) {
         printf("expression is none!\n");
     } else {
-        printf("the value is %d\n", ans);
+        printf("the value is %u\n", ans);
     }
     return 0;
 }
