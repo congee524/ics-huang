@@ -179,7 +179,9 @@ uint32_t eval(int p, int q) {
                         cnt--;
                     }
                 }
-                i++;
+                if (i < q) {
+                    i++;
+                }
             }
             if (tokens[i].type == '*' && op_prio >= 3) {
                 op_type = '*';
