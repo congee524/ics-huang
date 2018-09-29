@@ -6,8 +6,8 @@
 typedef struct watchpoint {
     int NO;
     struct watchpoint *next;
-    int nv;        // new value
-    int ov;        // old value
+    uint32_t nv;        // new value
+    uint32_t ov;        // old value
     bool open;     // to judge whether the watchpoint is open
     char *expr;     // put the expression
     /* TODO: Add more members if necessary */
