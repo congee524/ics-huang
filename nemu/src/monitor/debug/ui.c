@@ -102,12 +102,13 @@ static int cmd_w(char *args) {
         if (!success) {
             printf("correct expression is needed!\n");
         } else {
+            printf("#success\n");
             WP* n_wp = new_wp(args, ans);
             printf("the %d-th watchpoint was added, expression '%s' store the value: %d", 
                     n_wp->NO, n_wp->expr, n_wp->nv);
         }
+        return 0;
     }
-    return 0;
 }
 
 static int cmd_help(char *args);
