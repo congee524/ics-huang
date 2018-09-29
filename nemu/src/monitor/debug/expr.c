@@ -149,7 +149,8 @@ static bool make_token(char *e) {
                     case TK_NOTYPE:
                         nr_token--;
                 }
-                if (tokens[nr_token].type == '*' && check_DEREF(nr_token - 1)) {
+                if (tokens[nr_token].type == '*' && (nr_token == 0 
+                            || check_DEREF(nr_token - 1))) {
                     tokens[nr_token].type = DEREF;
                 }
                 nr_token++;
