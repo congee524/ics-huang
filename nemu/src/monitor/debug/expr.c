@@ -251,6 +251,7 @@ uint32_t eval(int p, int q) {
                     i++;
                 }
             }
+            printf("tokens'type is %d\n", tokens[i].type);
             if (tokens[i].type == '*' && op_prio >= 3) {
                 op_type = '*';
                 op_posi = i;
