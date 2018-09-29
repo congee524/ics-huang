@@ -131,7 +131,7 @@ static bool make_token(char *e) {
                     case REG:
                         empty_token_str();
                         strncpy(tokens[nr_token].str, substr_start + 1, substr_len);
-                        tokens[nr_token].str[substr_len + 1] = '\0';
+                        tokens[nr_token].str[substr_len] = '\0';
                         tokens[nr_token].type = rules[i].token_type;
                         break;
                     case '+':
