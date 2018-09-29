@@ -118,7 +118,6 @@ static bool make_token(char *e) {
                         empty_token_str();
                         strncpy(tokens[nr_token].str, substr_start, substr_len);
                         tokens[nr_token].type = rules[i].token_type;
-                        nr_token++;
                         break;
                     case HEX:
                         if (substr_len > 8) {
