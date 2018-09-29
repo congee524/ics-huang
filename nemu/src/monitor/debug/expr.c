@@ -259,7 +259,7 @@ uint32_t eval(int p, int q) {
                     i++;
                 }
             }
-            printf("tokens'type is %d\n", tokens[i].type);
+            printf("tokens'type is %d, i = %d\n", tokens[i].type, i);
             if (tokens[i].type == '*' && op_prio >= 3) {
                 op_type = '*';
                 op_posi = i;
@@ -334,6 +334,10 @@ uint32_t eval(int p, int q) {
 } 
 
 uint32_t expr(char *e, bool *success) {
+    for (int i = 0; i < nr_token; i++) {
+        printf("%d ", tokens[i].type);
+    }
+    printf("\n");
     if (!make_token(e)) {
         *success = false;
         return 0;
