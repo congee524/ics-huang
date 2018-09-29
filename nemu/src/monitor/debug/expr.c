@@ -130,7 +130,8 @@ static bool make_token(char *e) {
                         break;
                     case REG:
                         empty_token_str();
-                        strncpy(tokens[nr_token].str, substr_start + 1, substr_len);
+                        strncpy(tokens[nr_token].str, substr_start + 1, substr_len - 1);
+                        // remember that it is the length, not the end position!
                         printf("the name is %s\n", tokens[nr_token].str);
                         tokens[nr_token].str[substr_len] = '\0';
                         tokens[nr_token].type = rules[i].token_type;
