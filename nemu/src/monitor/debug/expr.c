@@ -187,29 +187,29 @@ uint32_t eval(int p, int q) {
                 op_type = '*';
                 op_posi = i;
                 op_prio = 3;            
-                 printf("p = %d, q = %d, i = %d, op_type = %d\n ", p, q, i, op_type);
+                // printf("p = %d, q = %d, i = %d, op_type = %d\n ", p, q, i, op_type);
             } else if (tokens[i].type == '/' && op_prio >= 3) {
                 op_type = '/';
                 op_posi = i;
                 op_prio = 3;
-                 printf("p = %d, q = %d, i = %d, op_type = %d\n ", p, q, i, op_type);
+                // printf("p = %d, q = %d, i = %d, op_type = %d\n ", p, q, i, op_type);
             } else if (tokens[i].type == '+' && op_prio >= 2) {
                 op_type = '+';
                 op_posi = i;
                 op_prio = 2;
-                 printf("p = %d, q = %d, i = %d, op_type = %d\n ", p, q, i, op_type);
+                // printf("p = %d, q = %d, i = %d, op_type = %d\n ", p, q, i, op_type);
             } else if (tokens[i].type == '-' && op_prio >= 2) {
                 op_type = '-';
                 op_posi = i;
                 op_prio = 2;
-                 printf("p = %d, q = %d, i = %d, op_type = %d\n ", p, q, i, op_type);
+                // printf("p = %d, q = %d, i = %d, op_type = %d\n ", p, q, i, op_type);
             }    
         }
         uint32_t val1 = 0, val2 = 0;
-         printf("%d~%d, op_posi: %d\n", p, q, op_posi);
+        // printf("%d~%d, op_posi: %d\n", p, q, op_posi);
         val1 = eval(p, op_posi - 1);
         val2 = eval(op_posi + 1, q);
-         printf("val1 = %u, val2 = %u\n", val1, val2);
+        // printf("val1 = %u, val2 = %u\n", val1, val2);
         switch (op_type) {
             case '*':
                 return val1 * val2;
