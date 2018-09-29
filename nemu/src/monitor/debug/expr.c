@@ -7,7 +7,7 @@
 #include <regex.h>
 
 enum {
-    TK_NOTYPE = 256, TK_EQ, DEC
+    TK_NOTYPE = 256, TK_EQ, TK_NEQ, DEC, HEX, AND, OR, REG, DEREF
 
         /* TODO: Add more token types */
 
@@ -25,13 +25,17 @@ static struct rule {
     {" +", TK_NOTYPE},       // spaces
     {"\\+", '+'},            // plus
     {"\\-", '-'},            // minus
-    {"\\*", '*'},            // multiply
+    {"\\*", '*'},            // multiply, pointer dereference
     {"/", '/'},              // divide
     {"\\(", '('},            // left bracket
     {"\\)", ')'},            // right bracket
     {"==", TK_EQ},           // equal
+    {"!=", TK_NEQ},          // not equal
     {"[0-9]+", DEC},         // decimal number
-    //{"0x[0-9a-fA-F]+", HEX}  // hexadecimal number
+    {"0x[0-9a-fA-F]+", HEX}, // hexadecimal number
+    {"&&", AND},             // logical and
+    {"\\|\\|", OR},          // logical or
+    {"\\$\\w{3}", REG},      // register
     // firstly, i use \\d but error, and then i modify to [0-9]
 };
 
@@ -52,8 +56,6 @@ void init_regex() {
         if (ret != 0) {
             regerror(ret, &re[i], error_msg, 128);
             panic("regex compilation failed: %s\n%s", error_msg, rules[i].regex);
-        } else {
-
         }
     }
 }
@@ -65,6 +67,12 @@ typedef struct token {
 
 Token tokens[50005];
 int nr_token;
+
+void empty_token_str(void) {
+    for (int i = 0; i < 32; i++) {
+        tokens[nr_token].str[i] = '\0';
+    }
+}
 
 static bool make_token(char *e) {
     int position = 0;
@@ -80,10 +88,10 @@ static bool make_token(char *e) {
                 char *substr_start = e + position;
                 int substr_len = pmatch.rm_eo;
 
-                /*
+
                 Log("match rules[%d] = \"%s\" at position %d with len %d: %.*s",
                         i, rules[i].regex, position, substr_len, substr_len, substr_start);
-                */
+
                 position += substr_len;
 
                 /* TODO: Now a new token is recognized with rules[i]. Add codes
@@ -97,10 +105,25 @@ static bool make_token(char *e) {
                             printf("the number is overflow!\n");
                             assert(0);
                         } 
-                        for (int i = 0; i < 32; i++) {
-                            tokens[nr_token].str[i] = '\0';
-                        }
+                        empty_token_str();
                         strncpy(tokens[nr_token].str, substr_start, substr_len);
+                        tokens[nr_token].type = rules[i].token_type;
+                        nr_token++;
+                        break;
+                    case HEX:
+                        if (substr_len > 8) {
+                            printf("the hex number is overflow!\n");
+                            assert(0);
+                        }
+                        empty_token_str(); 
+                        strncpy(tokens[nr_token].str, substr_start, substr_len);
+                        tokens[nr_token].type = rules[i].token_type;
+                        break;
+                    case REG:
+                        empty_token_str();
+                        strncpy(tokens[nr_token].str, substr_start + 1, substr_len);
+                        tokens[nr_token].type = rules[i].token_type;
+                        break;
                     case '+':
                     case '-':
                     case '*':
@@ -108,10 +131,21 @@ static bool make_token(char *e) {
                     case '(':
                     case ')':
                     case TK_EQ:
+                    case TK_NEQ:
+                    case AND:
+                    case OR:
                         // printf("nr_token: %d\n", nr_token);
                         tokens[nr_token].type = rules[i].token_type;
-                        nr_token++;
+                        break;
+                    case TK_NOTYPE:
+                        nr_token--;
                 }
+                if (tokens[nr_token].type == '*' && (nr_token == 0 
+                            || ((tokens[nr_token - 1].type != DEC) 
+                            && (tokens[nr_token - 1].type != HEX)))) {
+                    tokens[nr_token].type = DEREF;
+                }
+                nr_token++;
                 break;
             }
         }
@@ -157,13 +191,43 @@ uint32_t eval(int p, int q) {
         if (tokens[p].type == DEC) {
             sscanf(tokens[p].str, "%u", &operand);
             // printf("%d~%d, operand: %d\n", p, q, operand);
-            return operand;
+        } else if (tokens[p].type == HEX) {
+            sscanf(tokens[p].str, "%x", &operand);
+        } else if (tokens[p].type == REG) {
+            if (!strcmp(tokens[p].str, "eax")) {
+                return cpu.eax;
+            } else if (!strcmp(tokens[p].str, "ecx")) {
+                return cpu.ecx;
+            } else if (!strcmp(tokens[p].str, "edx")) {
+                return cpu.edx;
+            } else if (!strcmp(tokens[p].str, "ebx")) {
+                return cpu.ebx;
+            } else if (!strcmp(tokens[p].str, "esp")) {
+                return cpu.esp;
+            } else if (!strcmp(tokens[p].str, "ebp")) {
+                return cpu.ebp;
+            } else if (!strcmp(tokens[p].str, "esi")) {
+                return cpu.esi;
+            } else if (!strcmp(tokens[p].str, "edi")) {
+                return cpu.edi;
+            } else if (!strcmp(tokens[p].str, "eip")) {
+                return cpu.eip;
+            } else {
+                printf("unknown register name!\n");
+                assert(0);
+            }
         } else {
             printf("operand loss!\n");
             assert(0);
         }
+        return operand;
+    } else if ((tokens[p].type == DEREF) && 
+                ((p + 1 == q) || check_parentheses(p + 1, q))) {
+        uint32_t addr;
+        addr = eval(p + 1, q);
+        return vaddr_read(addr, 4);
     } else if (check_parentheses(p, q)) {
-         // the expression is surrounded by a matched pair of parentheses. 
+        // the expression is surrounded by a matched pair of parentheses. 
         return eval(p + 1, q - 1);
     } else {
         //  remember that the main operation is the right one
@@ -204,7 +268,23 @@ uint32_t eval(int p, int q) {
                 op_posi = i;
                 op_prio = 2;
                 // printf("p = %d, q = %d, i = %d, op_type = %d\n ", p, q, i, op_type);
-            }    
+            } else if (tokens[i].type == TK_EQ && op_prio >= 7) {
+                op_type = TK_EQ;
+                op_posi = i;
+                op_prio = 7;
+            } else if (tokens[i].type == TK_NEQ && op_prio >= 7) {
+                op_type = TK_NEQ;
+                op_posi = i;
+                op_prio = 7;
+            } else if (tokens[i].type == AND && op_prio >= 11) {
+                op_type = AND;
+                op_posi = i;
+                op_prio = 11;
+            } else if (tokens[i].type == OR && op_prio >= 11) {
+                op_type = OR;
+                op_posi = i;
+                op_prio = 11;
+            }
         }
         uint32_t val1 = 0, val2 = 0;
         // printf("%d~%d, op_posi: %d\n", p, q, op_posi);
@@ -223,7 +303,15 @@ uint32_t eval(int p, int q) {
             case '+':
                 return val1 + val2;
             case '-':
-                    return val1 - val2;
+                return val1 - val2;
+            case TK_EQ:
+                return val1 == val2;
+            case TK_NEQ:
+                return val1 != val2;
+            case AND:
+                return val1 && val2;
+            case OR:
+                return val1 || val2;
             default:
                 printf("wrong op_type!\n");
                 assert(0);
