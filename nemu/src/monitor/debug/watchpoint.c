@@ -110,5 +110,6 @@ void print_watchpoint(void) {
      WP *p = head;
      while (p != NULL) {
          printf("%d %s %u %u\n", p->NO, p->expr, p->nv, p->ov);
+         p = p->next;
      }
 }
