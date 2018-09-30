@@ -106,10 +106,10 @@ WP* check_watchpoint(WP *p_wp) {
 }
  
 void print_watchpoint(void) {
-     printf("Num  expression value old_value\n");
+     printf("Num   address        value     old_value\n");
      WP *p = head;
      while (p != NULL) {
-         printf("%d %s %u %u\n", p->NO, p->expr, p->nv, p->ov);
+         printf("%-6d%-15s%-10u%-10u\n", p->NO, p->expr, p->nv, p->ov);
          p = p->next;
      }
 }
