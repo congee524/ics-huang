@@ -37,7 +37,7 @@ WP* new_wp(char *expr, uint32_t value) {
     n_wp->nv = value;
     // printf("#2.7\n");
     strcpy(n_wp->expr, expr);
-    
+
     // printf("#3\n");
     if (head != NULL) {
         n_wp->next = head;
@@ -52,11 +52,12 @@ void free_wp(char *expr) {
         printf("there doesn't exist any watchpoint!\n");
         return;
     }
-    
+
     WP* p_wp = head;
     if (!strcmp(p_wp->expr, expr)) {
+        printf("delete %d-th watchapoint '%s'\n", p_wp->NO, p_wp->expr);
         head = head->next;
-        memset(p_wp->expr, '\0', 65536);
+        memset(p_wp->expr, '\0', sizeof(p_wp));
         p_wp->nv = p_wp->ov = 0;
         p_wp->next = free_;
         free_ = p_wp;
@@ -65,9 +66,10 @@ void free_wp(char *expr) {
 
     while(p_wp->next != NULL) {
         if (!strcmp(p_wp->next->expr, expr)) {
+            printf("delete %d-th watchapoint '%s'\n", p_wp->next->NO, p_wp->next->expr);
             WP *tmp = p_wp->next;
             p_wp->next = tmp->next;
-            memset(tmp->expr, '\0', 65536);
+            memset(tmp->expr, '\0', sizeof(tmp));
             tmp->nv = tmp->ov = 0;
             tmp->next = free_;
             free_ = tmp;
@@ -81,4 +83,28 @@ void free_wp(char *expr) {
         printf("delete the watchpoint failed! please check the expression.\n");
     }
     return;
-} 
+}
+
+WP* check_watchpoint(WP *p_wp) {
+    if (p_wp == NULL) {
+        p_wp = head;
+    }
+    if (p_wp != NULL) {
+        bool success = true;
+        uint32_t ans = expr(p_wp->expr, &success);
+        if (!success) {
+            printf("exprission compute failed!\n");
+            return NULL;
+        } else {
+            if (ans != p_wp->nv) {
+                p_wp->ov = p_wp->nv;
+                p_wp->nv = ans;
+            }
+            printf("the value of %d-th watchpoint '%s' has changed from %d to %d", 
+                    p_wp->NO, p_wp->expr, p_wp->ov, p_wp->nv);
+            return p_wp->next;
+        }
+    }
+    return NULL;
+}
+        

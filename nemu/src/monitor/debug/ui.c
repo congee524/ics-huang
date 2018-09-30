@@ -173,8 +173,6 @@ void ui_mainloop(int is_batch_mode) {
         cmd_c(NULL);
         return;
     }
-    
-    init_wp_pool();
 
     while (1) {
         char *str = rl_gets();
