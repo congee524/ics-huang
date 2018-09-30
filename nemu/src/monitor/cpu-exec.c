@@ -48,6 +48,7 @@ void cpu_exec(uint64_t n) {
                     p->NO, p->expr, p->ov, p->nv);
             if (nemu_state == NEMU_RUNNING) {
                 nemu_state = NEMU_STOP;
+                return;
             }
             p = check_watchpoint(p);
         }
