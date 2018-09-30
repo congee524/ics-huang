@@ -104,7 +104,7 @@ static int cmd_w(char *args) {
         } else {
             printf("#success\n");
             WP* n_wp = new_wp(args, ans);
-            printf("the %d-th watchpoint was added, expression '%s' store the value: %d", 
+            printf("the %d-th watchpoint was added, '%s' store the value: %d\n", 
                     n_wp->NO, n_wp->expr, n_wp->nv);
         }
         return 0;

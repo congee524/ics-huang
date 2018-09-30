@@ -26,19 +26,19 @@ WP* new_wp(char *expr, uint32_t value) {
         printf("the watchpoint pool has been full!\n");
         assert(0);
     }
-    printf("#2\n");
+    // printf("#2\n");
     WP* n_wp = NULL;
-    n_wp = (WP*)malloc(sizeof(WP));
+    // n_wp = (WP*)malloc(sizeof(WP));
     n_wp = free_;
     free_ = free_->next;
-    printf("#2.5\n"); 
+    // printf("#2.5\n"); 
     n_wp->next = NULL;
-    printf("#2.6\n");
+    // printf("#2.6\n");
     n_wp->nv = value;
-    printf("#2.7\n");
+    // printf("#2.7\n");
     strcpy(n_wp->expr, expr);
     
-    printf("#3\n");
+    // printf("#3\n");
     if (head != NULL) {
         n_wp->next = head;
     }
