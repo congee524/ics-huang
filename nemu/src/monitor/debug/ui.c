@@ -57,6 +57,8 @@ static int cmd_info(char *args) {
         printf("EBP:%x %d\n", cpu.ebp, cpu.ebp);
         printf("ESI:%x %d\n", cpu.esi, cpu.esi);
         printf("EDI:%x %d\n", cpu.edi, cpu.edi);
+    } else if (args[0] == 'w') {
+        print_watchpoint();
     }
     return 0;
 }

@@ -23,4 +23,6 @@ void free_wp(char *);
 
 WP* check_watchpoint(WP *);
 
+void print_watchpoint(void);
+
 #endif
