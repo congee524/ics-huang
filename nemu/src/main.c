@@ -26,6 +26,7 @@ int main(int argc, char *argv[]) {
     fclose(fp);
     */
     /* Receive commands from user. */
+
     ui_mainloop(is_batch_mode);
 
     return 0;
