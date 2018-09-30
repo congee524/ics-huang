@@ -106,10 +106,16 @@ WP* check_watchpoint(WP *p_wp) {
 }
  
 void print_watchpoint(void) {
-     printf("Num   address        value          old_value\n");
      WP *p = head;
+     if (p != NULL) {
+        printf("Num   address        value          old_value\n");
+     } else {
+         printf("no watchpoint setted!\n");
+         return;
+     }
      while (p != NULL) {
          printf("%-6d%-15s%-15u%-15u\n", p->NO, p->expr, p->nv, p->ov);
          p = p->next;
      }
+     return;
 }
