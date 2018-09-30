@@ -1,6 +1,6 @@
 #include "monitor/watchpoint.h"
 #include "monitor/expr.h"
-#include <stdlib.h>
+#include <string.h>
 #define NR_WP 32
 
 static WP wp_pool[NR_WP];
@@ -21,7 +21,7 @@ void init_wp_pool() {
 /* TODO: Implement the functionality of watchpoint */
 
 WP* new_wp(char *expr, uint32_t value) {
-    printf("#1\n");
+    // printf("#1\n");
     if (free_ == NULL) {
         printf("the watchpoint pool has been full!\n");
         assert(0);
@@ -56,7 +56,10 @@ void free_wp(char *expr) {
     WP* p_wp = head;
     if (!strcmp(p_wp->expr, expr)) {
         head = head->next;
-        free(p_wp);
+        memset(p_wp->expr, '\0', 65536);
+        p_wp->nv = p_wp->ov = 0;
+        p_wp->next = free_;
+        free_ = p_wp;
         return;
     }
 
@@ -64,7 +67,10 @@ void free_wp(char *expr) {
         if (!strcmp(p_wp->next->expr, expr)) {
             WP *tmp = p_wp->next;
             p_wp->next = tmp->next;
-            free(tmp);
+            memset(tmp->expr, '\0', 65536);
+            tmp->nv = tmp->ov = 0;
+            tmp->next = free_;
+            free_ = tmp;
             break;
         } else {
             p_wp = p_wp->next;
