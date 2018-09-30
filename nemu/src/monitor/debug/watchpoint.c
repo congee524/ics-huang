@@ -73,7 +73,7 @@ void free_wp(char *expr) {
             tmp->nv = tmp->ov = 0;
             tmp->next = free_;
             free_ = tmp;
-            break;
+            return;
         } else {
             p_wp = p_wp->next;
         }
