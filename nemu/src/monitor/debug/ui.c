@@ -102,13 +102,25 @@ static int cmd_w(char *args) {
         if (!success) {
             printf("correct expression is needed!\n");
         } else {
-            printf("#success\n");
+            // printf("#success\n");
             WP* n_wp = new_wp(args, ans);
             printf("the %d-th watchpoint was added, '%s' store the value: %d\n", 
                     n_wp->NO, n_wp->expr, n_wp->nv);
         }
         return 0;
     }
+}
+
+static int cmd_d(char *args) {
+    if (args == NULL) {
+        printf("please write the expression!\n");
+        return 0;
+    } else if (strlen(args) > 65530) {
+        printf("the expression is too long!\n");
+        return 0;
+    }
+    free_wp(args);
+    return 0;
 }
 
 static int cmd_help(char *args);
@@ -126,7 +138,7 @@ static struct {
     { "x", "examine the memory", cmd_x },
     { "p", "solve the value of the expression", cmd_p },
     { "w", "set the watchpoint", cmd_w },
-    // { "d", "delete the watchpoint", cmd_d },
+    { "d", "delete the watchpoint", cmd_d },
     /* TODO: Add more commands */
 
 };
