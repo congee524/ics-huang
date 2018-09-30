@@ -66,6 +66,6 @@ clean:
 	$(MAKE) -C tools/qemu-diff clean
 
 count:
-	@echo $(shell find . -name *.[ch] | xargs cat | wc -l)
+	@echo $(shell find . -name *.[ch] | xargs cat | grep -v ^$$ | wc -l)
 
 
