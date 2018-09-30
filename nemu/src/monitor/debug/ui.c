@@ -48,36 +48,56 @@ static int cmd_si(char *args) {
 }
 
 static int cmd_info(char *args) {
-    if (args[0] == 'r') {
-        printf("EAX:%x %d\n", cpu.eax, cpu.eax);
-        printf("ECX:%x %d\n", cpu.ecx, cpu.ecx);
-        printf("EDX:%x %d\n", cpu.edx, cpu.edx);
-        printf("EBX:%x %d\n", cpu.ebx, cpu.ebx);
-        printf("ESP:%x %d\n", cpu.esp, cpu.esp);
-        printf("EBP:%x %d\n", cpu.ebp, cpu.ebp);
-        printf("ESI:%x %d\n", cpu.esi, cpu.esi);
-        printf("EDI:%x %d\n", cpu.edi, cpu.edi);
-    } else if (args[0] == 'w') {
+    if (args == NULL) {
+        printf("'r' -- registers or 'w' -- watchpoint\n");
+        return 0;
+    } else if (!strcmp(args, "r")) {
+        printf("EAX: 0x%08x %d\n", cpu.eax, cpu.eax);
+        printf("ECX: 0x%08x %d\n", cpu.ecx, cpu.ecx);
+        printf("EDX: 0x%08x %d\n", cpu.edx, cpu.edx);
+        printf("EBX: 0x%08x %d\n", cpu.ebx, cpu.ebx);
+        printf("ESP: 0x%08x %d\n", cpu.esp, cpu.esp);
+        printf("EBP: 0x%08x %d\n", cpu.ebp, cpu.ebp);
+        printf("ESI: 0x%08x %d\n", cpu.esi, cpu.esi);
+        printf("EDI: 0x%08x %d\n", cpu.edi, cpu.edi);
+    } else if (!strcmp(args, "w")) {
         print_watchpoint();
     }
     return 0;
 }
 
 static int cmd_x(char *args) {
+    if (args == NULL) {
+        printf("please input n and expr!\n");
+        return 1;
+    }
     char *n = strtok(args, " ");
-    char *expr = n + strlen(n) + 1;
-    int i = 0, addr = 0;
+    if (n == NULL) {
+        printf("please input n!\n");
+        return 1;
+    }
+    char *exp = n + strlen(n) + 1;
+    if (exp == NULL) {
+        printf("please input addr!\n");
+        return 1;
+    }
+    int i = 0;
+    bool success = true;
+    uint32_t addr = expr(exp, &success);
+    if (!success) {
+        printf("expression computation failed!\n");
+        return 1;
+    }
     sscanf(n, "%d", &i);
-    sscanf(expr, "%x", &addr);
-    for (; i > 0; i--) {
-        printf("0x%x: 0x", addr);
+    for (int k = 0; k < i; k++) {
+        uint32_t value = vaddr_read(addr, 4);
+        printf("0x%08x: ", addr + k * 4);
         for (int j = 0; j < 4; j++) {
-            printf("%02x", pmem[addr]);
-            addr++;
+            printf("0x%02x ", value & 0xff);
+            value = value >> 8;
         }
         printf("\n");
     }
-    printf("\n");
     return 0;
 }
 
