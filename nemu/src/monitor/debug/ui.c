@@ -90,7 +90,7 @@ static int cmd_x(char *args) {
     }
     sscanf(n, "%d", &i);
     for (int k = 0; k < i; k++) {
-        uint32_t value = vaddr_read(addr, 4);
+        uint32_t value = vaddr_read(addr + k * 4, 4);
         printf("0x%08x: ", addr + k * 4);
         for (int j = 0; j < 4; j++) {
             printf("0x%02x ", value & 0xff);
