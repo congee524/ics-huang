@@ -7,7 +7,7 @@
 #include <regex.h>
 
 enum {
-    TK_NOTYPE = 256, TK_EQ, TK_NEQ, HEX, DEC, AND, OR, REG, DEREF
+    TK_NOTYPE = 256, TK_EQ, TK_NEQ, HEX, DEC, AND, OR, REG, DEREF, NEG
 
         /* TODO: Add more token types */
 
@@ -24,18 +24,22 @@ static struct rule {
 
     {" +", TK_NOTYPE},       // spaces
     {"\\+", '+'},            // plus
-    {"\\-", '-'},            // minus
+    {"-", '-'},              // minus, negative
     {"\\*", '*'},            // multiply, pointer dereference
     {"/", '/'},              // divide
+
     {"\\(", '('},            // left bracket
     {"\\)", ')'},            // right bracket
+
     {"==", TK_EQ},           // equal
     {"!=", TK_NEQ},          // not equal
+    
     {"0[xX][0-9a-fA-F]+", HEX}, // hexadecimal number
-    {"[0-9]+", DEC},         // decimal number
+    {"[0-9]+", DEC},            // decimal number
+    {"\\$\\w{3}", REG},         // register
+
     {"&&", AND},             // logical and
     {"\\|\\|", OR},          // logical or
-    {"\\$\\w{3}", REG},      // register
     // firstly, i use \\d but error, and then i modify to [0-9]
 };
 
@@ -65,7 +69,7 @@ typedef struct token {
     char str[32];
 } Token;
 
-Token tokens[50005];
+Token tokens[65536];
 int nr_token;
 
 void empty_token_str(void) {
@@ -74,10 +78,10 @@ void empty_token_str(void) {
     }
 }
 
-bool check_DEREF(int i) {
+bool check_DEREF_NEG(int i) {
     int t = tokens[i].type;
     if (t == '+' || t == '-' || t == '*' || t == '/' || t == '(' 
-            || t == AND || t == OR || t == DEREF) {
+            || t == NEG || t == AND || t == OR || t == DEREF) {
         return true;
     } else {
         return false;
@@ -136,8 +140,8 @@ static bool make_token(char *e) {
                         tokens[nr_token].str[substr_len - 1] = '\0';
                         tokens[nr_token].type = rules[i].token_type;
                         break;
-                    case '+':
                     case '-':
+                    case '+':
                     case '*':
                     case '/':
                     case '(':
@@ -151,10 +155,15 @@ static bool make_token(char *e) {
                         break;
                     case TK_NOTYPE:
                         nr_token--;
+                        break;
                 }
                 if (tokens[nr_token].type == '*' && (nr_token == 0 
-                            || check_DEREF(nr_token - 1))) {
+                            || check_DEREF_NEG(nr_token - 1))) {
                     tokens[nr_token].type = DEREF;
+                }
+                if (tokens[nr_token].type == '-' && (nr_token == 0
+                            || check_DEREF_NEG(nr_token - 1))) {
+                    tokens[nr_token].type = NEG;
                 }
                 nr_token++;
                 break;
@@ -172,20 +181,19 @@ bool check_parentheses(int p, int q) {
     if (tokens[p].type != '(' || tokens[q].type != ')') {
         return false;
     }
-    int cnt_l = 0, cnt_r = 0;
+    int cnt = 0;
     while (p < q) {
         if (tokens[p].type == '(') {
-            cnt_l++;
+            cnt++;
         } else if (tokens[p].type == ')') {
-            cnt_r++;
+            cnt--;
         }
-        if (cnt_l <= cnt_r) {
+        if (cnt <= 0) {
             return false;
         }
         p++;
     }
-    cnt_r++;
-    if (cnt_l == cnt_r) {
+    if (cnt == 1) {
         return true;
     } else {
         return false;
@@ -235,11 +243,14 @@ uint32_t eval(int p, int q) {
         }
         return operand;
     } else if ((tokens[p].type == DEREF) && 
-                ((p + 1 == q) || check_parentheses(p + 1, q))) {
+            ((p + 1 == q) || check_parentheses(p + 1, q))) {
         uint32_t addr;
         // printf("#1\n");
         addr = eval(p + 1, q);
         return vaddr_read(addr, 4);
+    } else if ((tokens[p].type == NEG) &&
+            ((p + 1 == q) || check_parentheses(p + 1, q))) {
+        return -1 * eval(p + 1, q);
     } else if (check_parentheses(p, q)) {
         // the expression is surrounded by a matched pair of parentheses. 
         // printf("#2\n");
