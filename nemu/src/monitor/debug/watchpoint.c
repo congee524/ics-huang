@@ -98,7 +98,7 @@ WP* check_watchpoint(WP *p_wp) {
         } else if (ans != p_wp->nv) {
             p_wp->ov = p_wp->nv;
             p_wp->nv = ans;
-            return p_wp->next;
+            return p_wp;
         }
         p_wp = p_wp->next;
     }
