@@ -64,3 +64,6 @@ clean:
 	-rm -rf $(BUILD_DIR)
 	$(MAKE) -C tools/gen-expr clean
 	$(MAKE) -C tools/qemu-diff clean
+
+count:
+	CL = $(shell find . -name *.[ch] | xargs cat | wc -l)
