@@ -36,7 +36,6 @@ WP* new_wp(char *expr, uint32_t value) {
     printf("#2.6\n");
     n_wp->nv = value;
     printf("#2.7\n");
-    assert(n_wp->expr);
     strcpy(n_wp->expr, expr);
     
     printf("#3\n");

@@ -8,8 +8,8 @@ typedef struct watchpoint {
     struct watchpoint *next;
     uint32_t nv;        // new value
     uint32_t ov;        // old value
-    bool open;     // to judge whether the watchpoint is open
-    char *expr;     // put the expression
+    bool open;          // to judge whether the watchpoint is open
+    char *expr;         // put the expression
     /* TODO: Add more members if necessary */
 
 
