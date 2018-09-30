@@ -44,9 +44,16 @@ void cpu_exec(uint64_t n) {
 #ifdef DEBUG
         /* TODO: check watchpoints here. */
         WP *p = NULL;
-        do {
+        p = check_watchpoint(p);
+        while (p != NULL) {
+            printf("the value of %d-th watchpointer '%s' has changed from %d to %d.\n", 
+                    p->NO, p->expr, p->ov, p->nv);
+            nemu_state = NEMU_STOP;
             p = check_watchpoint(p);
-        } while (p != NULL);
+        }
+        //do {
+        //    p = check_watchpoint(p);
+        //} while (p != NULL);
 #endif
 
 #ifdef HAS_IOE

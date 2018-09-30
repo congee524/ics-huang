@@ -89,21 +89,18 @@ WP* check_watchpoint(WP *p_wp) {
     if (p_wp == NULL) {
         p_wp = head;
     }
-    if (p_wp != NULL) {
+    while (p_wp != NULL) {
         bool success = true;
         uint32_t ans = expr(p_wp->expr, &success);
         if (!success) {
             printf("exprission compute failed!\n");
-            return NULL;
-        } else {
-            if (ans != p_wp->nv) {
-                p_wp->ov = p_wp->nv;
-                p_wp->nv = ans;
-            }
-            printf("the value of %d-th watchpoint '%s' has changed from %d to %d", 
-                    p_wp->NO, p_wp->expr, p_wp->ov, p_wp->nv);
+            assert(0);
+        } else if (ans != p_wp->nv) {
+            p_wp->ov = p_wp->nv;
+            p_wp->nv = ans;
             return p_wp->next;
         }
+        p_wp = p_wp->next;
     }
     return NULL;
 }
