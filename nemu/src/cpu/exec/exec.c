@@ -2,9 +2,9 @@
 #include "all-instr.h"
 
 typedef struct {
-  DHelper decode;
-  EHelper execute;
-  int width;
+  DHelper decode;  // the decoding function
+  EHelper execute; // the executing function
+  int width;       // the width of operand
 } opcode_entry;
 
 #define IDEXW(id, ex, w)   {concat(decode_, id), concat(exec_, ex), w}
