@@ -43,6 +43,7 @@ static inline make_DopHelper(SI) {
    op->simm = ???
    */
   op->simm = instr_fetch(eip, op->width);
+
   //int tmp = instr_fetch(eip, op->width); 
   //if (op->width == 1) {
   //  op->simm = (tmp << 24) >> 24; 
