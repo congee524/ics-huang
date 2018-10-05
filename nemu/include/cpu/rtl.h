@@ -189,18 +189,47 @@ static inline void rtl_msb(rtlreg_t* dest, const rtlreg_t* src1, int width) {
   *dest = (*src1 >> cnt) & 1;
 }
 
+// i find that ## doesn't work, because cpu.eflags.OF has a '.' seperating the token.
+// therefore, i have to write seperatly.
+/*
 #define make_rtl_setget_eflags(f) \
   static inline void concat(rtl_set_, f) (const rtlreg_t* src) { \
-    TODO(); \
+    concat(cpu.eflags., f) = *src; \
   } \
   static inline void concat(rtl_get_, f) (rtlreg_t* dest) { \
-    TODO(); \
+    *dest = concat(cpu.eflags., f); \
   }
 
 make_rtl_setget_eflags(CF)
 make_rtl_setget_eflags(OF)
 make_rtl_setget_eflags(ZF)
 make_rtl_setget_eflags(SF)
+*/
+
+static inline void rtl_set_CF (const rtlreg_t* src) {
+    cpu.eflags.CF = *src;
+}
+static inline void rtl_get_CF (rtlreg_t* dest) {
+    *dest = cpu.eflags.CF;
+}
+static inline void rtl_set_OF (const rtlreg_t* src) {
+    cpu.eflags.OF = *src;
+}
+static inline void rtl_get_OF (rtlreg_t* dest) {
+    *dest = cpu.eflags.OF;
+} 
+static inline void rtl_set_ZF (const rtlreg_t* src) {
+    cpu.eflags.ZF = *src;
+}
+static inline void rtl_get_ZF (rtlreg_t* dest) {
+    *dest = cpu.eflags.ZF;
+} 
+static inline void rtl_set_SF (const rtlreg_t* src) {
+    cpu.eflags.SF = *src;
+}
+static inline void rtl_get_SF (rtlreg_t* dest) {
+    *dest = cpu.eflags.SF;
+} 
 
 static inline void rtl_update_ZF(const rtlreg_t* result, int width) {
   // eflags.ZF <- is_zero(result[width * 8 - 1 .. 0])
