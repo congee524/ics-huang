@@ -52,14 +52,15 @@ static int cmd_info(char *args) {
         printf("'r' -- registers or 'w' -- watchpoint\n");
         return 0;
     } else if (!strcmp(args, "r")) {
-        printf("EAX: 0x%08x %d\n", cpu.eax, cpu.eax);
-        printf("ECX: 0x%08x %d\n", cpu.ecx, cpu.ecx);
-        printf("EDX: 0x%08x %d\n", cpu.edx, cpu.edx);
-        printf("EBX: 0x%08x %d\n", cpu.ebx, cpu.ebx);
-        printf("ESP: 0x%08x %d\n", cpu.esp, cpu.esp);
-        printf("EBP: 0x%08x %d\n", cpu.ebp, cpu.ebp);
-        printf("ESI: 0x%08x %d\n", cpu.esi, cpu.esi);
-        printf("EDI: 0x%08x %d\n", cpu.edi, cpu.edi);
+        printf("EAX: 0x%08x \n", cpu.eax);
+        printf("ECX: 0x%08x \n", cpu.ecx);
+        printf("EDX: 0x%08x \n", cpu.edx);
+        printf("EBX: 0x%08x \n", cpu.ebx);
+        printf("ESP: 0x%08x \n", cpu.esp);
+        printf("EBP: 0x%08x \n", cpu.ebp);
+        printf("ESI: 0x%08x \n", cpu.esi);
+        printf("EDI: 0x%08x \n", cpu.edi);
+        printf("EIP: 0x%08x \n", cpu.eip);
     } else if (!strcmp(args, "w")) {
         print_watchpoint();
     }
