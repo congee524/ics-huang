@@ -14,7 +14,7 @@ make_EHelper(push) {
 
 make_EHelper(pop) {
   printf("search pop! 0x%08x 0x%08x\n", id_dest->val, id_dest->addr);
-  rtl_pop(&id_dest->addr);
+  rtl_pop(&id_dest->val);
   print_asm_template1(pop);
 }
 
