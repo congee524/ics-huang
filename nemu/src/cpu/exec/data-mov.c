@@ -7,12 +7,13 @@ make_EHelper(mov) {
 }
 
 make_EHelper(push) {
+  printf("search push! 0x%08x 0x%08x\n", id_dest->val, id_dest->addr);
   rtl_push(&id_dest->addr); 
   print_asm_template1(push);
 }
 
 make_EHelper(pop) {
-  printf("search! 0x%08x 0x%08x\n", id_dest->val, id_dest->addr);
+  printf("search pop! 0x%08x 0x%08x\n", id_dest->val, id_dest->addr);
   rtl_pop(&id_dest->addr);
   print_asm_template1(pop);
 }
