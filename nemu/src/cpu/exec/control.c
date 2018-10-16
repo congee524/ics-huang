@@ -33,6 +33,9 @@ make_EHelper(call) {
 
 make_EHelper(ret) {
   // rtl_pop(&decoding.seq_eip);
+  // some strange thing happened! if i use rtl_pop(&decoding.seq_eip)
+  // in the nemu, the "ret" will be printf incorrectly.
+  // but when i use the following two lines code, the "ret" will be printf correctly!
   rtl_pop(&decoding.jmp_eip);
   rtl_j(decoding.jmp_eip);
   print_asm("ret");
