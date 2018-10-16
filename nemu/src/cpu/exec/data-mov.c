@@ -10,6 +10,8 @@ make_EHelper(push) {
   printf("search push! 0x%08x 0x%08x\n", id_dest->val, id_dest->addr);
   rtl_push(&id_dest->val); 
   print_asm_template1(push);
+  printf("search search push! 0x%08x 0x%08x\n", id_dest->val, id_dest->addr);
+
 }
 
 make_EHelper(pop) {
