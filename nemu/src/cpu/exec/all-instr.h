@@ -9,6 +9,7 @@ make_EHelper(movzx);
 // control.c
 make_EHelper(call);
 make_EHelper(ret);
+make_EHelper(jcc);
 
 // prefix.c
 make_EHelper(operand_size);
