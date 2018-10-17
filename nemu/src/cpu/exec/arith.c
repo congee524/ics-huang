@@ -7,10 +7,10 @@ make_EHelper(add) {
 }
 
 make_EHelper(sub) {
-  rtl_sub(&t2, &id_dest->val, &id_src->val);
+  rtl_sub(&id_dest->val, &id_dest->val, &id_src->val);
   //rtl_setrelop(RELOP_LTU, &t3, &id_dest->val, &t2);
   //rtl_sub(&t2, &t2, &t1);
-  operand_write(id_dest, &t2);
+  operand_write(id_dest, &id_dest->val);
 
   //rtl_update_ZFSF(&t2, id_dest->width);
 
