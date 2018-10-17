@@ -12,6 +12,8 @@ make_EHelper(and) {
   rtl_and(&id_dest->val, &id_dest->val, &id_src->val);
   operand_write(id_dest, &id_dest->val);
   cpu.eflags.CF = cpu.eflags.OF = 0;
+  cpu.eflags.ZF = (id_dest->val == 0 ? 1 : 0);
+  cpu.eflags.SF = (id_dest->val >> 31) & 1;
   print_asm_template2(and);
 }
 
@@ -19,6 +21,8 @@ make_EHelper(xor) {
   rtl_xor(&id_dest->val, &id_dest->val, &id_src->val);
   operand_write(id_dest, &id_dest->val);
   cpu.eflags.CF = cpu.eflags.OF = 0;
+  cpu.eflags.ZF = (id_dest->val == 0 ? 1 : 0);
+  cpu.eflags.SF = (id_dest->val >> 31) & 1;
   print_asm_template2(xor);
 }
 
@@ -27,6 +31,9 @@ make_EHelper(or) {
   rtl_or(&id_dest->val, &id_dest->val, &id_src->val);
   operand_write(id_dest, &id_dest->val);
   cpu.eflags.CF = cpu.eflags.OF = 0;
+  
+  cpu.eflags.ZF = (id_dest->val == 0 ? 1 : 0);
+  cpu.eflags.SF = (id_dest->val >> 31) & 1;
   print_asm_template2(or);
 }
 
