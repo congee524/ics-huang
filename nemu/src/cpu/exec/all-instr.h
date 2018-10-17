@@ -31,3 +31,4 @@ make_EHelper(test);
 make_EHelper(sub);
 make_EHelper(add);
 make_EHelper(adc);
+make_EHelper(cmp);
