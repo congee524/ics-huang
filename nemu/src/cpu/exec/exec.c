@@ -176,7 +176,7 @@ opcode_entry opcode_table [512] = {
   /* 0x88 */	EMPTY, EMPTY, EMPTY, EMPTY,
   /* 0x8c */	EMPTY, EMPTY, EMPTY, EMPTY,
   /* 0x90 */	EMPTY, EMPTY, EMPTY, EMPTY,
-  /* 0x94 */	EMPTY, EMPTY, EMPTY, EMPTY,
+  /* 0x94 */	IDEX(r, setcc), EMPTY, EMPTY, EMPTY,
   /* 0x98 */	EMPTY, EMPTY, EMPTY, EMPTY,
   /* 0x9c */	EMPTY, EMPTY, EMPTY, EMPTY,
   /* 0xa0 */	EMPTY, EMPTY, EMPTY, EMPTY,
@@ -209,7 +209,6 @@ static make_EHelper(2byte_esc) {
   uint32_t opcode = instr_fetch(eip, 1) | 0x100;
   decoding.opcode = opcode;
   set_width(opcode_table[opcode].width);
-  printf("opcode is 0x%x\n", opcode);
   idex(eip, &opcode_table[opcode]);
 }
 
