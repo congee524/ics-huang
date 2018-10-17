@@ -26,7 +26,8 @@ void rtl_setcc(rtlreg_t* dest, uint8_t subcode) {
         //printf("zf is %u\n", *dest);
         break;
     case CC_NE:
-        *dest = !cpu.eflags.ZF;
+        if (cpu.eflags.ZF == 0) {*dest = 1;} else {*dest = 0;}
+        //*dest = !cpu.eflags.ZF;
     case CC_BE:
     case CC_S:
     case CC_L:
