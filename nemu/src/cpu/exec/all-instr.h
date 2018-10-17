@@ -3,6 +3,7 @@
 make_EHelper(mov);
 make_EHelper(push);
 make_EHelper(pop);
+make_EHelper(lea);
 
 // control.c
 make_EHelper(call);
