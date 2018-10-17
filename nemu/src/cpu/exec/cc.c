@@ -22,6 +22,7 @@ void rtl_setcc(rtlreg_t* dest, uint8_t subcode) {
         } else {
             *dest = 0;
         }
+        printf("zf is %u\n", *dest);
         break;
     case CC_BE:
     case CC_S:
