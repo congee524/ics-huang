@@ -89,12 +89,10 @@ void difftest_step(uint32_t eip) {
       printf("NEMU ebx is 0x%08x; QEMU ebx is 0x%08x.\n", cpu.ebx, ref_r.ebx); 
       diff_judge = 1;
   }
-  printf("NEMU esp is 0x%08x; QEMU esp is 0x%08x.\n", cpu.esp, ref_r.esp);
   if (ref_r.esp != cpu.esp) {
       printf("NEMU esp is 0x%08x; QEMU esp is 0x%08x.\n", cpu.esp, ref_r.esp); 
       diff_judge = 1;
   }
-  printf("NEMU ebp is 0x%08x; QEMU ebp is 0x%08x.\n", cpu.ebp, ref_r.ebp);
   if (ref_r.ebp != cpu.ebp) {
       printf("NEMU ebp is 0x%08x; QEMU ebp is 0x%08x.\n", cpu.ebp, ref_r.ebp); 
       diff_judge = 1;
