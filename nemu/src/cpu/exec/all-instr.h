@@ -5,6 +5,7 @@ make_EHelper(push);
 make_EHelper(pop);
 make_EHelper(lea);
 make_EHelper(movzx);
+make_EHelper(leave);
 
 // control.c
 make_EHelper(call);
