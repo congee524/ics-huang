@@ -2,8 +2,11 @@
 #include "cpu/cc.h"
 
 make_EHelper(test) {
-  TODO();
-
+  //TODO();
+  rtl_and(&id_dest->val, &id_dest->val, &id_src->val);
+  cpu.eflags.CF = cpu.eflags.OF = 0;
+  cpu.eflags.ZF = (id_dest->val == 0 ? 1 : 0);
+  cpu.eflags.SF = (id_dest->val >> 31) & 1;
   print_asm_template2(test);
 }
 
