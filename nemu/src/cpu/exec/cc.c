@@ -17,6 +17,12 @@ void rtl_setcc(rtlreg_t* dest, uint8_t subcode) {
     case CC_O:
     case CC_B:
     case CC_E:
+        if (cpu.eflags.ZF == 1) {
+            *dest = 1;
+        } else {
+            *dest = 0;
+        }
+        break;
     case CC_BE:
     case CC_S:
     case CC_L:
