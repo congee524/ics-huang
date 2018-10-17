@@ -20,6 +20,7 @@ make_EHelper(nop);
 // logic.c
 make_EHelper(xor);
 make_EHelper(and);
+make_EHelper(or);
 
 // arith.c
 make_EHelper(sub);
