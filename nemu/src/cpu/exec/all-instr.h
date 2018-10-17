@@ -24,3 +24,4 @@ make_EHelper(and);
 // arith.c
 make_EHelper(sub);
 make_EHelper(add);
+make_EHelper(adc);
