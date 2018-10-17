@@ -15,6 +15,7 @@ make_EHelper(operand_size);
 // special.c
 make_EHelper(inv);
 make_EHelper(nemu_trap);
+make_EHelper(nop);
 
 // logic.c
 make_EHelper(xor);
