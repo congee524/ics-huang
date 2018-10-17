@@ -8,8 +8,10 @@ make_EHelper(test) {
 }
 
 make_EHelper(and) {
-  TODO();
-
+  //TODO();
+  rtl_and(&id_dest->val, &id_dest->val, &id_src->val);
+  operand_write(id_dest, &id_dest->val);
+  cpu.eflags.CF = cpu.eflags.OF = 0;
   print_asm_template2(and);
 }
 
