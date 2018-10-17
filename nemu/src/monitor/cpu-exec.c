@@ -46,12 +46,10 @@ void cpu_exec(uint64_t n) {
         while (p != NULL) {
             printf("%d-th watchpointer '%s' has changed!\n%-11d-> %-11d\n", 
                     p->NO, p->expr, p->ov, p->nv);
-            nemu_state = NEMU_STOP;
-            return;
-            //if (nemu_state == NEMU_RUNNING) {
-            //    nemu_state = NEMU_STOP;
-            //    return;
-            //}
+            if (nemu_state == NEMU_RUNNING) {
+                nemu_state = NEMU_STOP;
+                return;
+            }
             p = check_watchpoint(p);
         }
         //do {
