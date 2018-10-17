@@ -71,7 +71,6 @@ make_EHelper(movzx) {
 }
 
 make_EHelper(lea) {
-  printf("the reg is %u\n", id_dest->reg);
   operand_write(id_dest, &id_src->addr);
   print_asm_template2(lea);
 }
