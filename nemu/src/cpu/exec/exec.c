@@ -209,6 +209,7 @@ static make_EHelper(2byte_esc) {
   uint32_t opcode = instr_fetch(eip, 1) | 0x100;
   decoding.opcode = opcode;
   set_width(opcode_table[opcode].width);
+  printf("opcode is 0x%x\n", opcode);
   idex(eip, &opcode_table[opcode]);
 }
 
