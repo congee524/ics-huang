@@ -109,6 +109,7 @@ void difftest_step(uint32_t eip) {
       printf("NEMU eip is 0x%08x; QEMU eip is 0x%08x.\n", cpu.eip, ref_r.eip); 
       diff_judge = 1;
   }
+  
   if (diff_judge) {
       nemu_state = NEMU_ABORT;
   }
