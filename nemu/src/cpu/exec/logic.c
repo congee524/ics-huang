@@ -3,40 +3,39 @@
 
 make_EHelper(test) {
   //TODO();
-  rtl_and(&id_dest->val, &id_dest->val, &id_src->val);
+  rtl_and(&t2, &id_dest->val, &id_src->val);
+
   cpu.eflags.CF = cpu.eflags.OF = 0;
-  cpu.eflags.ZF = (id_dest->val == 0 ? 1 : 0);
-  cpu.eflags.SF = (id_dest->val >> 31) & 1;
+  rtl_update_ZFSF(&t2, id_dest->width);
   print_asm_template2(test);
 }
 
 make_EHelper(and) {
   //TODO();
-  rtl_and(&id_dest->val, &id_dest->val, &id_src->val);
-  operand_write(id_dest, &id_dest->val);
+  rtl_and(&t2, &id_dest->val, &id_src->val);
+  operand_write(id_dest, &t2);
+
   cpu.eflags.CF = cpu.eflags.OF = 0;
-  cpu.eflags.ZF = (id_dest->val == 0 ? 1 : 0);
-  cpu.eflags.SF = (id_dest->val >> 31) & 1;
+  rtl_update_ZFSF(&t2, id_dest->width);
   print_asm_template2(and);
 }
 
 make_EHelper(xor) {
-  rtl_xor(&id_dest->val, &id_dest->val, &id_src->val);
-  operand_write(id_dest, &id_dest->val);
+  rtl_xor(&t2, &id_dest->val, &id_src->val);
+  operand_write(id_dest, &t2);
+
   cpu.eflags.CF = cpu.eflags.OF = 0;
-  cpu.eflags.ZF = (id_dest->val == 0 ? 1 : 0);
-  cpu.eflags.SF = (id_dest->val >> 31) & 1;
+  rtl_update_ZFSF(&t2, id_dest->width);
   print_asm_template2(xor);
 }
 
 make_EHelper(or) {
   //TODO();
-  rtl_or(&id_dest->val, &id_dest->val, &id_src->val);
-  operand_write(id_dest, &id_dest->val);
+  rtl_or(&t2, &id_dest->val, &id_src->val);
+  operand_write(id_dest, &t2);
+
   cpu.eflags.CF = cpu.eflags.OF = 0;
-  
-  cpu.eflags.ZF = (id_dest->val == 0 ? 1 : 0);
-  cpu.eflags.SF = (id_dest->val >> 31) & 1;
+  rtl_update_ZFSF(&t2, id_dest->width);
   print_asm_template2(or);
 }
 
