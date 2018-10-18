@@ -64,6 +64,7 @@ make_EHelper(setcc) {
   uint32_t cc = decoding.opcode & 0xf;
   //printf("decoding.opcode 0x%x\n", decoding.opcode);
   rtl_setcc(&t2, cc);
+  printf("t2 is %u\n", t2);
   rtl_and(&id_dest->val, &id_dest->val, &t2);
   operand_write(id_dest, &id_dest->val);
 
