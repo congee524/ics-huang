@@ -40,7 +40,7 @@ make_EHelper(or) {
 }
 
 make_EHelper(sar) {
-  TODO();
+  //TODO();
   // unnecessary to update CF and OF in NEMU
   while(id_src->val--) {
       id_dest->val >>= 1;
