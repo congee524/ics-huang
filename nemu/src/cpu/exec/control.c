@@ -12,6 +12,7 @@ make_EHelper(jcc) {
   // the target address is calculated at the decode stage
   uint32_t cc = decoding.opcode & 0xf;
   //printf("j 0x%x cc %u\n", decoding.opcode, cc);
+  printf("j ZF is %u SF is %u OF is %u\n", cpu.eflags.ZF, cpu.eflags. SF, cpu.eflags.OF);
   rtl_setcc(&t0, cc);
   //printf("ori t0 is %u\n", t0);
   rtl_li(&t1, 0);
