@@ -13,6 +13,7 @@ make_EHelper(cltd);
 make_EHelper(call);// maybe exist effect on eflags
 make_EHelper(ret);
 make_EHelper(jcc);
+make_EHelper(jmp);
 
 // prefix.c
 make_EHelper(operand_size);
