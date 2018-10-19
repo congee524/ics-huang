@@ -40,3 +40,4 @@ make_EHelper(dec);
 make_EHelper(inc);
 make_EHelper(imul1);
 make_EHelper(imul2);
+make_EHelper(imul3);
