@@ -34,6 +34,8 @@ void rtl_setcc(rtlreg_t* dest, uint8_t subcode) {
     case CC_BE:
     case CC_S:
     case CC_L:
+        *dest = (cpu.eflags.SF != cpu.eflags.OF ? 1 : 0);
+        break;
     case CC_LE:
       TODO();
     default: panic("should not reach here");
