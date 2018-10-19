@@ -52,7 +52,7 @@ make_EHelper(sar) {
 }
 
 make_EHelper(shl) {
-  TODO();
+  //TODO();
   // unnecessary to update CF and OF in NEMU
   while(id_src->val--) {
       id_dest->val <<= 1;
@@ -64,7 +64,7 @@ make_EHelper(shl) {
 }
 
 make_EHelper(shr) {
-  //TODO();
+  TODO();
   // unnecessary to update CF and OF in NEMU
 
   print_asm_template2(shr);
