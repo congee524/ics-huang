@@ -44,6 +44,7 @@ make_EHelper(sub) {
 
 make_EHelper(cmp) {
   //TODO();
+  printf("the dest is %d\n", id_dest->reg);
   rtl_sub(&t2, &id_dest->val, &id_src->val);
   rtl_setrelop(RELOP_LTU, &t3, &id_dest->val, &t2);
 
