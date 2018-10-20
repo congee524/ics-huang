@@ -8,6 +8,7 @@ make_EHelper(movzx);
 make_EHelper(leave);
 make_EHelper(pusha);
 make_EHelper(cltd);
+make_EHelper(movsx);
 
 // control.c
 make_EHelper(call);// maybe exist effect on eflags
