@@ -48,3 +48,4 @@ make_EHelper(imul1);
 make_EHelper(imul2);
 make_EHelper(imul3);
 make_EHelper(idiv);
+make_EHelper(sbb);
