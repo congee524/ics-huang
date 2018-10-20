@@ -104,14 +104,16 @@ int sprintf(char *out, const char *fmt, ...) {
                     while (*ptr) {
                         *start++ = *ptr++;
                     }
-                    break;       
+                    break;
                 case 'c':
                     *start++ = (char) va_arg(arg, int);
                     break;
                 case 's':
                     ptr = va_arg(arg, char *);
                     while (*ptr) {
-                        *start++ = *ptr++;
+                        *start = *ptr;
+                        start++;
+                        ptr++;
                     }
                 default:
                     assert(0);
