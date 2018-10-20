@@ -117,7 +117,8 @@ int sprintf(char *out, const char *fmt, ...) {
                     assert(0);
             }
         } else {
-            *start++ = *fmt;
+            *start = *fmt;
+            start++;
         }
         fmt++;
     }
