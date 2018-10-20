@@ -3,19 +3,46 @@
 #ifndef __ISA_NATIVE__
 
 size_t strlen(const char *s) {
-  return 0;
+  const char *start = s;
+
+  while(*s)
+    s++;
+  return s - start;
 }
 
 char *strcpy(char* dst,const char* src) {
-  return NULL;
+  char *s = dst;
+  
+  while ((*dst++ = *src++) != '\0') 
+      ;
+
+  return s;
 }
 
 char* strncpy(char* dst, const char* src, size_t n) {
-  return NULL;
+  char *dscan;
+  const char *sscan;
+  dscan = dst;
+  sscan = src;
+  while (n > 0) {
+    --n;
+    if ((*dscan++ = *sscan++) == '\0')
+      break;
+  }
+  while (n-- > 0)
+    *dscan++ = '\0';
+  return dst;
 }
 
 char* strcat(char* dst, const char* src) {
-  return NULL;
+  char *s = dst;
+
+  while(*dst)
+    dst++;
+
+  while ((*dst++ = *src++) != '\0')
+    ;
+  return s;
 }
 
 int strcmp(const char* s1, const char* s2) {
@@ -27,7 +54,16 @@ int strcmp(const char* s1, const char* s2) {
 }
 
 int strncmp(const char* s1, const char* s2, size_t n) {
-  return 0;
+  if (n == 0) 
+    return 0;
+
+  while (n-- != 0 && *s1 == *s2) {
+    if (n == 0 || *s1 == '\0') 
+      break;
+    s1++;
+    s2++;
+  }
+  return (*(unsigned char *) s1) - (*(unsigned char *) s2);
 }
 
 void* memset(void* v, int c, size_t n) {
@@ -39,7 +75,16 @@ void* memset(void* v, int c, size_t n) {
 }
 
 void* memcpy(void* out, const void* in, size_t n) {
-  return NULL;
+  char *dst = (char *) out;
+  char *src = (char *) in;
+
+  void *save = out;
+
+  while (n--) {
+    *dst++ = *src++;
+  }
+
+  return save;
 }
 
 int memcmp(const void* s1, const void* s2, size_t n){
