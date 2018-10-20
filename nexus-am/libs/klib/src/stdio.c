@@ -88,7 +88,9 @@ int sprintf(char *out, const char *fmt, ...) {
                         t /= 10;
                     } while (t);
                     while (*ptr) {
-                        *start++ = *ptr++;
+                        *start = *ptr;
+                        start++;
+                        ptr++;
                     }
                     break;
                 case 'x':
