@@ -42,9 +42,12 @@ make_EHelper(or) {
 make_EHelper(sar) {
   //TODO();
   // unnecessary to update CF and OF in NEMU
+  t2 = 0xffff;
   while(id_src->val--) {
+      t2 >>= 1;
       id_dest->val >>= 1;
   }
+  id_dest->val &= t2;
   operand_write(id_dest, &id_dest->val);
   
   rtl_update_ZFSF(&id_dest->val, id_dest->width);
