@@ -47,7 +47,7 @@ make_EHelper(ret) {
 
 make_EHelper(call_rm) {
   //TODO();
-  printf("id_dest val is %u seq.eip is %u\n", id_dest->val, decoding.seq_eip);
+  printf("id_dest val is 0x%x seq.eip is 0x%x\n", id_dest->val, decoding.seq_eip);
   //decoding.seq_eip = vaddr_read(id_dest->val, 4);
   rtl_push(&decoding.seq_eip);
   rtl_j(decoding.jmp_eip);
