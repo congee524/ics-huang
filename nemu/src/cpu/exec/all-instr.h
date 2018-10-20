@@ -49,6 +49,7 @@ make_EHelper(imul2);
 make_EHelper(imul3);
 make_EHelper(idiv);
 make_EHelper(sbb);
+make_EHelper(div);
 
 // system.c
 make_EHelper(in);
