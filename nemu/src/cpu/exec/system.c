@@ -47,7 +47,7 @@ make_EHelper(in) {
   switch(id_src->width) {
     case 4: id_dest->val = pio_read_l(id_src->val); break;
     case 2: id_dest->val = pio_read_w(id_src->val); break;
-    case 1: id_dest->val = pio_read_b(id_src->reg); break;
+    case 1: id_dest->val = pio_read_b(id_src->val); break;
   }
   operand_write(id_dest, &id_dest->val);
   print_asm_template2(in);
