@@ -60,9 +60,9 @@ make_EHelper(in) {
 make_EHelper(out) {
   //TODO();
     switch(id_dest->val) {
-      case 4: pio_write_l(id_dest->val, id_src->val);
-      case 2: pio_write_w(id_dest->val, id_src->val);
-      case 1: pio_write_b(id_dest->val, id_src->val);
+      case 4: pio_write_l(id_src->val, id_dest->val);
+      case 2: pio_write_w(id_src->val, id_dest->val);
+      case 1: pio_write_b(id_src->val, id_dest->val);
     }
   print_asm_template2(out);
 
