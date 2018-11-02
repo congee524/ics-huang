@@ -78,11 +78,12 @@ make_EHelper(shr) {
 }
 
 make_EHelper(setcc) {
-  printf("before ecx is 0x%x\n", cpu.ecx);
+  printf("before ecx is 0x%x\n id_dest->val is 0x%x\n", cpu.ecx, id_dest->val);
   uint32_t cc = decoding.opcode & 0xf;
   //printf("decoding.opcode 0x%x\n", decoding.opcode);
   rtl_setcc(&t2, cc);
   printf("t2 is %u\n", t2);
+  printf("after ecx is 0x%x\n id_dest->val is 0x%x\n", cpu.ecx, id_dest->val);
   id_dest->val = (id_dest->val >> 8) << 8;
   rtl_or(&id_dest->val, &id_dest->val, &t2);
   operand_write(id_dest, &id_dest->val);
