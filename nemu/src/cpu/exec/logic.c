@@ -83,7 +83,7 @@ make_EHelper(setcc) {
   //printf("decoding.opcode 0x%x\n", decoding.opcode);
   rtl_setcc(&t2, cc);
   printf("t2 is %u\n", t2);
-  vaddr_write(at, id_dest->addr, 4);
+  rtl_mv(&at, &reg_l(id_dest->reg));
   printf("after at is 0x%x\necx is 0x%x\nid_dest->val is 0x%x\n", at, cpu.ecx, id_dest->val);
   at = (at >> 8) << 8;
   rtl_or(&id_dest->val, &at, &t2);
