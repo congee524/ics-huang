@@ -69,12 +69,12 @@ make_EHelper(cltd) {
 
 make_EHelper(cwtl) {
   if (decoding.is_operand_size_16) {
-    TODO();
+    rtl_sext(&id_dest->val, &id_src->val, id_dest->width);
   }
   else {
-    TODO();
+    rtl_sext(&id_dest->val, &id_src->val, id_dest->width);
   }
-
+  operand_write(id_dest, &id_dest->val);
   print_asm(decoding.is_operand_size_16 ? "cbtw" : "cwtl");
 }
 
