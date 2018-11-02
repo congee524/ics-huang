@@ -78,6 +78,7 @@ make_EHelper(shr) {
 }
 
 make_EHelper(setcc) {
+  printf("before ecx is 0x%x\n", cpu.ecx);
   uint32_t cc = decoding.opcode & 0xf;
   //printf("decoding.opcode 0x%x\n", decoding.opcode);
   rtl_setcc(&t2, cc);
