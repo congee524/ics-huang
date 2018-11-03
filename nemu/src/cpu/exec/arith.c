@@ -108,8 +108,15 @@ make_EHelper(dec) {
 }
 
 make_EHelper(neg) {
-  TODO();
-
+  //TODO();
+  if (id_dest->val == 0) {
+    cpu.eflags.CF = 0;
+  } else {
+    cpu.eflags.CF = 1;
+  }
+  at = 0xffffffff;
+  rtl_xor(&id_dest->val, &id_dest->val, &at);
+  operand_write(id_dest, &id_dest->val);
   print_asm_template1(neg);
 }
 
