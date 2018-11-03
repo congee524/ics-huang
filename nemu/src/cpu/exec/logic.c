@@ -65,9 +65,7 @@ make_EHelper(sar) {
 make_EHelper(shl) {
   //TODO();
   // unnecessary to update CF and OF in NEMU
-  while(id_src->val--) {
-      id_dest->val <<= 1;
-  }
+  rtl_shl(&id_dest->val, &id_dest->val, &id_src->val);
   operand_write(id_dest, &id_dest->val);
   
   rtl_update_ZFSF(&id_dest->val, id_dest->width);
@@ -77,9 +75,7 @@ make_EHelper(shl) {
 make_EHelper(shr) {
   //TODO();
   // unnecessary to update CF and OF in NEMU
-  while(id_src->val--) {
-      id_dest->val >>= 1;
-  }
+  rtl_shr(&id_dest->val, &id_dest->val, &id_src->val);
   operand_write(id_dest, &id_dest->val);
   
   rtl_update_ZFSF(&id_dest->val, id_dest->width);
@@ -94,9 +90,9 @@ make_EHelper(setcc) {
   //printf("t2 is %u\n", t2);
   //rtl_mv(&at, &reg_l(id_dest->reg));
   //printf("after ecx is 0x%x\nid_dest->val is 0x%x\n", cpu.ecx, id_dest->val);
-  id_dest->val = (id_dest->val >> 8) << 8;
-  rtl_or(&id_dest->val, &id_dest->val, &t2);
-  operand_write(id_dest, &id_dest->val);
+  //id_dest->val = (id_dest->val >> 8) << 8;
+  //rtl_or(&id_dest->val, &id_dest->val, &t2);
+  operand_write(id_dest, &t2);
   print_asm("set%s %s", get_cc_name(cc), id_dest->str);
 }
 
