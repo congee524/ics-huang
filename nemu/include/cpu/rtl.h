@@ -159,7 +159,7 @@ static inline void rtl_sext(rtlreg_t* dest, const rtlreg_t* src1, int width) {
   printf("sext: src1: 0x%08x\n", *src1);
   int tmp = *src1;
   uint32_t cnt = 32 - width * 8;
-  *dest = (tmp << cnt) >> cnt;
+  *dest = (int)(tmp << cnt) >> cnt;
   printf("sext: dest: 0x%08x\n", *dest);
 }
 
