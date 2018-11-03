@@ -72,7 +72,7 @@ make_EHelper(cwtl) {
   if (decoding.is_operand_size_16) {
     rtl_sext(&at, &reg_l(0), 2);
     //to ensure that the high bit keep still
-    cpu.eax = at | ((cpu.eax >> 16) << 16);
+    cpu.eax = (at & 0xffff) | cpu.eax;
   }
   else {
     rtl_sext(&reg_l(0), &reg_l(0), 4);
