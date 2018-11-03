@@ -82,6 +82,28 @@ make_EHelper(shr) {
   print_asm_template2(shr);
 }
 
+make_EHelper(rol) {
+  //TODO();
+  //i didn't find it, may it be left out
+  assert(id_src->val);
+  at = 1;
+  t1 = id_dest->val & 1;
+  while (id_src->val--) {
+    t0 = id_dest->val & 1;
+    rtl_shl(&id_dest->val, &id_dest->val, &at);
+    rtl_or(&id_dest->val, &id_dest->val, &t0);
+  }
+  cpu.eflags.CF = t0;
+  if((id_dest->val & 1) != t1) {
+      cpu.eflags.OF = 1;
+  } else {
+      cpu.eflags.OF = 0;
+  }
+  operand_write(id_dest, &id_dest->val);
+  
+  print_asm_template2(rol);
+}
+
 make_EHelper(setcc) {
   //printf("before ecx is 0x%x\nid_dest->val is 0x%x\n", cpu.ecx, id_dest->val);
   uint32_t cc = decoding.opcode & 0xf;

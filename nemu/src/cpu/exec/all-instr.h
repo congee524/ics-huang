@@ -37,6 +37,7 @@ make_EHelper(sar);
 make_EHelper(shl);
 make_EHelper(not); 
 make_EHelper(shr);
+make_EHelper(rol);
 
 // arith.c
 make_EHelper(sub);
