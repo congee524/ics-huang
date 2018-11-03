@@ -116,6 +116,7 @@ make_EHelper(neg) {
   }
   at = 0xffffffff;
   rtl_xor(&id_dest->val, &id_dest->val, &at);
+  id_dest->val++;
   operand_write(id_dest, &id_dest->val);
   print_asm_template1(neg);
 }
