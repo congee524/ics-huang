@@ -32,13 +32,12 @@ void cpu_exec(uint64_t n) {
     nemu_state = NEMU_RUNNING;
 
     bool print_flag = n < MAX_INSTR_TO_PRINT;
-
     for (; n > 0; n --) {
         /* Execute one instruction, including instruction fetch,
          * instruction decode, and the actual execution. */
         exec_wrapper(print_flag);
         nr_guest_instr_add(1);
-
+                printf("0x3c is 0x%08x at eip 0x%08x\n", vaddr_read(0x3c, 4), cpu.eip);
 #ifdef DEBUG
         /* TODO: check watchpoints here. */
         WP *p = NULL;
