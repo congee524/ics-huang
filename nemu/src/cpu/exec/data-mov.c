@@ -51,17 +51,17 @@ make_EHelper(cltd) {
   if (decoding.is_operand_size_16) {
     //TODO();
       if ((cpu.eax >> 15) & 1) {
-          cpu.edx |= 0xFFFF;
+          cpu.edx = 0xFFFF;
       } else {
-          cpu.edx &= 0x0000;
+          cpu.edx = 0;
       }
   }
   else {
     //TODO();
       if ((cpu.eax >> 31) & 1) {
-          cpu.edx |= 0xFFFFFFFF;
+          cpu.edx = 0xFFFFFFFF;
       } else {
-          cpu.edx &= 0x00000000;
+          cpu.edx = 0;
       }
   }
 
@@ -70,7 +70,9 @@ make_EHelper(cltd) {
 
 make_EHelper(cwtl) {
   if (decoding.is_operand_size_16) {
-    rtl_sext(&reg_l(0), &reg_l(0), 2);
+    rtl_sext(&at, &reg_l(0), 2);
+    //to ensure that the high bit keep still
+    cpu.eax = at | ((cpu.eax >> 16) << 16);
   }
   else {
     rtl_sext(&reg_l(0), &reg_l(0), 4);
