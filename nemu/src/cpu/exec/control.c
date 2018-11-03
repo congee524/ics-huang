@@ -41,6 +41,7 @@ make_EHelper(ret) {
   // in the nemu, the "ret" will be printf incorrectly.
   // but when i use the following two lines code, the "ret" will be printf correctly!
   rtl_pop(&decoding.jmp_eip);
+  decoding.is_jmp = 1;
   rtl_j(decoding.jmp_eip);
   print_asm("ret");
 }

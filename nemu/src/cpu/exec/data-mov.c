@@ -61,7 +61,7 @@ make_EHelper(cltd) {
       if ((cpu.eax >> 31) & 1) {
           cpu.edx |= 0xFFFFFFFF;
       } else {
-          cpu.edx &= 0x0000;
+          cpu.edx &= 0x00000000;
       }
   }
 
