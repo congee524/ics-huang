@@ -1,7 +1,7 @@
 #include <am.h>
 #include <x86.h>
 #include <amdev.h>
-
+#define RTC_PORT 0x48 
 static _UptimeReg rtc_start;
 
 size_t timer_read(uintptr_t reg, void *buf, size_t size) {
@@ -9,7 +9,7 @@ size_t timer_read(uintptr_t reg, void *buf, size_t size) {
     case _DEVREG_TIMER_UPTIME: {
       _UptimeReg *uptime = (_UptimeReg *)buf;
       uptime->hi = 0;
-      uptime->lo = inl(0x48) - rtc_start.lo;
+      uptime->lo = inl(RTC_PORT) - rtc_start.lo;
       return sizeof(_UptimeReg);
     }
     case _DEVREG_TIMER_DATE: {
@@ -28,5 +28,5 @@ size_t timer_read(uintptr_t reg, void *buf, size_t size) {
 
 void timer_init() {
     rtc_start.hi = 0;
-    rtc_start.lo = inl(0x48);
+    rtc_start.lo = inl(RTC_PORT);
 }
