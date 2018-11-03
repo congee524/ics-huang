@@ -4,7 +4,6 @@
 make_EHelper(mov) {
   printf("mov: id_src->val 0x%08x\n", id_src->val);
   operand_write(id_dest, &id_src->val);
-  printf("mov: id_dest turn to 0x%08x\n", reg_l(id_dest->reg));
   print_asm_template2(mov);
 }
 
