@@ -20,79 +20,84 @@ int printf(const char *fmt, ...) {
 
 int vsprintf(char *out, const char *fmt, va_list ap) {
     unsigned int t;
+    unsigned int lim = 0;
     char *ptr = NULL;
     char *start = out;
     char buffer[50];
     char Representation[] = "0123456789abcdef";
 
     while (*fmt) {
-        if (*fmt == '%') {
+        /*
+        if (*fmt == '\') {
             switch (*++fmt) {
-                case 'd': {
-                              t = va_arg(ap, int);
-                              ptr = &buffer[49];
-                              *ptr = '\0';
-                              do {
-                                  *--ptr = Representation[t % 10];
-                                  t /= 10;
-                              } while (t);
-                              while (*ptr) {
-                                  *start = *ptr;
-                                  start++;
-                                  ptr++;
-                              }
-                              break;
-                          }
-                case 'x': {
-                              t = va_arg(ap, unsigned int);
-                              ptr = &buffer[49];
-                              *ptr = '\0';
-                              do {
-                                  *--ptr = Representation[t % 16];
-                                  t /= 16;
-                              } while (t);
-                              while (*ptr) {
-                                  *start++ = *ptr++;
-                              }
-                              break;
-                          }
-                case 'c': {
-                              *start++ = (char) va_arg(ap, int);
-                              break;
-                          }
-                case 's': {
-                              ptr = va_arg(ap, char *);
-                              while (*ptr) {
-                                  *start++ = *ptr++;
-                              }
-                              break;
-                          }
-                case '0': {
-                              if (*(fmt + 1) == '2' && *(fmt + 2) == 'd') {
-                                  fmt += 2;
-                                  t = va_arg(ap, int);
-                                  ptr = &buffer[49];
-                                  *ptr = '\0';
-                                  do {
-                                      *--ptr = Representation[t % 10];
-                                      t /= 10;
-                                  } while (t);
-                                  if (*(ptr + 1) == '\0') {
-                                      *--ptr = Representation[0];
-                                  }
-                                  while (*ptr) {
-                                      *start = *ptr;
-                                      start++;
-                                      ptr++;
-                                  }
-
-                              } else {
-                                  assert(0);
-                              }
-                          }
-                          break;
+                case 'n':
+                    *start++ = '\n';
                 default:
-                          assert(0);
+                    assert(0);
+            }
+        }
+        */
+
+        if (*fmt == '%') {
+            if (*(fmt + 1) == '0') {
+                fmt++;
+                lim = 0;
+                for (int k = 0; k <= 9; k++) {
+                    if(*(fmt + 1) == Representation[k]) {
+                        lim = k;
+                        fmt++;
+                        break;
+                    }
+                }
+            }
+
+            switch (*++fmt) {
+                case 'd': 
+                    t = va_arg(ap, int);
+                    ptr = &buffer[49];
+                    *ptr = '\0';
+                    do {
+                        *--ptr = Representation[t % 10];
+                        t /= 10;
+                    } while (t);
+                    while (&buffer[49] - ptr < lim) {
+                        *--ptr = Representation[0];
+                    }
+                    while (*ptr) {
+                        *start = *ptr;
+                        start++;
+                        ptr++;
+                    }
+                    break;
+
+                case 'x': 
+                    t = va_arg(ap, unsigned int);
+                    ptr = &buffer[49];
+                    *ptr = '\0';
+                    do {
+                        *--ptr = Representation[t % 16];
+                        t /= 16;
+                    } while (t);
+                    while (&buffer[49] - ptr < lim) {
+                        *--ptr = Representation[0];
+                    }
+                    while (*ptr) {
+                        *start++ = *ptr++;
+                    }
+                    break;
+
+                case 'c':
+                    *start++ = (char) va_arg(ap, int);
+                    break;
+
+                case 's': 
+                    ptr = va_arg(ap, char *);
+                    while (*ptr) {
+                        *start++ = *ptr++;
+                    }
+                    break;
+                default:
+                    assert(0);
             }
         } else {
             *start = *fmt;
