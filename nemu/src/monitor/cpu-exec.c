@@ -37,7 +37,7 @@ void cpu_exec(uint64_t n) {
          * instruction decode, and the actual execution. */
         exec_wrapper(print_flag);
         nr_guest_instr_add(1);
-                printf("0xc is 0x%08x at eip 0x%08x\n", vaddr_read(reg_l(5) + 0xc, 4), cpu.eip);
+        //printf("0xc is 0x%08x at eip 0x%08x\n", vaddr_read(reg_l(5) + 0xc, 4), cpu.eip);
 #ifdef DEBUG
         /* TODO: check watchpoints here. */
         WP *p = NULL;
