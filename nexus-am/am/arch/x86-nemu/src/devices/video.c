@@ -6,7 +6,6 @@
 #define min(a, b) (a < b ? a : b)
 #define W 400
 #define H 300
-#define FPS 30
 
 static uint32_t* const fb __attribute__((used)) = (uint32_t *)0x40000;
 
@@ -43,4 +42,6 @@ size_t video_write(uintptr_t reg, void *buf, size_t size) {
 }
 
 void vga_init() {
+    memset(fb, 0, W * H * sizeof(uint32_t));
 }
+
