@@ -28,11 +28,11 @@ size_t video_write(uintptr_t reg, void *buf, size_t size) {
       _FBCtlReg *ctl = (_FBCtlReg *)buf;
       int x = ctl->x, y = ctl->y, w = ctl->w, h = ctl->h;
       uint32_t *pixels = ctl->pixels;
-      int cp_bytes = sizeof(uint32_t) * min(w, W - x);
+      //int cp_bytes = sizeof(uint32_t) * min(w, W - x);
       for (int j = 0; j < h && y + j < H; j++) {
           //printf("pixels is 0x%08x\n", *pixels);
-          for (int i = 0; i < w && x + i < W; x++)
-          memcpy(&fb[(y + j) * W + x + i], pixels, cp_bytes);
+          fb[(y + j) * W + x] = *pixels;
+          //memcpy(&fb[(y + j) * W + x], pixels, cp_bytes);
           //printf("the position is %d\n", (y + j) * W + x);
           //printf("fb is 0x%08x\n", fb[(y + j) * W + x]);
           pixels += w;
