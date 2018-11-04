@@ -86,7 +86,7 @@ make_EHelper(rol) {
   //TODO();
   //i didn't find it, may it be left out
   // ohhhhhhhhhhh, i forget the width
-  t2 = 0;
+  t2 = 31;
   switch (id_dest->width) {
       case 1: 
         t2 = 7;
@@ -94,8 +94,6 @@ make_EHelper(rol) {
         t2 = 15;
       case 4:
         t2 = 31;
-      default:
-          assert(0);
   }
   at = 1;
   t0 = id_dest->val;
@@ -116,6 +114,8 @@ make_EHelper(rol) {
     case 2:
       id_dest->val = (t0 & 0xffff) | ((id_dest->val >> 16) << 16);
     case 4:
+      id_dest->val = t0;
+    default:
       id_dest->val = t0;
   }
   operand_write(id_dest, &id_dest->val);
