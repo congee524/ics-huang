@@ -2,9 +2,9 @@
 #define __COMMON_H__
 
 //PA2 report pro.2
-volatile static int dummy;
+volatile static int dummy = 0;
 
-#define DEBUG
+//#define DEBUG
 //#define DIFF_TEST
 
 #if _SHARE
