@@ -85,7 +85,6 @@ make_EHelper(shr) {
 make_EHelper(rol) {
   //TODO();
   //i didn't find it, may it be left out
-  assert(id_src->val);
   at = 1;
   t1 = id_dest->val & 1;
   while (id_src->val--) {
