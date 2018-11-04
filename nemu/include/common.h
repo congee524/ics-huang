@@ -4,7 +4,7 @@
 //PA2 report pro.2
 volatile static int dummy;
 
-//#define DEBUG
+#define DEBUG
 //#define DIFF_TEST
 
 #if _SHARE
