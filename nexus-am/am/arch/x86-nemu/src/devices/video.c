@@ -7,8 +7,8 @@
 #define W 400
 #define H 300
 
-//static uint32_t* const fb __attribute__((used)) = (uint32_t *)0x40000;
-static uint32_t fb[W * H];
+static uint32_t* const fb __attribute__((used)) = (uint32_t *)0x40000;
+//static uint32_t fb[W * H];
 
 size_t video_read(uintptr_t reg, void *buf, size_t size) {
   switch (reg) {
@@ -31,7 +31,7 @@ size_t video_write(uintptr_t reg, void *buf, size_t size) {
       int cp_bytes = sizeof(uint32_t) * min(w, W - x);
       for (int j = 0; j < h && y + j < H; j++) {
           //printf("pixels is 0x%08x\n", *pixels);
-          memcpy(&fb[(y + j) * W + x], pixels, cp_bytes);
+          memcpy(&fb[(y + j) * W + (x + j) * H], pixels, cp_bytes);
           //printf("the position is %d\n", (y + j) * W + x);
           //printf("fb is 0x%08x\n", fb[(y + j) * W + x]);
           pixels += w;
