@@ -1,9 +1,6 @@
 #ifndef __COMMON_H__
 #define __COMMON_H__
 
-//PA2 report pro.2
-volatile static int dummy = 0;
-
 //#define DEBUG
 //#define DIFF_TEST
 
