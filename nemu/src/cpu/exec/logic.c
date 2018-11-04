@@ -85,18 +85,38 @@ make_EHelper(shr) {
 make_EHelper(rol) {
   //TODO();
   //i didn't find it, may it be left out
-  at = 1;
-  t1 = id_dest->val & 1;
-  while (id_src->val--) {
-    t0 = id_dest->val & 1;
-    rtl_shl(&id_dest->val, &id_dest->val, &at);
-    rtl_or(&id_dest->val, &id_dest->val, &t0);
+  // ohhhhhhhhhhh, i forget the width
+  t2 = 0;
+  switch (id_dest->width) {
+      case 1: 
+        t2 = 7;
+      case 2:
+        t2 = 15;
+      case 4:
+        t2 = 31;
+      default:
+          assert(0);
   }
-  cpu.eflags.CF = t0;
-  if((id_dest->val & 1) != t1) {
+  at = 1;
+  t0 = id_dest->val;
+  while (id_src->val--) {
+    t1 = (t0 >> t2) & 1;
+    rtl_shl(&t0, &t0, &at);
+    rtl_or(&t0, &t0, &t1);
+  }
+  cpu.eflags.CF = t1;
+  if((t0 & 1) != t1) {
       cpu.eflags.OF = 1;
   } else {
       cpu.eflags.OF = 0;
+  }
+  switch (id_dest->width) {
+    case 1:
+      id_dest->val = (t0 & 0xff) | ((id_dest->val >> 8) << 8);
+    case 2:
+      id_dest->val = (t0 & 0xffff) | ((id_dest->val >> 16) << 16);
+    case 4:
+      id_dest->val = t0;
   }
   operand_write(id_dest, &id_dest->val);
   
