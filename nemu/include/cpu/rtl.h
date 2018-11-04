@@ -79,7 +79,10 @@ static inline void interpret_rtl_idiv64_r(rtlreg_t* dest,
 }
 
 static inline void interpret_rtl_lm(rtlreg_t *dest, const rtlreg_t* addr, int len) {
-  *dest = vaddr_read(*addr, len);
+//inline void interpret_rtl_lm(rtlreg_t *dest, const rtlreg_t* addr, int len) {
+//static void interpret_rtl_lm(rtlreg_t *dest, const rtlreg_t* addr, int len) {
+//void interpret_rtl_lm(rtlreg_t *dest, const rtlreg_t* addr, int len) {
+*dest = vaddr_read(*addr, len);
 }
 
 static inline void interpret_rtl_sm(const rtlreg_t* addr, const rtlreg_t* src1, int len) {
