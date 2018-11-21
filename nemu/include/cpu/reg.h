@@ -33,15 +33,35 @@ typedef struct {
     };
     vaddr_t eip;
     union {
-        uint32_t _32;
+        uint32_t val;
         struct {
             uint8_t CF : 1;
+            uint8_t E1 : 1; // should be 1
+            uint8_t PF : 1;
+            uint8_t E2 : 1;
+            uint8_t AF : 1;
+            uint8_t E3 : 1;
             uint8_t ZF : 1;
             uint8_t SF : 1;
+            uint8_t TF : 1;
             uint8_t IF : 1;
+            uint8_t DF : 1;
             uint8_t OF : 1;
+            uint8_t IOPL : 2;
+            uint8_t NT : 1;
+            uint8_t E4 : 1;
+            uint8_t RF : 1;
+            uint8_t VM : 1;
+            uint16_t E5 : 14;
         };
     }eflags;
+    
+    struct {
+        uint32_t base;  // the first address of IDT
+        uint16_t limit; // the length of IDT
+    } IDTR;
+
+    uint16_t CS;
 
 } CPU_state;
 
