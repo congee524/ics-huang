@@ -23,7 +23,7 @@ _Context* irq_handle(_Context *tf) {
   return next;
 }
 
-static GateDesc idt[NR_IRQ];
+static GateDesc idt[NR_IRQ]; // NR_IRQ = 256
 
 int _cte_init(_Context*(*handler)(_Event, _Context*)) {
   // initialize IDT
@@ -33,8 +33,9 @@ int _cte_init(_Context*(*handler)(_Event, _Context*)) {
 
   // -------------------- system call --------------------------
   idt[0x81] = GATE(STS_TG32, KSEL(SEG_KCODE), vectrap, DPL_KERN);
+  // 0x81 field function enter
 
-  set_idt(idt, sizeof(idt));
+  set_idt(idt, sizeof(idt)); // set the first address and lenght of idt
 
   // register event handler
   user_handler = handler;

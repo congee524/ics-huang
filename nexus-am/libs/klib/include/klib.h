@@ -30,7 +30,7 @@
 extern "C" {
 #endif
 
-#define TODO() panic("please implement the lib function")
+//#define TODO() panic("please implement the lib function")
 
 // am devices
 
