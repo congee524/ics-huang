@@ -16,6 +16,7 @@ void vga_init();
 void timer_init();
 
 int _ioe_init() {
+    assert(0);
   vga_init();
   timer_init();
   return 0;
