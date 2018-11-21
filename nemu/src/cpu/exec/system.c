@@ -4,6 +4,8 @@
 void difftest_skip_ref();
 void difftest_skip_dut();
 
+void raise_intr();
+
 make_EHelper(lidt) {
   //TODO();
   assert(id_dest->width == 2 || id_dest->width == 4);
@@ -13,7 +15,6 @@ make_EHelper(lidt) {
   } else if (id_dest->width == 4) {
     cpu.IDTR.base = vaddr_read(id_src->val + 1, 4);
   }
-
   print_asm_template1(lidt);
 }
 
@@ -34,8 +35,8 @@ make_EHelper(mov_cr2r) {
 }
 
 make_EHelper(int) {
-  TODO();
-
+  //TODO();
+  raise_intr(id_dest->val, id_dest->addr);
   print_asm("int %s", id_dest->str);
 
 #if defined(DIFF_TEST) && defined(DIFF_TEST_QEMU)
