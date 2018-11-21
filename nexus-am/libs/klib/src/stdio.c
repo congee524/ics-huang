@@ -96,6 +96,26 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
                         *start++ = *ptr++;
                     }
                     break;
+                
+                case 'p':
+                    t = va_arg(ap, unsigned int);
+                    ptr = &buffer[49];
+                    *ptr = '\0';
+                    do {
+                        *--ptr = Representation[t % 16];
+                        t /= 16;
+                    } while (t);
+                    while (&buffer[49] - ptr < lim) {
+                        *--ptr = Representation[0];
+                    }
+
+                    *start++ = '0';
+                    *start++ = 'x';
+                    while (*ptr) {
+                        *start++ = *ptr++;
+                    }
+                    break;
+
                 default:
                     assert(0);
             }
