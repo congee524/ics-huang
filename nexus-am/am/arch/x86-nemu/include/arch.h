@@ -21,11 +21,10 @@ struct _Context {
   uintptr_t eax, ecx, edx, ebx, esp, ebp, esi, edi;
   */
 
-  struct _Protect *prot;
-  uintptr_t edi, esi, ebp, ebx, edx, ecx, eax;
+  uintptr_t esp, edi, esi, ebp, ebx, edx, ecx, eax;
   int irq;
-  uintptr_t esp, eip, cs, eflags;
-  
+  struct _Protect *prot;
+  uintptr_t eip, cs, eflags;
 };
 
 #define GPR1 eax
