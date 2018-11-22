@@ -9,11 +9,11 @@ void raise_intr();
 make_EHelper(lidt) {
   //TODO();
   assert(id_dest->width == 2 || id_dest->width == 4);
-  cpu.IDTR.limit = vaddr_read(id_src->val, 2);
+  cpu.IDTR.limit = vaddr_read(id_dest->val, 2);
   if (id_dest->width == 2) {
-    cpu.IDTR.base = vaddr_read(id_src->val + 1, 2);
+    cpu.IDTR.base = vaddr_read(id_dest->val + 1, 2);
   } else if (id_dest->width == 4) {
-    cpu.IDTR.base = vaddr_read(id_src->val + 1, 4);
+    cpu.IDTR.base = vaddr_read(id_dest->val + 1, 4);
   }
   print_asm_template1(lidt);
 }
