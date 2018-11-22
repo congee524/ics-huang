@@ -14,10 +14,11 @@ _Context* irq_handle(_Context *tf) {
 
   if (user_handler) {
     _Event ev;
+    printf("1");
     switch (tf->irq) {
       default: ev.event = _EVENT_ERROR; break;
     }
-
+    printf("2");
     next = user_handler(ev, tf);
     if (next == NULL) {
       next = tf;
