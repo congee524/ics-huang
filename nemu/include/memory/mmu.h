@@ -77,6 +77,7 @@ typedef union GateDescriptor {
     uint32_t offset_31_16     : 16;
   };
   uint32_t val;
+  uint32_t val2;// !!! val2 is added by me
 } GateDesc;
 
 #endif

@@ -19,8 +19,11 @@ void raise_intr(uint8_t NO, vaddr_t ret_addr) {
 
   cpu.eflags.IF = cpu.eflags.TF = 0;
 
-  
-  assert(0);
+  GateDesc GD;
+  GD.val = vaddr_read(cpu.IDTR.base + NO * 8, 4);
+  GD.val2 = vaddr_read(cpu.IDTR.base + NO * 8 + 4, 4);
+  cpu.eip = GD.offset_15_0 + (GD.offset_31_16 << 16);
+  //assert(0);
 }
 
 void dev_raise_intr() {
