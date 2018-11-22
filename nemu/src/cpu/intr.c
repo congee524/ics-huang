@@ -12,11 +12,10 @@ void raise_intr(uint8_t NO, vaddr_t ret_addr) {
   rtl_push(&cpu.eflags.val);
 
   // push CS
-  cpu.esp -= 2; // because CS is 16 bit, i cannot use rtl_push
-  vaddr_write(cpu.esp, cpu.CS, 2);
+  rtl_push(&cpu.cs);
 
   // push eip
-  rtl_push(&cpu.eip);
+  rtl_push(&ret_addr);
 
   cpu.eflags.IF = cpu.eflags.TF = 0;
 

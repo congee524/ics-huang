@@ -90,7 +90,7 @@ static inline long load_img() {
 static inline void restart() {
   /* Set the initial instruction pointer. */
   cpu.eip = ENTRY_START;
-  cpu.CS = 8;
+  cpu.cs = 8;
   cpu.eflags.val = 0x2;
   // ENTRY_START is the position 0x100000
 }

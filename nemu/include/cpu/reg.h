@@ -61,7 +61,7 @@ typedef struct {
         uint16_t limit; // the length of IDT
     } IDTR;
 
-    uint16_t CS;
+    uint32_t cs, ss, ds, es, fs, gs;
 
 } CPU_state;
 
