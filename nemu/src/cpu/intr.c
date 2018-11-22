@@ -10,7 +10,7 @@ void raise_intr(uint8_t NO, vaddr_t ret_addr) {
   //printf("NO is 0x%x, ret_addr is 0x%x\n", NO, ret_addr);
   // push eflags
   rtl_push(&cpu.eflags.val);
-
+  Log("1");
   // push CS
   rtl_push(&cpu.cs);
 
