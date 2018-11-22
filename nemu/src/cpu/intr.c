@@ -13,10 +13,10 @@ void raise_intr(uint8_t NO, vaddr_t ret_addr) {
   Log("1");
   // push CS
   rtl_push(&cpu.cs);
-
+  Log("2");
   // push eip
   rtl_push(&ret_addr);
-
+  Log("3");
   cpu.eflags.IF = cpu.eflags.TF = 0;
 
   union {
@@ -25,9 +25,9 @@ void raise_intr(uint8_t NO, vaddr_t ret_addr) {
   } GD;
   GD.val[0] = vaddr_read(cpu.IDTR.base + NO * 8, 4);
   GD.val[1] = vaddr_read(cpu.IDTR.base + NO * 8 + 4, 4);
-  Log("15_0 = 0x%x\n31_16 = 0x%x\neip = 0x%x\n", GD.gate.offset_15_0, GD.gate.offset_31_16, cpu.eip);
+  Log("15_0 = 0x%x\n31_16 = 0x%x\neip = 0x%x", GD.gate.offset_15_0, GD.gate.offset_31_16, cpu.eip);
   cpu.eip = GD.gate.offset_15_0 + (GD.gate.offset_31_16 << 16);
-  Log("after eip = 0x%x\n", cpu.eip);
+  Log("after eip = 0x%x", cpu.eip);
   assert(0);
 }
 
