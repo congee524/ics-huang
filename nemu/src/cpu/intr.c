@@ -21,8 +21,8 @@ void raise_intr(uint8_t NO, vaddr_t ret_addr) {
 
   GateDesc GD;
   GD.val = vaddr_read(cpu.IDTR.base + NO * 8, 4);
-  GD.val2 = vaddr_read(cpu.IDTR.base + NO * 8 + 4, 4);
-  cpu.eip = GD.offset_15_0 + (GD.offset_31_16 << 16);
+  //GD.val2 = vaddr_read(cpu.IDTR.base + NO * 8 + 4, 4);
+  decoding.seq_eip = GD.offset_15_0 + (GD.offset_31_16 << 16);
   //assert(0);
 }
 
