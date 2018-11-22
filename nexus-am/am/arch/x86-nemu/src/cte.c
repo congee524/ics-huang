@@ -11,16 +11,17 @@ _Context* irq_handle(_Context *tf) {
   _Context *next = tf;
   
   printf("tf 0x%x\n", tf);
-
+  printf("tf->irq 0x %d", tf->irq);
   if (user_handler) {
     _Event ev;
-    printf("1");
+    //printf("1");
     switch (tf->irq) {
+      case 6: ev.event = _EVENT_SYSCALL;
       default: ev.event = _EVENT_ERROR; break;
     }
-    printf("2");
+    //printf("2");
     next = user_handler(ev, tf);
-    printf("3");
+    //printf("3");
     if (next == NULL) {
       next = tf;
     }
