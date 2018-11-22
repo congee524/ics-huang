@@ -19,11 +19,16 @@ void raise_intr(uint8_t NO, vaddr_t ret_addr) {
 
   cpu.eflags.IF = cpu.eflags.TF = 0;
 
-  GateDesc GD;
-  GD.val = vaddr_read(cpu.IDTR.base + NO * 8, 4);
-  //GD.val2 = vaddr_read(cpu.IDTR.base + NO * 8 + 4, 4);
-  decoding.seq_eip = GD.offset_15_0 + (GD.offset_31_16 << 16);
-  //assert(0);
+  union {
+    GateDesc gate;
+    uint32_t val[2];
+  } GD;
+  GD.val[0] = vaddr_read(cpu.IDTR.base + NO * 8, 4);
+  GD.val[1] = vaddr_read(cpu.IDTR.base + NO * 8 + 4, 4);
+  Log("15_0 = 0x%x\n31_16 = 0x%x\neip = 0x%x\n", GD.gate.offset_15_0, GD.gate.offset_31_16, cpu.eip);
+  cpu.eip = GD.gate.offset_15_0 + (GD.gate.offset_31_16 << 16);
+  Log("after eip = 0x%x\n", cpu.eip);
+  assert(0);
 }
 
 void dev_raise_intr() {
