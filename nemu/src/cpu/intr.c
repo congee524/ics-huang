@@ -14,7 +14,7 @@ void raise_intr(uint8_t NO, vaddr_t ret_addr) {
   rtl_push(&cpu.cs);
   // push eip
   rtl_push(&ret_addr);
-  cpu.eflags.IF = cpu.eflags.TF = 0;
+  //cpu.eflags.IF = cpu.eflags.TF = 0;
 
   union {
     GateDesc gate;
