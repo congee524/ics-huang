@@ -20,6 +20,7 @@ _Context* irq_handle(_Context *tf) {
     }
     printf("2");
     next = user_handler(ev, tf);
+    printf("3");
     if (next == NULL) {
       next = tf;
     }
