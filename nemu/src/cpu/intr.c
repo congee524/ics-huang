@@ -21,19 +21,19 @@ void raise_intr(uint8_t NO, vaddr_t ret_addr) {
     uint32_t val[2];
   } GD;
 
-  Log("0x%x", cpu.IDTR.base);
+  //Log("0x%x", cpu.IDTR.base);
   //Log("%d", NO);
 
   GD.val[0] = vaddr_read(cpu.IDTR.base + NO * 8, 4);
   GD.val[1] = vaddr_read(cpu.IDTR.base + NO * 8 + 4, 4);
   
-  Log("15_0 = 0x%x", GD.gate.offset_15_0);
-  Log("31_16 = 0x%x", GD.gate.offset_31_16);
-  Log("eip = 0x%x", cpu.eip);
+  //Log("15_0 = 0x%x", GD.gate.offset_15_0);
+  //Log("31_16 = 0x%x", GD.gate.offset_31_16);
+  //Log("eip = 0x%x", cpu.eip);
 
   cpu.eip = GD.gate.offset_15_0 + (GD.gate.offset_31_16 << 16);
-  Log("after eip = 0x%x", cpu.eip);
-  assert(0);
+  //Log("after eip = 0x%x", cpu.eip);
+  //assert(0);
 }
 
 void dev_raise_intr() {
