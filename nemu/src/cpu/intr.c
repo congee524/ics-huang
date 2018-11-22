@@ -31,7 +31,9 @@ void raise_intr(uint8_t NO, vaddr_t ret_addr) {
   //Log("31_16 = 0x%x", GD.gate.offset_31_16);
   //Log("eip = 0x%x", cpu.eip);
 
-  cpu.eip = GD.gate.offset_15_0 + (GD.gate.offset_31_16 << 16);
+  //cpu.eip = GD.gate.offset_15_0 + (GD.gate.offset_31_16 << 16);
+  cpu.eip = GD.gate.offset_15_0;
+
   //Log("after eip = 0x%x", cpu.eip);
   //assert(0);
 }
