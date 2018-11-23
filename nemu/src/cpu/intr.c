@@ -16,6 +16,15 @@ void raise_intr(uint8_t NO, vaddr_t ret_addr) {
   rtl_push(&ret_addr);
   //cpu.eflags.IF = cpu.eflags.TF = 0;
   Log("eip = 0x%x", ret_addr);
+  Log("eax = 0x%x", cpu.eax);
+  Log("ebx = 0x%x", cpu.ebx);
+  Log("ecx = 0x%x", cpu.ecx);
+  Log("edx = 0x%x", cpu.edx);
+  Log("esp = 0x%x", cpu.esp);
+  Log("ebp = 0x%x", cpu.ebp);
+  Log("esi = 0x%x", cpu.esi);
+  Log("edi = 0x%x", cpu.edi);
+  Log("eip = 0x%x", cpu.eip);
   union {
     GateDesc gate;
     uint32_t val[2];
