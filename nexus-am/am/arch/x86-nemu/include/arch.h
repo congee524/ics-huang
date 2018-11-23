@@ -14,9 +14,9 @@ struct _Context {
 
    
   uintptr_t eflags, cs, eip;
-  uintptr_t eax, ecx, edx, ebx, esp, ebp, esi, edi;
   struct _Protect *prot;
   int irq;
+  uintptr_t eax, ecx, edx, ebx, esp, ebp, esi, edi;
   
  
   /* 
