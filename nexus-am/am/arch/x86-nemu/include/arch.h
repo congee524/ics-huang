@@ -21,10 +21,10 @@ struct _Context {
   uintptr_t eax, ecx, edx, ebx, esp, ebp, esi, edi;
   */
   
-  uintptr_t edi, esi, ebp, esp, ebx, edx, ecx, eax;
+  uintptr_t edi, esi, ebp, ebx, edx, ecx, eax;
   struct _Protect *prot;
   int irq;
-  uintptr_t eip, cs, eflags;
+  uintptr_t esp, eip, cs, eflags;
   
 };
 
