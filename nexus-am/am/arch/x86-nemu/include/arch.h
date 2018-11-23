@@ -12,19 +12,19 @@ struct _Context {
   // original:
   // uintptr_t esi, ebx, eax, eip, edx, err, eflags, ecx, cs, esp, edi, ebp;
 
-  
+  /*  
   uintptr_t eflags, cs, eip;
   int irq;
   uintptr_t eax, ecx, edx, ebx, esp, ebp, esi, edi;
   struct _Protect *prot;
-  
+  */
 
-  /* 
+   
+  uintptr_t edi, esi, ebp, esp, ebx, edx, ecx, eax;
   struct _Protect *prot;
   int irq;
   uintptr_t eip, cs, eflags;
-  uintptr_t edi, esi, ebp, esp, ebx, edx, ecx, eax;
-  */
+  
 };
 
 #define GPR1 eax
