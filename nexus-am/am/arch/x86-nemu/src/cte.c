@@ -10,8 +10,17 @@ void vecnull();
 _Context* irq_handle(_Context *tf) {
   _Context *next = tf;
   
-  //printf("tf 0x%x\n", tf);
+  printf("tf 0x%x\n", tf);
   printf("tf->irq = %d\n", tf->irq);
+  printf("tf->eax = 0x%x\n", tf->eax);
+  printf("tf->ecx = 0x%x\n", tf->ecx);
+  printf("tf->edx = 0x%x\n", tf->edx);
+  printf("tf->ebx = 0x%x\n", tf->ebx);
+  printf("tf->esp = 0x%x\n", tf->esp);
+  printf("tf->ebp = 0x%x\n", tf->ebp);
+  printf("tf->esi = 0x%x\n", tf->esi);
+  printf("tf->edi = 0x%x\n", tf->edi);
+  printf("tf->eip = 0x%x\n", tf->eip);
   if (user_handler) {
     _Event ev;
     //printf("1");
