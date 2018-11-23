@@ -25,6 +25,8 @@ void raise_intr(uint8_t NO, vaddr_t ret_addr) {
   Log("esi = 0x%x", cpu.esi);
   Log("edi = 0x%x", cpu.edi);
   Log("eip = 0x%x", cpu.eip);
+  Log("cs = 0x%x", cpu.cs);
+  Log("eflags = 0x%x", cpu.eflags.val);
   union {
     GateDesc gate;
     uint32_t val[2];
