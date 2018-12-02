@@ -9,9 +9,9 @@ void raise_intr();
 make_EHelper(lidt) {
   //TODO();
   assert(id_dest->width == 2 || id_dest->width == 4);
-  cpu.IDTR.limit = vaddr_read(id_dest->val, 2);
+  cpu.IDTR.limit = vaddr_read(id_dest->addr, 2);
   if (id_dest->width == 2) {
-    cpu.IDTR.base = vaddr_read(id_dest->addr + 1, 2);
+    cpu.IDTR.base = vaddr_read(id_dest->addr + 2, 4) & 0x00ffffff;
     // about this, i think if we need 16 bit address, then we need data[1];
     assert(0);
   } else if (id_dest->width == 4) {
@@ -47,8 +47,10 @@ make_EHelper(int) {
 }
 
 make_EHelper(iret) {
-  TODO();
-
+  //TODO();
+  rtl_pop(&decoding.seq_eip);
+  rtl_pop(&cpu.cs);
+  rtl_pop(&cpu.eflags.val);
   print_asm("iret");
 }
 
@@ -69,11 +71,11 @@ make_EHelper(in) {
 
 make_EHelper(out) {
   //TODO();
-    switch(id_dest->width) {
-      case 4: pio_write_l(id_dest->val, id_src->val); break;
-      case 2: pio_write_w(id_dest->val, id_src->val); break;
-      case 1: pio_write_b(id_dest->val, id_src->val); break;
-    }
+  switch(id_dest->width) {
+    case 4: pio_write_l(id_dest->val, id_src->val); break;
+    case 2: pio_write_w(id_dest->val, id_src->val); break;
+    case 1: pio_write_b(id_dest->val, id_src->val); break;
+  }
   print_asm_template2(out);
 
 #if defined(DIFF_TEST)
