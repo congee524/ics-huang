@@ -20,7 +20,7 @@ make_EHelper(pop) {
 
 make_EHelper(pusha) {
   //TODO();
-  t2 = vaddr_read(cpu.esp, 4);
+  t2 = cpu.esp;
   rtl_push(&cpu.eax);
   rtl_push(&cpu.ecx);
   rtl_push(&cpu.edx);
@@ -33,7 +33,7 @@ make_EHelper(pusha) {
 }
 
 make_EHelper(popa) {
-  TODO();
+  //TODO();
 
   print_asm("popa");
 }
