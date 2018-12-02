@@ -4,7 +4,7 @@
 
 static uintptr_t loader(PCB *pcb, const char *filename) {
   //TODO();
-  printf("1");
+  printf("1\n\n");
   return DEFAULT_ENTRY;
 }
 
