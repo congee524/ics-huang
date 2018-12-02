@@ -10,6 +10,7 @@ make_EHelper(pusha);
 make_EHelper(cltd);
 make_EHelper(movsx);
 make_EHelper(cwtl);
+make_EHelper(popa);
 
 // control.c
 make_EHelper(call);// maybe exist effect on eflags
@@ -60,3 +61,4 @@ make_EHelper(in);
 make_EHelper(out);
 make_EHelper(lidt);
 make_EHelper(int);
+make_EHelper(iret);
