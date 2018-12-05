@@ -4,138 +4,150 @@
 //#ifndef __ISA_NATIVE__
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
 
-int printf(const char *fmt, ...) {
-  va_list ap;
-  char out[105];
-  va_start(ap, fmt);
-  vsprintf(out, fmt, ap);
-  va_end(ap);
-  char* ptr = out;
-  while (*ptr) {
-    _putc(*ptr);
-    ptr++;
-  }
-  return 0;
+
+void _puts(char* s){
+	for(int i = 0; i < strlen(s); ++i) _putc(s[i]);
 }
 
+char* my_itoa(char* dest, int n){
+	/*transfer int into char[]*/
+	//int outn = n;
+	if(n == 0) {
+		dest[0] = '0';
+		dest[1] = '\0';
+		return dest;
+	}
+	
+	int len = 0;
+	int neg = 0;
+	if(n < 0) {
+		neg = 1;
+		len ++;
+		n = -n;
+	}
+	int temp = n;
+	while(temp > 0){
+		len ++;
+		temp /= 10;
+	}
+	
+	for(int i = 0; i < len; ++i){
+		int x = n % 10;
+		dest[len - i - 1] = x + '0';
+		//printf("dest[%d] = %c\n", len-i-1,dest[len-i-1]);
+		n /= 10;
+	}
+	if(neg) dest[0] = '-';
+	dest[len] = '\0';
+	//printf("%d -> %s\n",outn,dest);
+	return dest;
+}
+
+int printf(const char *format, ...) {
+	int len = strlen(format);
+	int i = 0;
+	int in_size = 0;
+	va_list var_arg;
+	va_start(var_arg, format);
+
+	while(i < len){
+		if(format[i] == '%'){
+			int in_num = 0;
+			char in_char[50] = "";
+			switch(format[i+1]){
+				case 'd'://%d 
+					in_num = va_arg(var_arg,int);
+					my_itoa(in_char,in_num);
+					//strcat(str, in_char);
+					_puts(in_char);
+					in_size += strlen(in_char);
+					i += 2;
+					break;
+				case 's'://%s
+				 	strcpy(in_char,va_arg(var_arg, char*));
+					//strcat(str,in_char);
+					_puts(in_char);
+					in_size += strlen(in_char);
+					i += 2;
+					break;
+				case '0'://%02d
+					in_num = va_arg(var_arg,int);
+					my_itoa(in_char, in_num);
+					int pwidth = format[i+2] - '0';//width of number
+					for(int i = strlen(in_char); i < pwidth; ++i) {
+						in_size ++;
+						_putc('0');
+					}
+					_puts(in_char);
+					in_size += strlen(in_char);
+					i += 4;
+					break;
+
+				default:
+				 	//printf("Not implememted argument type!\n");
+					//i ++;
+					i = len;
+			}
+		}
+		else {
+			//char temp[2];
+			//temp[0] = format[i];
+			//temp[1] = '\0';
+			//strcat(str, temp);
+			_putc(format[i]);
+			in_size ++;
+			i ++;
+		}
+	}
+		va_end(var_arg);
+		return in_size;
+}
 int vsprintf(char *out, const char *fmt, va_list ap) {
-  unsigned int t;
-  unsigned int lim = 0;
-  char *ptr = NULL;
-  char *start = out;
-  char buffer[50];
-  char Representation[] = "0123456789abcdef";
-
-  while (*fmt) {
-    /*
-       if (*fmt == '\') {
-       switch (*++fmt) {
-       case 'n':
-     *start++ = '\n';
-     default:
-     assert(0);
-     }
-     }
-     */
-
-    if (*fmt == '%') {
-      if (*(fmt + 1) == '0') {
-        fmt++;
-        lim = 0;
-        for (int k = 0; k <= 9; k++) {
-          if(*(fmt + 1) == Representation[k]) {
-            lim = k;
-            fmt++;
-            break;
-          }
-        }
-      }
-
-      switch (*++fmt) {
-        case 'd': 
-          t = va_arg(ap, int);
-          ptr = &buffer[49];
-          *ptr = '\0';
-          do {
-            *--ptr = Representation[t % 10];
-            t /= 10;
-          } while (t);
-          while (&buffer[49] - ptr < lim) {
-            *--ptr = Representation[0];
-          }
-          while (*ptr) {
-            *start = *ptr;
-            start++;
-            ptr++;
-          }
-          break;
-
-        case 'x': 
-          t = va_arg(ap, unsigned int);
-          ptr = &buffer[49];
-          *ptr = '\0';
-          do {
-            *--ptr = Representation[t % 16];
-            t /= 16;
-          } while (t);
-          while (&buffer[49] - ptr < lim) {
-            *--ptr = Representation[0];
-          }
-          while (*ptr) {
-            *start++ = *ptr++;
-          }
-          break;
-
-        case 'c':
-          *start++ = (char) va_arg(ap, int);
-          break;
-
-        case 's': 
-          ptr = va_arg(ap, char *);
-          while (*ptr) {
-            *start++ = *ptr++;
-          }
-          break;
-
-        case 'p':
-          t = va_arg(ap, unsigned int);
-          ptr = &buffer[49];
-          *ptr = '\0';
-          do {
-            *--ptr = Representation[t % 16];
-            t /= 16;
-          } while (t);
-          while (&buffer[49] - ptr < lim) {
-            *--ptr = Representation[0];
-          }
-
-          *start++ = '0';
-          *start++ = 'x';
-          while (*ptr) {
-            *start++ = *ptr++;
-          }
-          break;
-
-        default:
-          assert(0);
-      }
-    } else {
-      *start = *fmt;
-      start++;
-    }
-    fmt++;
-  }
-  *start = '\0';
   return 0;
 }
 
-int sprintf(char *out, const char *fmt, ...) {
-  va_list ap;
-  va_start(ap, fmt);
-  vsprintf(out, fmt, ap);
-  va_end(ap);
-  return 0;
+
+int sprintf(char* str, const char* format, ...){
+	int len = strlen(format);
+	int i = 0;
+	int in_size = 0;
+	va_list var_arg;
+	va_start(var_arg, format);
+	str[0] = '\0';
+
+	while(i < len){
+		if(format[i] == '%'){
+			int in_num = 0;
+			char in_char[50] = "";
+			switch(format[i+1]){
+				case 'd'://%d 
+					in_num = va_arg(var_arg,int);
+					my_itoa(in_char,in_num);
+					strcat(str, in_char);
+					in_size += strlen(in_char);
+					break;
+				case 's'://%s
+				 	strcpy(in_char,va_arg(var_arg, char*));
+					strcat(str,in_char);
+					in_size += strlen(in_char);
+					break;
+				default: printf("Not implememted argument type!\n");
+			}
+			i += 2;
+		}
+		else {
+			char temp[2];
+			temp[0] = format[i];
+			temp[1] = '\0';
+			strcat(str, temp);
+			in_size ++;
+			i ++;
+		}
+	}
+		va_end(var_arg);
+		return in_size;
 }
+
 
 int snprintf(char *out, size_t n, const char *fmt, ...) {
   return 0;
