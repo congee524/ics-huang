@@ -15,7 +15,7 @@ _Context* irq_handle(_Context *tf) {
     tf->irq = 0x80;
   } 
   */
-  /*
+  
   printf("tf 0x%x\n", tf);
   printf("tf->eflags = 0x%x\n", tf->eflags);
   printf("ef->cs = 0x%x\n", tf->cs);
@@ -30,7 +30,7 @@ _Context* irq_handle(_Context *tf) {
   printf("tf->esi = 0x%x\n", tf->esi);
   printf("tf->edi = 0x%x\n", tf->edi);
   printf("tf->eip = 0x%x\n", tf->eip);
-  */
+
 
   if (user_handler) {
     _Event ev;
