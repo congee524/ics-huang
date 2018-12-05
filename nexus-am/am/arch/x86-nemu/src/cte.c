@@ -14,7 +14,7 @@ _Context* irq_handle(_Context *tf) {
   printf("tf->eflags = 0x%x\n", tf->eflags);
   printf("ef->cs = 0x%x\n", tf->cs);
   printf("tf->prot = 0x%x\n", *(tf->prot));
-  printf("tf->irq = 0x%x\n", tf->irq);
+  printf("tf->irq = %d\n", tf->irq);
   printf("tf->eax = 0x%x\n", tf->eax);
   printf("tf->ecx = 0x%x\n", tf->ecx);
   printf("tf->edx = 0x%x\n", tf->edx);
