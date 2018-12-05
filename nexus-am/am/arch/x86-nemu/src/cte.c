@@ -9,10 +9,12 @@ void vecnull();
 
 _Context* irq_handle(_Context *tf) {
   _Context *next = tf;
+  /*
   if(tf->irq == -1) {
     printf("irq is -1!!!\n");
     tf->irq = 0x80;
   } 
+  */
   /*
   printf("tf 0x%x\n", tf);
   printf("tf->eflags = 0x%x\n", tf->eflags);
