@@ -57,8 +57,8 @@ typedef struct {
     }eflags;
     
     struct {
-        uint16_t limit; // the length of IDT
         uint32_t base;  // the first address of IDT
+        uint16_t limit; // the length of IDT
     } IDTR;
 
     uint32_t cs, ss, ds, es, fs, gs;
