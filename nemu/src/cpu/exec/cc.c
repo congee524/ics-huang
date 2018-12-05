@@ -3,6 +3,7 @@
 /* Condition Code */
 
 void rtl_setcc(rtlreg_t* dest, uint8_t subcode) {
+  //printf("invert is %u\n", subcode & 0x1);
   bool invert = subcode & 0x1;
   enum {
     CC_O, CC_NO, CC_B,  CC_NB,
@@ -13,27 +14,33 @@ void rtl_setcc(rtlreg_t* dest, uint8_t subcode) {
 
   // TODO: Query EFLAGS to determine whether the condition code is satisfied.
   // dest <- ( cc is satisfied ? 1 : 0)
+  //printf("switch is %u\n", subcode & 0xe);
   switch (subcode & 0xe) {
-    case CC_O://Log("I am cc 0");assert(0);
-			*dest=cpu.eflags.OF;break;
-    case CC_B://Log("I am cc B");assert(0);
-			*dest=cpu.eflags.CF;
-			break;
-	case CC_E://printf("ZF: %d\n",cpu.eflags.ZF);
-			  *dest=cpu.eflags.ZF;break;
-    case CC_BE://Log("I am cc_be");
-			   *dest=((cpu.eflags.CF)||(cpu.eflags.ZF));
-			   break;
-    case CC_S://Log("I am cc s");assert(0);
-			   *dest=cpu.eflags.SF;
-			   break;
-    case CC_L://Log("I am cc l");
-			  *dest=(cpu.eflags.SF!=cpu.eflags.OF);break;
-    case CC_LE://Log("I am cc le");
-			  // Log("ZF: %d SF: %d OF: %d",cpu.eflags.ZF,cpu.eflags.SF,cpu.eflags.OF);
-	*dest=((cpu.eflags.ZF)||(cpu.eflags.SF!=cpu.eflags.OF));break;
-
-    //  TODO();
+    case CC_O:
+        *dest = cpu.eflags.OF;
+        break;
+    case CC_B:
+        *dest = cpu.eflags.CF;
+        break;
+    case CC_E:
+        *dest = cpu.eflags.ZF;
+        break;
+    case CC_NE:
+        *dest = !cpu.eflags.ZF;
+        break;
+    case CC_BE:
+        *dest = cpu.eflags.CF | cpu.eflags.ZF;
+        break;
+    case CC_S:
+        *dest = cpu.eflags.SF;
+        break;
+    case CC_L:
+        *dest = (cpu.eflags.SF != cpu.eflags.OF ? 1 : 0);
+        break;
+    case CC_LE:
+      //TODO();
+        *dest = (cpu.eflags.ZF) || (cpu.eflags.SF != cpu.eflags.OF);
+        break;
     default: panic("should not reach here");
     case CC_P: panic("n86 does not have PF");
   }

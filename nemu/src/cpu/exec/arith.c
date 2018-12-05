@@ -1,60 +1,30 @@
 #include "cpu/exec.h"
 
 make_EHelper(add) {
-//  TODO();
-//Log("I am in add");  
-	rtl_add(&t2,&id_dest->val,&id_src->val);
-	operand_write(id_dest,&t2);
+  //TODO();
+  rtl_add(&t2, &id_dest->val, &id_src->val);
+  //rtl_setrelop(RELOP_LTU, &t3, &t2, &id_dest->val);
+  operand_write(id_dest, &t2);
 
-    rtl_update_ZFSF(&t2,id_dest->width);
+  rtl_update_ZFSF(&t2, id_dest->width);
 
-	rtl_setrelop(RELOP_LTU, &t0, &t2, &id_dest->val);
-	rtl_or(&t0, &t3, &t0);
-	rtl_set_CF(&t0);
-    
-	rtl_xor(&t0, &id_dest->val, &id_src->val);
-	rtl_not(&t0, &t0);
-	rtl_xor(&t1, &id_dest->val, &t2);
-	rtl_and(&t0, &t0, &t1);
-	rtl_msb(&t0, &t0, id_dest->width);
-	rtl_set_OF(&t0);
+  rtl_setrelop(RELOP_LTU, &t0, &t2, &id_dest->val);
+  rtl_or(&t0, &t3, &t0);
+  rtl_set_CF(&t0);
 
-
-
-
-
+  rtl_xor(&t0, &id_dest->val, &id_src->val);
+  rtl_not(&t0, &t0);
+  rtl_xor(&t1, &id_dest->val, &t2);
+  rtl_and(&t0, &t0, &t1);
+  rtl_msb(&t0, &t0, id_dest->width);
+  rtl_set_OF(&t0);
+ 
   print_asm_template2(add);
 }
 
 make_EHelper(sub) {
-//  TODO();
-//printf("here miaomiaomiao\n");
-
-
-	/*
-
-	rtl_sub(&t2,&id_dest->val,&id_src->val);
-	operand_write(id_dest,&t2);
-
-    rtl_update_ZFSF(&t2,id_dest->width);
-
-	rtl_setrelop(RELOP_LTU, &t0, &t2, &id_dest->val);
-//	rtl_or(&t0, &t3, &t0);
-	rtl_set_CF(&t0);
-    
-	rtl_xor(&t0, &id_dest->val, &id_src->val);
-	rtl_not(&t0, &t0);
-	rtl_xor(&t1, &id_dest->val, &t2);
-	rtl_and(&t0, &t0, &t1);
-	rtl_msb(&t0, &t0, id_dest->width);
-	rtl_set_OF(&t0);
-	
-*/
-
   rtl_sub(&t2, &id_dest->val, &id_src->val);
   rtl_setrelop(RELOP_LTU, &t3, &id_dest->val, &t2);
- // rtl_get_CF(&t1);
- // rtl_sub(&t2, &t2, &t1);
   operand_write(id_dest, &t2);
 
   rtl_update_ZFSF(&t2, id_dest->width);
@@ -73,34 +43,10 @@ make_EHelper(sub) {
 }
 
 make_EHelper(cmp) {
-//  TODO();
-//Log("I am in cmp");	
-/*	rtl_sub(&t2,&id_dest->val,&id_src->val);
-
-    rtl_update_ZFSF(&t2,id_dest->width);
-
-	rtl_setrelop(RELOP_LTU, &t0, &t2, &id_dest->val);
-//	rtl_or(&t0, &t3, &t0);
-	rtl_set_CF(&t0);
-
-//	rtl_sltu(&t0,&id->dest->val,&t2);
-//	rtl_set_CF(&t0);
-
-	rtl_xor(&t0, &id_dest->val, &id_src->val);
-	rtl_not(&t0, &t0);
-	rtl_xor(&t1, &id_dest->val, &t2);
-	rtl_and(&t0, &t0, &t1);
-	rtl_msb(&t0, &t0, id_dest->width);
-	rtl_set_OF(&t0);
-//	Log("ZF=%d",cpu.eflags.ZF);
-*/
-
-
+  //TODO();
+  //printf("the dest is %d\n,", id_dest->reg);
   rtl_sub(&t2, &id_dest->val, &id_src->val);
   rtl_setrelop(RELOP_LTU, &t3, &id_dest->val, &t2);
- // rtl_get_CF(&t1);
- // rtl_sub(&t2, &t2, &t1);
-//  operand_write(id_dest, &t2);
 
   rtl_update_ZFSF(&t2, id_dest->width);
 
@@ -114,22 +60,16 @@ make_EHelper(cmp) {
   rtl_msb(&t0, &t0, id_dest->width);
   rtl_set_OF(&t0);
 
-//	Log("In cmp : ZF=%d ,OF=%d",cpu.eflags.ZF,cpu.eflags.OF);
-
-
   print_asm_template2(cmp);
 }
 
 make_EHelper(inc) {
-//  TODO();
-
-  t0=1;
-  rtl_add(&t2, &id_dest->val,&t0 );
+  //TODO();
+  t2 = 1;
+  rtl_add(&t2, &id_dest->val, &t2);
   rtl_setrelop(RELOP_LTU, &t3, &id_dest->val, &t2);
- // rtl_get_CF(&t1);
- // rtl_sub(&t2, &t2, &t1);
   operand_write(id_dest, &t2);
-  t0=0;
+
   rtl_update_ZFSF(&t2, id_dest->width);
 
   rtl_setrelop(RELOP_LTU, &t0, &id_dest->val, &t2);
@@ -146,15 +86,12 @@ make_EHelper(inc) {
 }
 
 make_EHelper(dec) {
-//  TODO();
-
-  t0=1;
-  rtl_sub(&t2, &id_dest->val,&t0 );
+  //TODO();
+  t2 = 1;
+  rtl_sub(&t2, &id_dest->val, &t2);
   rtl_setrelop(RELOP_LTU, &t3, &id_dest->val, &t2);
- // rtl_get_CF(&t1);
- // rtl_sub(&t2, &t2, &t1);
   operand_write(id_dest, &t2);
-  t0=0;
+
   rtl_update_ZFSF(&t2, id_dest->width);
 
   rtl_setrelop(RELOP_LTU, &t0, &id_dest->val, &t2);
@@ -171,52 +108,16 @@ make_EHelper(dec) {
 }
 
 make_EHelper(neg) {
-//  TODO();
-	t0=0;
-	if(!id_dest->val)
-	{
-		rtl_set_CF(&t0);
-	}else
-	{
-		t0=1;
-		rtl_set_CF(&t0);
-	}
-	t0=0;
-	rtl_add(&t2,&t0,&id_dest->val);
-	t2=-t2;
-
-
-	rtl_setrelop(RELOP_LTU, &t3, &id_dest->val, &t2);
-	operand_write(id_dest,&t2);
-	
-	rtl_update_ZFSF(&t2,id_dest->width);
-
-	rtl_setrelop(RELOP_LTU, &t0, &id_dest->val, &t2);
-	rtl_or(&t0, &t3, &t0);
-	rtl_set_CF(&t0);
-  
-	rtl_xor(&t0, &id_dest->val, &id_src->val);
-	rtl_xor(&t1, &id_dest->val, &t2);
-	rtl_and(&t0, &t0, &t1);
-	rtl_msb(&t0, &t0, id_dest->width);
- /* rtl_sub(&t2, &id_dest->val, &id_src->val);
-  rtl_setrelop(RELOP_LTU, &t3, &id_dest->val, &t2);
- // rtl_get_CF(&t1);
- // rtl_sub(&t2, &t2, &t1);
-  operand_write(id_dest, &t2);
-
-  rtl_update_ZFSF(&t2, id_dest->width);
-
-  rtl_setrelop(RELOP_LTU, &t0, &id_dest->val, &t2);
-  rtl_or(&t0, &t3, &t0);
-  rtl_set_CF(&t0);
-
-  rtl_xor(&t0, &id_dest->val, &id_src->val);
-  rtl_xor(&t1, &id_dest->val, &t2);
-  rtl_and(&t0, &t0, &t1);
-  rtl_msb(&t0, &t0, id_dest->width);
-  rtl_set_OF(&t0);
-*/
+  //TODO();
+  if (id_dest->val == 0) {
+    cpu.eflags.CF = 0;
+  } else {
+    cpu.eflags.CF = 1;
+  }
+  at = 0xffffffff;
+  rtl_xor(&id_dest->val, &id_dest->val, &at);
+  id_dest->val++;
+  operand_write(id_dest, &id_dest->val);
   print_asm_template1(neg);
 }
 
@@ -224,6 +125,7 @@ make_EHelper(adc) {
   rtl_add(&t2, &id_dest->val, &id_src->val);
   rtl_setrelop(RELOP_LTU, &t3, &t2, &id_dest->val);
   rtl_get_CF(&t1);
+  //printf("CF is %01u", t1);
   rtl_add(&t2, &t2, &t1);
   operand_write(id_dest, &t2);
 
