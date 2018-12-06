@@ -74,7 +74,7 @@ ssize_t fs_write(int fd, const void *buf, size_t len){
   Log("fd is %d", fd);
   Finfo fo = file_table[fd];
   Log("0x%x 0x%x %d", fo.open_offset, fo.size, len);
-  if (fo.open_offset >= fo.size){
+  if (fo.open_offset > fo.size){
     printf("out of file bound!\n");
     return 0;
   }
