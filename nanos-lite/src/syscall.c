@@ -30,8 +30,11 @@ _Context* do_syscall(_Context *c) {
                             break;
     case SYS_yield:         c->GPRx=sys_yield(); 
                             break;
-    case SYS_write:         //c->GPRx=sys_write((int)a[1],(void *)a[2],(size_t)a[3]);
-                            c->GPRx=fs_write((int)a[1],(void *)a[2],(size_t)a[3]);
+    case SYS_write:         if (a[1] == 1 || a[1] == 2) {
+                              c->GPRx=sys_write((int)a[1],(void *)a[2],(size_t)a[3]);
+                            } else {
+                              c->GPRx=fs_write((int)a[1],(void *)a[2],(size_t)a[3]);
+                            }
                             break;
     case SYS_brk:           c->GPRx=sys_brk((intptr_t)a[1]);
                             printf("newbrk %p\n", a[1]);
