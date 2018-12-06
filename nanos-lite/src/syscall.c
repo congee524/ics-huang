@@ -20,31 +20,31 @@ _Context* do_syscall(_Context *c) {
   switch (a[0]) {
     // SPEC.md say code should be 0, since return value is put in eax, we may use a[1]
     // _yield() return nothing, therefore, complete a funciton sys_yield
-    case SYS_exit:  _halt(a[1]); 
-                    break;
-    case SYS_yield: c->GPRx = sys_yield(); 
-                    break;
-    case SYS_write: c->GPRx = sys_write((int)a[1], (void *)a[2], (size_t)a[3]);
-                    break;
-    case SYS_brk:   c->GPRx = sys_brk((intptr_t)a[1]);
-                    printf("newbrk %p\n", a[1]);
-                    break;
-    case SYS_open: assert(0); break;
-    case SYS_read: assert(0); break;
-    case SYS_kill: assert(0); break;
-    case SYS_getpid: assert(0); break;
-    case SYS_close: assert(0); break;
-    case SYS_lseek: assert(0); break;
-    case SYS_fstat: assert(0); break;
-    case SYS_time: assert(0); break;
-    case SYS_signal: assert(0); break;
-    case SYS_execve: assert(0); break;
-    case SYS_fork: assert(0); break;
-    case SYS_link: assert(0); break;
-    case SYS_unlink: assert(0); break;
-    case SYS_wait: assert(0); break;
-    case SYS_times: assert(0); break;
-    case SYS_gettimeofday: assert(0); break;
+    case SYS_exit:          _halt(a[1]); 
+                            break;
+    case SYS_yield:         c->GPRx = sys_yield(); 
+                            break;
+    case SYS_write:         c->GPRx = sys_write((int)a[1], (void *)a[2], (size_t)a[3]);
+                            break;
+    case SYS_brk:           c->GPRx = sys_brk((intptr_t)a[1]);
+                            printf("newbrk %p\n", a[1]);
+                            break;
+    case SYS_open:          assert(0); break;
+    case SYS_read:          assert(0); break;
+    case SYS_kill:          assert(0); break;
+    case SYS_getpid:        assert(0); break;
+    case SYS_close:         assert(0); break;
+    case SYS_lseek:         assert(0); break;
+    case SYS_fstat:         assert(0); break;
+    case SYS_time:          assert(0); break;
+    case SYS_signal:        assert(0); break;
+    case SYS_execve:        assert(0); break;
+    case SYS_fork:          assert(0); break;
+    case SYS_link:          assert(0); break;
+    case SYS_unlink:        assert(0); break;
+    case SYS_wait:          assert(0); break;
+    case SYS_times:         assert(0); break;
+    case SYS_gettimeofday:  assert(0); break;
     default: panic("Unhandled syscall ID = %d", a[0]);
   }
 
@@ -57,7 +57,7 @@ int sys_yield() {
 }
 
 int sys_write(int fd, void *buf, size_t count){
-  //Log();
+  Log();
   if (fd == 1 || fd == 2) {
     for (int i = 0; i < count; i++) {
       _putc(((char*)buf)[i]);
