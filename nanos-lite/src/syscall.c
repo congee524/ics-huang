@@ -2,6 +2,7 @@
 #include "syscall.h"
 
 int sys_yield();
+int sys_write(int fd, void *buf, size_t count);
 
 _Context* do_syscall(_Context *c) {
   uintptr_t a[4];
@@ -56,4 +57,16 @@ _Context* do_syscall(_Context *c) {
 int sys_yield() {
   _yield();
   return 0;
+}
+
+int sys_write(int fd, void *buf, size_t count){
+  if (fd == 1 || fd == 2) {
+    for (int i = 0; i < count; i++) {
+      _putc(((char*)buf)[i]);
+    }
+  } else {
+    printf("fd: %d\n", fd);
+    assert(0);
+  }
+  return count;
 }
