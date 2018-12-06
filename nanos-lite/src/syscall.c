@@ -10,12 +10,12 @@ _Context* do_syscall(_Context *c) {
   a[1] = c->GPR2;
   a[2] = c->GPR3;
   a[3] = c->GPR4;
-
+  /*
   printf("a[0]: %p\n", a[0]);
   printf("a[1]: %p\n", a[1]);
   printf("a[2]: %p\n", a[2]);
   printf("a[3]: %p\n", a[3]);
-
+  */
   switch (a[0]) {
     // SPEC.md say code should be 0, since return value is put in eax, we may use a[1]
     // _yield() return nothing, therefore, complete a funciton sys_yield
