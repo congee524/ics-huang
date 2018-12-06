@@ -29,8 +29,7 @@ _Context* do_syscall(_Context *c) {
     case SYS_open: assert(0); break;
     case SYS_read: assert(0); break;
     case SYS_write: {
-                      assert(0);
-                      //c->GPRx = sys_write((int)a[1], (void *)a[2], (size_t)a[3]);
+                      c->GPRx = sys_write((int)a[1], (void *)a[2], (size_t)a[3]);
                       break;
                     }
     case SYS_kill: assert(0); break;
