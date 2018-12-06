@@ -7,7 +7,7 @@
 #include "syscall.h"
 
 extern char _etext, _edata, _end;
-
+intptr_t pro_brk = (intptr_t)&_end;
 #if defined(__ISA_X86__)
 intptr_t _syscall_(int type, intptr_t a0, intptr_t a1, intptr_t a2){
   int ret = -1;
@@ -37,13 +37,15 @@ int _open(const char *path, int flags, mode_t mode) {
 
 int _write(int fd, void *buf, size_t count){
   //_exit(SYS_write);
-  _syscall_(SYS_write, (intptr_t) fd, (intptr_t) buf, (intptr_t) count);
+  return _syscall_(SYS_write, (intptr_t) fd, (intptr_t) buf, (intptr_t) count);
 }
 
 void *_sbrk(intptr_t increment){
   intptr_t oldbrk = &_end;
   intptr_t newbrk = oldbrk + increment;
-  _syscall_(SYS_brk, newbrk, 0, 0);
+  if(_syscall_(SYS_brk, newbrk, 0, 0) == 0){
+    pro_brk = newbrk;
+  }
   return (void *)oldbrk;
   //return (void *)-1;
 }
