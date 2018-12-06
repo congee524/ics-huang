@@ -27,6 +27,7 @@ _Context* do_syscall(_Context *c) {
     case SYS_write: c->GPRx = sys_write((int)a[1], (void *)a[2], (size_t)a[3]);
                     break;
     case SYS_brk:   c->GPRx = sys_brk((intptr_t)a[1]);
+                    printf("newbrk %p\n", a[1]);
                     break;
     case SYS_open: assert(0); break;
     case SYS_read: assert(0); break;
@@ -58,7 +59,7 @@ int sys_yield() {
 }
 
 int sys_write(int fd, void *buf, size_t count){
-  Log();
+  //Log();
   if (fd == 1 || fd == 2) {
     for (int i = 0; i < count; i++) {
       _putc(((char*)buf)[i]);
