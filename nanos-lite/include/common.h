@@ -8,6 +8,7 @@
 #include <am.h>
 #include <klib.h>
 #include "debug.h"
+#include <sys/types.h>
 
 typedef char bool;
 #define true 1

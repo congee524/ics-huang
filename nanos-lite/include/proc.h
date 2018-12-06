@@ -6,8 +6,8 @@
 
 #define STACK_SIZE (8 * PGSIZE)
 
-typedef size_t ssize_t;
-typedef size_t off_t;
+//typedef size_t ssize_t;
+//typedef size_t off_t;
 typedef union {
   uint8_t stack[STACK_SIZE] PG_ALIGN;
   struct {
