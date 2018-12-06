@@ -8,6 +8,7 @@
 
 extern char _etext, _edata, _end;
 intptr_t pro_brk = (intptr_t)&_end;
+
 #if defined(__ISA_X86__)
 intptr_t _syscall_(int type, intptr_t a0, intptr_t a1, intptr_t a2){
   int ret = -1;
@@ -46,9 +47,10 @@ void *_sbrk(intptr_t increment){
   if(_syscall_(SYS_brk, newbrk, 0, 0) == 0){
     //assert(0);
     pro_brk = newbrk;
+    return (void *)oldbrk;
+  } else {
+    return (void *)-1;
   }
-  return (void *)oldbrk;
-  //return (void *)-1;
 }
 
 int _read(int fd, void *buf, size_t count) {
