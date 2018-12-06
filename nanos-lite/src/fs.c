@@ -82,4 +82,6 @@ off_t fs_lseek(int fd, off_t offset, int whence) {
 
 // int fs_close(int fd);
 
-//size_t fs_filesz(int fd);
+size_t fs_filesz(int fd){
+  return file_table[fd].size;
+}
