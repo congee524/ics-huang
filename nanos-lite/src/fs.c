@@ -55,21 +55,33 @@ int fs_open(const char *pathname, int flags, int mode){
 }
 
 ssize_t fs_read(int fd, void *buf, size_t len){
+  Log("fd is %d", fd);
   Finfo fo = file_table[fd];
   if(fo.open_offset >= fo.size){
     printf("out of file_size!\n");
     return 0;
   }
   if(fo.open_offset + len >= fo.size){
-    file_table[fd].open_offset = fo.size;
-    return ramdisk_read(buf, fo.disk_offset+fo.open_offset, fo.size-fo.open_offset);
-  } else {
-    file_table[fd].open_offset += len;
-    return ramdisk_read(buf, fo.disk_offset + fo.open_offset, len);
+    len = fo.size - fo.open_offset;
   }
+  file_table[fd].open_offset += len;
+  return ramdisk_read(buf, fo.disk_offset + fo.open_offset, len);
+
 }
 
-// ssize_t fs_write(int fd, const void *buf, size_t len);
+ssize_t fs_write(int fd, const void *buf, size_t len){
+  Log("fd is %d", fd);
+  Finfo fo = file_table[fd];
+  if (fo.open_offset >= fo.size){
+    printf("out of file bound!\n");
+    return 0;
+  }
+  if(fo.open_offset + len >= fo.size){
+    len = fo.size - fo.open_offset;
+  }
+  file_table[fd].open_offset += len;
+  return ramdisk_write(buf, fo.disk_offset + fo.open_offset, len);
+}
 
 off_t fs_lseek(int fd, off_t offset, int whence) {
   off_t tmp;
