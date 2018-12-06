@@ -10,18 +10,12 @@ void vecsys();
 
 _Context* irq_handle(_Context *tf) {
   _Context *next = tf;
-  /*
-  if(tf->irq == -1) {
-    printf("irq is -1!!!\n");
-    tf->irq = 0x80;
-  } 
-  */
-  
+  printf("tf->irq = 0x%x\n", tf->irq);
+  /* 
   printf("tf 0x%x\n", tf);
   printf("tf->eflags = 0x%x\n", tf->eflags);
   printf("ef->cs = 0x%x\n", tf->cs);
   printf("tf->prot = 0x%x\n", *(tf->prot));
-  printf("tf->irq = 0x%x\n", tf->irq);
   printf("tf->eax = 0x%x\n", tf->eax);
   printf("tf->ecx = 0x%x\n", tf->ecx);
   printf("tf->edx = 0x%x\n", tf->edx);
@@ -31,7 +25,7 @@ _Context* irq_handle(_Context *tf) {
   printf("tf->esi = 0x%x\n", tf->esi);
   printf("tf->edi = 0x%x\n", tf->edi);
   printf("tf->eip = 0x%x\n", tf->eip);
-
+  */
 
   if (user_handler) {
     _Event ev;
