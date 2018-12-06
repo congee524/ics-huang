@@ -44,7 +44,7 @@ void *_sbrk(intptr_t increment){
   intptr_t oldbrk = &_end;
   intptr_t newbrk = oldbrk + increment;
   _syscall_(SYS_brk, newbrk, 0, 0);
-  return oldbrk;
+  return (void *)oldbrk;
   //return (void *)-1;
 }
 
