@@ -44,7 +44,7 @@ void *_sbrk(intptr_t increment){
   intptr_t oldbrk = pro_brk;
   intptr_t newbrk = oldbrk + increment;
   if(_syscall_(SYS_brk, newbrk, 0, 0) == 0){
-    assert(0);
+    //assert(0);
     pro_brk = newbrk;
   }
   return (void *)oldbrk;
