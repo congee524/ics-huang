@@ -16,13 +16,13 @@ _Context* do_syscall(_Context *c) {
   printf("a[3]: %p\n", a[3]);
 
   switch (a[0]) {
-    // SPEC.md say code should be 0, since return value is put in eax, we may use a[0]
+    // SPEC.md say code should be 0, since return value is put in eax, we may use a[1]
+    // _yield() return nothing, therefore, complete a funciton sys_yield
     case SYS_exit: 
-      _halt(a[0]); 
+      _halt(a[1]); 
       break;
     case SYS_yield:{ 
-                     sys_yield(); 
-                     c->GPRx = 0;
+                     c->GPRx = sys_yield(); 
                      break;
                    }
     case SYS_open: assert(0); break;
