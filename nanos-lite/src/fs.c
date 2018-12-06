@@ -90,15 +90,19 @@ off_t fs_lseek(int fd, off_t offset, int whence) {
   off_t tmp;
   Finfo fo = file_table[fd];
   switch (whence) {
-    case SEEK_SET: tmp = offset; 
+    case SEEK_SET: Log("SEEK_SET");
+                   tmp = offset; 
                    break;
-    case SEEK_CUR: tmp = fo.open_offset + offset; 
+    case SEEK_CUR: Log("SEEK_CUR");
+                   tmp = fo.open_offset + offset; 
                    break;
-    case SEEK_END: tmp = fo.size + offset;
+    case SEEK_END: Log("SEEK_END");
+                   tmp = fo.size + offset;
                    break;
     default:       printf("wrong whence type!\n");
                    return -1;
   }
+  Log("lseek 0x%x 0x%x 0x%x", tmp, fo.size, offset);
   if(tmp >= 0 && tmp < fo.size){
     file_table[fd].open_offset = tmp;
     return tmp;
