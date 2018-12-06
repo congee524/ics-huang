@@ -103,12 +103,12 @@ off_t fs_lseek(int fd, off_t offset, int whence) {
                    return -1;
   }
   Log("lseek 0x%x 0x%x 0x%x", tmp, fo.size, offset);
-  if(tmp >= 0 && tmp <= fo.size){
+  if(tmp > fo.size){
+    file_table[fd].open_offset = fo.size;
+    return fo.size;
+  } else {
     file_table[fd].open_offset = tmp;
     return tmp;
-  } else {
-    printf("out of file bound!\n");
-    return -1;
   }
 }
 
