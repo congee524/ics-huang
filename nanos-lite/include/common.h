@@ -8,8 +8,10 @@
 #include <am.h>
 #include <klib.h>
 #include "debug.h"
-#include <sys/types.h>
+//#include <sys/types.h>
 
+typedef size_t ssize_t;
+typedef size_t off_t;
 typedef char bool;
 #define true 1
 #define false 0
