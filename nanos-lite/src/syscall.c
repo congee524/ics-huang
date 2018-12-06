@@ -1,6 +1,8 @@
 #include "common.h"
 #include "syscall.h"
 
+int sys_yield();
+
 _Context* do_syscall(_Context *c) {
   uintptr_t a[4];
   a[0] = c->GPR1;
@@ -15,11 +17,21 @@ _Context* do_syscall(_Context *c) {
 
   switch (a[0]) {
     // SPEC.md say code should be 0, since return value is put in eax, we may use a[0]
-    case SYS_exit: _halt(a[0]); break;
-    case SYS_yield: _yield(); break;
+    case SYS_exit: 
+      _halt(a[0]); 
+      break;
+    case SYS_yield:{ 
+                     sys_yield(); 
+                     c->GPRx = 0;
+                     break;
+                   }
     case SYS_open: assert(0); break;
     case SYS_read: assert(0); break;
-    case SYS_write: assert(0); break;
+    case SYS_write: {
+                      assert(0);
+                      //c->GPRx = sys_write((int)a[1], (void *)a[2], (size_t)a[3]);
+                      break;
+                    }
     case SYS_kill: assert(0); break;
     case SYS_getpid: assert(0); break;
     case SYS_close: assert(0); break;
@@ -39,4 +51,9 @@ _Context* do_syscall(_Context *c) {
   }
 
   return c;
+}
+
+int sys_yield() {
+  _yield();
+  return 0;
 }
