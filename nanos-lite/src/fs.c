@@ -57,6 +57,7 @@ int fs_open(const char *pathname, int flags, int mode){
 ssize_t fs_read(int fd, void *buf, size_t len){
   Log("fd is %d", fd);
   Finfo fo = file_table[fd];
+  Log("0x%x 0x%x", fo.open_offset, fo.size);
   if(fo.open_offset >= fo.size){
     printf("out of file_size!\n");
     return 0;
