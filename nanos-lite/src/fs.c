@@ -9,6 +9,7 @@ typedef struct {
   size_t disk_offset;
   ReadFn read;
   WriteFn write;
+  size_t open_offset;
 } Finfo;
 
 enum {FD_STDIN, FD_STDOUT, FD_STDERR, FD_FB};
@@ -37,9 +38,19 @@ void init_fs() {
   // TODO: initialize the size of /dev/fb
 }
 
+// we ignore flags and mode
 int fs_open(const char *pathname, int flags, int mode){
   //return open(pathname, flags, mode);
   Log("fs_open %s", *pathname);
+  for (int i = 0; i < NR_FILES; i++) {
+    Log("pre file name: %s", *file_table[i].name);
+    if (strcmp(pathname, file_table[i].name) == 0) {
+      file_table[i].open_offset = 0;
+      return i;
+    }
+  }
+  Log("file doesn't exist!!!!!!!");
+  assert(0);
   return 0;
 }
 /*
