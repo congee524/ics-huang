@@ -80,7 +80,10 @@ off_t fs_lseek(int fd, off_t offset, int whence) {
   }
 }
 
-// int fs_close(int fd);
+int fs_close(int fd) {
+  printf("%s closed!\n", file_table[fd].name);
+  return 0;
+}
 
 size_t fs_filesz(int fd){
   return file_table[fd].size;
