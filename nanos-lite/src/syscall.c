@@ -61,7 +61,7 @@ int sys_yield() {
 int sys_write(int fd, void *buf, size_t count){
   //Log();
   if (fd == 1 || fd == 2) {
-    assert(fd == 1);
+    assert(fd == 2);
     for (int i = 0; i < count; i++) {
       _putc(((char*)buf)[i]);
     }
