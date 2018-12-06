@@ -107,7 +107,7 @@ off_t fs_lseek(int fd, off_t offset, int whence) {
 }
 
 int fs_close(int fd) {
-  printf("%s closed!\n", file_table[fd].name);
+  Log("%d %s closed!\n", fd, file_table[fd].name);
   return 0;
 }
 
