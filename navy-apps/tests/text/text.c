@@ -26,7 +26,7 @@ int main() {
     fscanf(fp, "%d", &n);
     assert(n == i + 1);
   }
-  
+  // there's something wrong here!!! 
   fseek(fp, 0, SEEK_SET);
   for (i = 0; i < 500; i ++) {
     fscanf(fp, "%d", &n);
