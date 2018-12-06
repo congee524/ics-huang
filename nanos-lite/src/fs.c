@@ -6,10 +6,10 @@ typedef size_t (*WriteFn) (const void *buf, size_t offset, size_t len);
 typedef struct {
   char *name;
   size_t size;
-  size_t disk_offset;
+  off_t disk_offset;
   ReadFn read;
   WriteFn write;
-  size_t open_offset;
+  off_t open_offset;
 } Finfo;
 
 enum {FD_STDIN, FD_STDOUT, FD_STDERR, FD_FB};
@@ -58,9 +58,27 @@ int fs_open(const char *pathname, int flags, int mode){
 
 // ssize_t fs_write(int fd, const void *buf, size_t len);
 
-//off_t fs_lseek(int fd, off_t offset, int whence) {
-//
-//}
+off_t fs_lseek(int fd, off_t offset, int whence) {
+  off_t tmp;
+  Finfo fo = file_table[fd];
+  switch (whence) {
+    case SEEK_SET: tmp = offset; 
+                   break;
+    case SEEK_CUR: tmp = fo.open_offset + offset; 
+                   break;
+    case SEEK_END: tmp = fo.size + offset;
+                   break;
+    default:       printf("wrong whence type!\n");
+                   return -1;
+  }
+  if(tmp >= 0 && tmp < fo.size){
+    file_table[fd].open_offset = tmp;
+    return tmp;
+  } else {
+    printf("out of file bound!\n");
+    return -1;
+  }
+}
 
 // int fs_close(int fd);
 
