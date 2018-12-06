@@ -14,7 +14,7 @@ _Context* do_syscall(_Context *c) {
   printf("a[3]: %p\n", a[3]);
 
   switch (a[0]) {
-    case SYS_exit: _halt(a[0]); break;
+    case SYS_exit: _halt(a[1]); break;
     case SYS_yield: _yield(); break;
     case SYS_open: assert(0); break;
     case SYS_read: assert(0); break;
