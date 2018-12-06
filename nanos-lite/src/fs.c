@@ -2,8 +2,6 @@
 
 typedef size_t (*ReadFn) (void *buf, size_t offset, size_t len);
 typedef size_t (*WriteFn) (const void *buf, size_t offset, size_t len);
-typedef size_t ssize_t;
-typedef size_t off_t;
 
 typedef struct {
   char *name;
@@ -41,7 +39,7 @@ void init_fs() {
 
 int fs_open(const char *pathname, int flags, int mode){
   //return open(pathname, flags, mode);
-  printf("filename: %s\n", *pathname);
+  Log("fs_open %s", *pathname);
   return 0;
 }
 /*
