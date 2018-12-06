@@ -2,6 +2,8 @@
 
 typedef size_t (*ReadFn) (void *buf, size_t offset, size_t len);
 typedef size_t (*WriteFn) (const void *buf, size_t offset, size_t len);
+typedef size_t ssize_t;
+typedef size_t off_t;
 
 typedef struct {
   char *name;
@@ -36,3 +38,30 @@ static Finfo file_table[] __attribute__((used)) = {
 void init_fs() {
   // TODO: initialize the size of /dev/fb
 }
+
+int fs_open(const char *pathname, int flags, int mode){
+  //return open(pathname, flags, mode);
+  printf("filename: %s\n", *pathname);
+  return 0;
+}
+/*
+ssize_t fs_read(int fd, void *buf, size_t len){
+
+}
+
+ssize_t fs_write(int fd, const void *buf, size_t len){
+
+}
+
+off_t fs_lseek(int fd, off_t offset, int whence){
+
+}
+
+int fs_close(int fd){
+
+}
+
+size_t fs_filesz(int fd){
+
+}
+*/
