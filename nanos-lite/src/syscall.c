@@ -4,6 +4,12 @@
 int sys_yield();
 int sys_write(int fd, void *buf, size_t count);
 int sys_brk(intptr_t newbrk);
+int fs_open(const char *pathname, int flags, int mode);
+ssize_t fs_read(int fd, void *buf, size_t len);
+ssize_t fs_write(int fd, const void *buf, size_t len);
+off_t fs_lseek(int fd, off_t offset, int whence);
+int fs_close(int fd);
+size_t fs_filesz(int fd);
 
 _Context* do_syscall(_Context *c) {
   uintptr_t a[4];
@@ -22,19 +28,24 @@ _Context* do_syscall(_Context *c) {
     // _yield() return nothing, therefore, complete a funciton sys_yield
     case SYS_exit:          _halt(a[1]); 
                             break;
-    case SYS_yield:         c->GPRx = sys_yield(); 
+    case SYS_yield:         c->GPRx=sys_yield(); 
                             break;
-    case SYS_write:         c->GPRx = sys_write((int)a[1], (void *)a[2], (size_t)a[3]);
+    case SYS_write:         //c->GPRx=sys_write((int)a[1],(void *)a[2],(size_t)a[3]);
+                            c->GPRx=fs_read((int)a[1],(void *)a[2],(size_t)a[3]);
                             break;
-    case SYS_brk:           c->GPRx = sys_brk((intptr_t)a[1]);
+    case SYS_brk:           c->GPRx=sys_brk((intptr_t)a[1]);
                             printf("newbrk %p\n", a[1]);
                             break;
-    case SYS_open:          assert(0); break;
-    case SYS_read:          assert(0); break;
+    case SYS_open:          c->GPRx=fs_open((const char *)a[1],(int)a[2],(int)a[3]);
+                            break;
+    case SYS_read:          c->GPRx=fs_read((int)a[1],(void *)a[2],(size_t)a[3]);
+                            break;
+    case SYS_close:         c->GPRx=fs_close((int)a[1]);
+                            break;
+    case SYS_lseek:         c->GPRx=fs_lseek((int)a[1],(off_t)a[2],(int)a[3]);
+                            break;
     case SYS_kill:          assert(0); break;
     case SYS_getpid:        assert(0); break;
-    case SYS_close:         assert(0); break;
-    case SYS_lseek:         assert(0); break;
     case SYS_fstat:         assert(0); break;
     case SYS_time:          assert(0); break;
     case SYS_signal:        assert(0); break;
