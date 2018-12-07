@@ -16,6 +16,8 @@ enum {FD_STDIN, FD_STDOUT, FD_STDERR, FD_FB};
 
 size_t serial_write(const void *buf, size_t offset, size_t len);
 
+size_t dispinfo_read(void *buf, size_t offset, size_t len);
+
 size_t invalid_read(void *buf, size_t offset, size_t len) {
   panic("should not reach here");
   return 0;
@@ -31,6 +33,8 @@ static Finfo file_table[] __attribute__((used)) = {
   {"stdin", 0, 0, invalid_read, invalid_write},
   {"stdout", 0, 0, invalid_read, serial_write},
   {"stderr", 0, 0, invalid_read, serial_write},
+  {"/deb/fb", 0, 0, invalid_read, serial_write},
+  {"/proc/disinfo", 0, 0, dispinfo_read, invalid_write},
 #include "files.h"
 };
 
