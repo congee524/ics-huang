@@ -43,9 +43,9 @@ void init_fs() {
 // we ignore flags and mode
 int fs_open(const char *pathname, int flags, int mode){
   //return open(pathname, flags, mode);
-  Log("fs_open %s", pathname);
+  // Log("fs_open %s", pathname);
   for (int i = 0; i < NR_FILES; i++) {
-    Log("pre file name: %s", file_table[i].name);
+    // Log("pre file name: %s", file_table[i].name);
     if (strcmp(pathname, file_table[i].name) == 0) {
       file_table[i].open_offset = 0;
       return i;
@@ -57,9 +57,9 @@ int fs_open(const char *pathname, int flags, int mode){
 }
 
 ssize_t fs_read(int fd, void *buf, size_t len){
-  Log("fd is %d", fd);
+  // Log("fd is %d", fd);
   Finfo fo = file_table[fd];
-  Log("0x%x 0x%x %d", fo.open_offset, fo.size, len);
+  // Log("0x%x 0x%x %d", fo.open_offset, fo.size, len);
   //if(fo.open_offset >= fo.size){
   //  printf("out of file_size!\n");
   //  return 0;
@@ -73,7 +73,7 @@ ssize_t fs_read(int fd, void *buf, size_t len){
 }
 
 ssize_t fs_write(int fd, const void *buf, size_t len){
-  Log("fd is %d", fd);
+  // Log("fd is %d", fd);
   if(file_table[fd].write == NULL) {
     // Log("0x%x 0x%x %d", fo.open_offset, fo.size, len);
     Finfo fo = file_table[fd];
@@ -92,23 +92,23 @@ ssize_t fs_write(int fd, const void *buf, size_t len){
 }
 
 off_t fs_lseek(int fd, off_t offset, int whence) {
-  Log("fd is %d", fd);
+  // Log("fd is %d", fd);
   off_t tmp;
   Finfo fo = file_table[fd];
   switch (whence) {
-    case SEEK_SET: Log("SEEK_SET");
+    case SEEK_SET: // Log("SEEK_SET");
                    tmp = offset; 
                    break;
-    case SEEK_CUR: Log("SEEK_CUR");
+    case SEEK_CUR: // Log("SEEK_CUR");
                    tmp = fo.open_offset + offset; 
                    break;
-    case SEEK_END: Log("SEEK_END");
+    case SEEK_END: // Log("SEEK_END");
                    tmp = fo.size + offset;
                    break;
     default:       printf("wrong whence type!\n");
                    return -1;
   }
-  Log("lseek 0x%x 0x%x 0x%x", tmp, fo.size, offset);
+  // Log("lseek 0x%x 0x%x 0x%x", tmp, fo.size, offset);
   if(tmp > fo.size){
     file_table[fd].open_offset = fo.size;
     return fo.size;
@@ -119,7 +119,7 @@ off_t fs_lseek(int fd, off_t offset, int whence) {
 }
 
 int fs_close(int fd) {
-  //Log("%d %s closed!\n", fd, file_table[fd].name);
+  // Log("%d %s closed!\n", fd, file_table[fd].name);
   return 0;
 }
 
