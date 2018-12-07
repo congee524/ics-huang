@@ -10,6 +10,7 @@ ssize_t fs_write(int fd, const void *buf, size_t len);
 off_t fs_lseek(int fd, off_t offset, int whence);
 int fs_close(int fd);
 size_t fs_filesz(int fd);
+// size_t serial_write(const void *buf, size_t offset, size_t len);
 
 _Context* do_syscall(_Context *c) {
   uintptr_t a[4];
@@ -30,14 +31,17 @@ _Context* do_syscall(_Context *c) {
                             break;
     case SYS_yield:         c->GPRx=sys_yield(); 
                             break;
-    case SYS_write:         if (a[1] == 1 || a[1] == 2) {
-                              c->GPRx=sys_write((int)a[1],(void *)a[2],(size_t)a[3]);
-                            } else {
-                              c->GPRx=fs_write((int)a[1],(void *)a[2],(size_t)a[3]);
-                            }
-                            break;
     case SYS_brk:           c->GPRx=sys_brk((intptr_t)a[1]);
-                            printf("newbrk %p\n", a[1]);
+                            // printf("newbrk %p\n", a[1]);
+                            break;
+    case SYS_write:         /*
+                               if (a[1] == 1 || a[1] == 2) {
+                               c->GPRx=sys_write((int)a[1],(void *)a[2],(size_t)a[3]);
+                               } else {
+                               c->GPRx=fs_write((int)a[1],(void *)a[2],(size_t)a[3]);
+                               }
+                               */
+                            c->GPRx=fs_write((int)a[1],(void *)a[2],(size_t)a[3]);
                             break;
     case SYS_open:          c->GPRx=fs_open((const char *)a[1],(int)a[2],(int)a[3]);
                             break;
@@ -69,18 +73,29 @@ int sys_yield() {
   return 0;
 }
 
-int sys_write(int fd, void *buf, size_t count){
-  //Log();
-  if (fd == 1 || fd == 2) {
-    for (int i = 0; i < count; i++) {
-      _putc(((char*)buf)[i]);
-    }
-  } else {
-    printf("fd: %d\n", fd);
-    assert(0);
-  }
-  return count;
-}
+/*
+   size_t sys_write(int fd, void *buf, size_t len) {
+   if(file_table[fd].write == NULL){
+   return fs_write(fd, buf, len);
+   } else {
+   Finfo fo = file_table[fd];
+   return serial_write(fd, , len);
+   }
+   }
+   */
+/*
+   int sys_write(int fd, void *buf, size_t count){
+   if (fd == 1 || fd == 2) {
+   for (int i = 0; i < count; i++) {
+   _putc(((char*)buf)[i]);
+   }
+   } else {
+   printf("fd: %d\n", fd);
+   assert(0);
+   }
+   return count;
+   }
+   */
 
 int sys_brk(intptr_t newbrk){
   // i should judge the range of newbrk, but    return dirctly;

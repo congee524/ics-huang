@@ -14,6 +14,8 @@ typedef struct {
 
 enum {FD_STDIN, FD_STDOUT, FD_STDERR, FD_FB};
 
+size_t serial_write(const void *buf, size_t offset, size_t len);
+
 size_t invalid_read(void *buf, size_t offset, size_t len) {
   panic("should not reach here");
   return 0;
@@ -27,8 +29,8 @@ size_t invalid_write(const void *buf, size_t offset, size_t len) {
 /* This is the information about all files in disk. */
 static Finfo file_table[] __attribute__((used)) = {
   {"stdin", 0, 0, invalid_read, invalid_write},
-  {"stdout", 0, 0, invalid_read, invalid_write},
-  {"stderr", 0, 0, invalid_read, invalid_write},
+  {"stdout", 0, 0, invalid_read, serial_write},
+  {"stderr", 0, 0, invalid_read, serial_write},
 #include "files.h"
 };
 
@@ -72,17 +74,21 @@ ssize_t fs_read(int fd, void *buf, size_t len){
 
 ssize_t fs_write(int fd, const void *buf, size_t len){
   Log("fd is %d", fd);
-  Finfo fo = file_table[fd];
-  Log("0x%x 0x%x %d", fo.open_offset, fo.size, len);
-  if (fo.open_offset > fo.size){
-    printf("out of file bound!\n");
-    return 0;
+  if(file_table[fd].write == NULL) {
+    // Log("0x%x 0x%x %d", fo.open_offset, fo.size, len);
+    Finfo fo = file_table[fd];
+    if (fo.open_offset > fo.size){
+      printf("out of file bound!\n");
+      return 0;
+    }
+    if(fo.open_offset + len >= fo.size){
+      len = fo.size - fo.open_offset;
+    }
+    file_table[fd].open_offset += len;
+    return ramdisk_write(buf, fo.disk_offset + fo.open_offset, len);
+  } else {
+    return file_table[fd].write(buf, 0, len);
   }
-  if(fo.open_offset + len >= fo.size){
-    len = fo.size - fo.open_offset;
-  }
-  file_table[fd].open_offset += len;
-  return ramdisk_write(buf, fo.disk_offset + fo.open_offset, len);
 }
 
 off_t fs_lseek(int fd, off_t offset, int whence) {
