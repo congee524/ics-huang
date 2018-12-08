@@ -86,7 +86,6 @@ ssize_t fs_read(int fd, void *buf, size_t len){
 
 ssize_t fs_write(int fd, const void *buf, size_t len){
   Finfo fo = file_table[fd];
-  Log();  
   if(file_table[fd].write == NULL) {
     if(fo.open_offset + len >= fo.size){
       len = fo.size - fo.open_offset;
@@ -96,8 +95,7 @@ ssize_t fs_write(int fd, const void *buf, size_t len){
   } else {
     // serial_write | fb_write
     // fb_write update open_offset
-    Log();
-      file_table[fd].open_offset += len;
+    //  file_table[fd].open_offset += len;
     return file_table[fd].write(buf, fo.disk_offset + fo.open_offset, len);
   }
 }
