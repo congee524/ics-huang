@@ -22,7 +22,7 @@ void hello_fun(void *arg) {
 }
 
 void init_proc(const char* filename /* FINISHED PA3.3 */) {
-  naive_uload(NULL,filename);
+  naive_uload(NULL, "/bin/pal");
 }
 
 _Context* schedule(_Context *prev) {
