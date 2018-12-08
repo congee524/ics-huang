@@ -18,7 +18,17 @@ static const char *keyname[256] __attribute__((used)) = {
 };
 
 size_t events_read(void *buf, size_t offset, size_t len) {
-  return 0;
+  int scan_code = read_key() & 0xffff;
+  if (scan_code) {
+    if (scan_code & 0x8000) {
+      sprintf(buf, "kd %s\n", keyname[scan_code & 0xfff]);
+    } else {
+      sprintf(buf, "ku %s\n", keyname[scan_code]);
+    }
+  } else {
+    sprintf(buf, "t %d\n", uptime());
+  }
+  return strlen(buf);
 }
 
 static char dispinfo[128] __attribute__((used));
