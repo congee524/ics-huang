@@ -36,7 +36,7 @@ static Finfo file_table[] __attribute__((used)) = {
   {"stdout", 0, 0, invalid_read, serial_write},
   {"stderr", 0, 0, invalid_read, serial_write},
   {"/deb/fb", 0, 0, invalid_read, fb_write},
-  {"/proc/disinfo", 0, 0, dispinfo_read, invalid_write},
+  {"/proc/dispinfo", 0, 0, dispinfo_read, invalid_write},
 #include "files.h"
 };
 
@@ -62,7 +62,7 @@ int fs_open(const char *pathname, int flags, int mode){
     }
   }
   Log("file doesn't exist!!!!!!!");
-  //assert(0);
+  assert(0);
   return 0;
 }
 
