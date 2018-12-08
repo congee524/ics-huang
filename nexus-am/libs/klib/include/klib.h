@@ -11,6 +11,7 @@
 #define __NATIVE_USE_KLIB__
 
 #ifdef __NATIVE_USE_KLIB__
+
 #define strlen my_strlen
 #define strcpy my_strcpy
 #define strncpy my_strncpy
@@ -24,6 +25,7 @@
 #define vsprintf my_vsprintf
 #define sprintf my_sprintf
 #define snprintf my_snprintf
+
 #endif
 
 #ifdef __cplusplus

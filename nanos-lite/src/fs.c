@@ -72,6 +72,9 @@ int fs_open(const char *pathname, int flags, int mode){
 ssize_t fs_read(int fd, void *buf, size_t len){
   // Log("fd is %d", fd);
   Finfo fo = file_table[fd];
+  if(fo.open_offset + len > fo.size){
+      len = fo.size - fo.open_offset;
+  }
   if(file_table[fd].read == NULL){
     // Log("0x%x 0x%x %d", fo.open_offset, fo.size, len);
     //if(fo.open_offset >= fo.size){
@@ -79,9 +82,7 @@ ssize_t fs_read(int fd, void *buf, size_t len){
     //  return 0;
     //}
     Log("%d", fd);
-    if(fo.open_offset + len > fo.size){
-      len = fo.size - fo.open_offset;
-    }
+    
     file_table[fd].open_offset += len;
     return ramdisk_read(buf, fo.disk_offset + fo.open_offset, len);
   } else {
