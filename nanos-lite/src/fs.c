@@ -86,7 +86,7 @@ ssize_t fs_read(int fd, void *buf, size_t len){
 
 ssize_t fs_write(int fd, const void *buf, size_t len){
   Finfo fo = file_table[fd];
-  if(fo.open_offset + len >= fo.size){
+  if(fo.open_offset + len > fo.size){
       len = fo.size - fo.open_offset;
   }
   if (fd != FD_STDIN && fd != FD_STDOUT)
