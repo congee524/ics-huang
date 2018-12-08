@@ -35,14 +35,15 @@ size_t fb_write(const void *buf, size_t offset, size_t len) {
   int x = (offset / 4) % w;
   int y = (offset / 4) / w;
   Log("w %d h % d coordinate %d %d", w, h, x, y);
-  draw_rect((uint32_t *)buf, x, y, len / 4, 1); 
+  draw_rect((uint32_t *)buf, x, y, w, h); 
   return len;
 }
 
 void init_device() {
   Log("Initializing devices...");
   _ioe_init();
-  sprintf(dispinfo, "WIDTH:%d\nHEIGHT:%d", screen_width(), screen_height);
+  int tmp_off = sprintf(dispinfo, "WIDTH:%d\n", screen_width());
+  sprintf(dispinfo + tmp_off, "HEIGHT:%d\n", screen_height());
   Log("the content of dispinfo: %s", dispinfo);
   // TODO: print the string to array `dispinfo` with the format
   // described in the Navy-apps convention
