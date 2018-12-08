@@ -36,7 +36,7 @@ size_t fb_write(const void *buf, size_t offset, size_t len) {
   int y = (offset / 4) / w;
   Log("w %d h % d coordinate %d %d", w, h, x, y);
   draw_rect((uint32_t *)buf, x, y, w, h); 
-  return 0;
+  return len;
 }
 
 void init_device() {
