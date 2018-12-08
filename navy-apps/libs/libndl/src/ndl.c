@@ -130,7 +130,7 @@ static void get_display_info() {
   assert(dispinfo);
   screen_w = screen_h = 0;
   char buf[128], key[128], value[128], *delim;
-  Log("the size of dispinfo: %d", sizeof(dispinfo));
+  printf("the size of dispinfo: %d\n", sizeof(dispinfo));
   while (fgets(buf, 128, dispinfo)) {
     *(delim = strchr(buf, ':')) = '\0';
     sscanf(buf, "%s", key);
