@@ -57,7 +57,7 @@ int fs_open(const char *pathname, int flags, int mode){
   Log("fs_open %s", pathname);
   Log("nr_files %d", NR_FILES);
   for (int i = 0; i < NR_FILES; i++) {
-     Log("pre file name: %s", file_table[i].name);
+    Log("pre file name: %s", file_table[i].name);
     if (strcmp(pathname, file_table[i].name) == 0) {
       file_table[i].open_offset = 0;
       return i;
@@ -71,24 +71,28 @@ int fs_open(const char *pathname, int flags, int mode){
 ssize_t fs_read(int fd, void *buf, size_t len){
   // Log("fd is %d", fd);
   Finfo fo = file_table[fd];
-  // Log("0x%x 0x%x %d", fo.open_offset, fo.size, len);
-  //if(fo.open_offset >= fo.size){
-  //  printf("out of file_size!\n");
-  //  return 0;
-  //}
-  if(fo.open_offset + len > fo.size){
-    len = fo.size - fo.open_offset;
+  if(file_table[fd].read == NULL){
+    // Log("0x%x 0x%x %d", fo.open_offset, fo.size, len);
+    //if(fo.open_offset >= fo.size){
+    //  printf("out of file_size!\n");
+    //  return 0;
+    //}
+    if(fo.open_offset + len > fo.size){
+      len = fo.size - fo.open_offset;
+    }
+    file_table[fd].open_offset += len;
+    return ramdisk_read(buf, fo.disk_offset + fo.open_offset, len);
+  } else {
+    return file_table[fd].read(buf, fo.disk_offset + fo.open_offset, len);
   }
-  file_table[fd].open_offset += len;
-  return ramdisk_read(buf, fo.disk_offset + fo.open_offset, len);
 
 }
 
 ssize_t fs_write(int fd, const void *buf, size_t len){
   // Log("fd is %d", fd);
+  Finfo fo = file_table[fd];
   if(file_table[fd].write == NULL) {
     // Log("0x%x 0x%x %d", fo.open_offset, fo.size, len);
-    Finfo fo = file_table[fd];
     if (fo.open_offset > fo.size){
       printf("out of file bound!\n");
       return 0;
@@ -99,7 +103,7 @@ ssize_t fs_write(int fd, const void *buf, size_t len){
     file_table[fd].open_offset += len;
     return ramdisk_write(buf, fo.disk_offset + fo.open_offset, len);
   } else {
-    return file_table[fd].write(buf, 0, len);
+    return file_table[fd].write(buf, fo.disk_offset + fo.open_offset, len);
   }
 }
 
@@ -109,14 +113,14 @@ off_t fs_lseek(int fd, off_t offset, int whence) {
   Finfo fo = file_table[fd];
   switch (whence) {
     case SEEK_SET: // Log("SEEK_SET");
-                   tmp = offset; 
-                   break;
+      tmp = offset; 
+      break;
     case SEEK_CUR: // Log("SEEK_CUR");
-                   tmp = fo.open_offset + offset; 
-                   break;
+      tmp = fo.open_offset + offset; 
+      break;
     case SEEK_END: // Log("SEEK_END");
-                   tmp = fo.size + offset;
-                   break;
+      tmp = fo.size + offset;
+      break;
     default:       printf("wrong whence type!\n");
                    return -1;
   }
