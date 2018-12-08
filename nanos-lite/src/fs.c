@@ -89,14 +89,12 @@ ssize_t fs_write(int fd, const void *buf, size_t len){
   if(fo.open_offset + len >= fo.size){
       len = fo.size - fo.open_offset;
   }
-
+  file_table[fd].open_offset += len;
   if(file_table[fd].write == NULL) {  
-    file_table[fd].open_offset += len;
     return ramdisk_write(buf, fo.disk_offset + fo.open_offset, len);
   } else {
     // serial_write | fb_write
     // both of them don't update open_offset
-    file_table[fd].open_offset += len;
     return file_table[fd].write(buf, fo.disk_offset + fo.open_offset, len);
   }
 }
