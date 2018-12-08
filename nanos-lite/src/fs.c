@@ -51,24 +51,23 @@ void init_fs() {
   //assert(0);
   //Log("w %d h %d", screen_width(), screen_height());
   file_table[FD_FB].size = screen_width() * screen_height() * 4;
-  Log("size 0x%x", file_table[FD_FB].size);
+  //Log("size 0x%x", file_table[FD_FB].size);
 }
 
 // we ignore flags and mode
 int fs_open(const char *pathname, int flags, int mode){
   //return open(pathname, flags, mode);
   Log("fs_open %s", pathname);
-  Log("nr_files %d", NR_FILES);
+  //Log("nr_files %d", NR_FILES);
   for (int i = 0; i < NR_FILES; i++) {
-    Log("pre file name: %s", file_table[i].name);
+    //Log("pre file name: %s", file_table[i].name);
     if (strcmp(pathname, file_table[i].name) == 0) {
-      Log("%d", i);
+      //Log("%d", i);
       file_table[i].open_offset = 0;
       return i;
     }
   }
-  Log("file doesn't exist!!!!!!!");
-  assert(0);
+  panic("file doesn't exist!!!!!!!");
   return 0;
 }
 
