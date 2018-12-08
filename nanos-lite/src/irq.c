@@ -1,14 +1,12 @@
 #include "common.h"
 
-extern _Context* do_syscall(_Context *c);
+void do_syscall();
 
 static _Context* do_event(_Event e, _Context* c) {
   switch (e.event) {
-    case _EVENT_YIELD:    Log("into EVENT_YIELD"); 
-                          break;
-    case _EVENT_SYSCALL:  do_syscall(c); 
-                          break;
-    default:              panic("Unhandled event ID = %d", e.event);
+    case _EVENT_SYSCALL: do_syscall(c); break;
+    case _EVENT_YIELD:  printf("System Yield.\n"); break;
+    default: panic("Unhandled event ID = %d", e.event);
   }
 
   return NULL;

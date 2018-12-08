@@ -2,22 +2,11 @@
 
 #define DEFAULT_ENTRY 0x4000000
 
-extern int fs_open(const char*,int,int);
-extern size_t fs_read(int,void*,size_t);
-extern size_t fs_filesz(int);
-
-size_t ramdisk_read(void*,size_t,size_t);
-//size_t ramdisk_write(const void*,size_t,size_t);
-size_t get_ramdisk_size();
-
 static uintptr_t loader(PCB *pcb, const char *filename) {
-  //ramdisk_read((void*)DEFAULT_ENTRY,0,get_ramdisk_size());
-  //FINISHED();
-  
-  int fd = fs_open(filename,0,0); //flag and mode not important, using 0
-  fs_read(fd,(void*)DEFAULT_ENTRY,fs_filesz(fd));
-  //FINISHED(); PA3.3
-  
+  //TODO(); PA3.2: ramdisk_read((void*)DEFAULT_ENTRY, 0, get_ramdisk_size());
+  int fd = fs_open(filename, 0, 0);
+  fs_read(fd, (void*)DEFAULT_ENTRY, fs_filesz(fd));
+  fs_close(fd);
   return DEFAULT_ENTRY;
 }
 

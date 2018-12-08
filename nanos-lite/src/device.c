@@ -1,12 +1,15 @@
 #include "common.h"
 #include <amdev.h>
-#include "klib.h"
+
+int screen_width();
+int screen_height();
+void draw_rect(uint32_t*,int,int,int,int);
+
+static int width;
+static int height;
 
 size_t serial_write(const void *buf, size_t offset, size_t len) {
-  for(int i = 0; i < len; i++){
-    _putc(((char*)buf)[i]);
-  }
-  return len;
+  return 0;
 }
 
 #define NAME(key) \
@@ -17,55 +20,71 @@ static const char *keyname[256] __attribute__((used)) = {
   _KEYS(NAME)
 };
 
+extern int read_key();
+extern uint32_t uptime();
+
 size_t events_read(void *buf, size_t offset, size_t len) {
-  int scan_code = read_key() & 0xffff;
-  if (scan_code) {
-    if (scan_code & 0x8000) {
-      sprintf(buf, "kd %s\n", keyname[scan_code & 0xfff]);
-    } else {
-      sprintf(buf, "ku %s\n", keyname[scan_code]);
+    char mybuf[128];
+    int key = read_key();
+    size_t ret = 0;
+    
+    if (key){
+        if (key & 0x8000) ret = sprintf(mybuf,"kd %s\n",keyname[key^0x8000]);
+        else ret = sprintf(mybuf,"ku %s\n",keyname[key]);
+    }else{
+        ret = sprintf(mybuf,"t %d\n",uptime());
     }
-  } else {
-    sprintf(buf, "t %d\n", uptime());
-  }
-  return strlen(buf);
+    
+    if (ret>len)
+      ret = len;
+    
+    char* ch = (char*) buf;
+    for (int i=0;i<ret;i++)
+	ch[i] = mybuf[i];
+    return ret;
 }
 
-static char dispinfo[128] __attribute__((used));
+#define DISPINFO_SIZE 128
+static char dispinfo[DISPINFO_SIZE] __attribute__((used));
 
 size_t dispinfo_read(void *buf, size_t offset, size_t len) {
-  //assert(0);
-  memcpy(buf, (void *)dispinfo + offset, len);
-  return len;
+  size_t real_len = DISPINFO_SIZE-offset;
+  if (real_len>len)
+	  real_len = len;
+  char* ch = (char*)buf;
+  for (int i=0;i<real_len;i++) ch[i] = dispinfo[i];
+
+  return real_len;
 }
 
 size_t fb_write(const void *buf, size_t offset, size_t len) {
-  int w = screen_width();
-  int bt = len / 4;
-  int x = (offset / 4) % w;
-  int y = (offset / 4) / w;
+    int nowy = (offset/4)/width;
+    int nowx = (offset/4)%width;
+    int num = 0;
+    
+    int flag = 1;
 
-  // maybe input multi lines
-  int flag = 1, have_in = 0, to_in = 0;
-  while(flag){
-    to_in = w - x;
-    if (to_in > bt - have_in) {
-      to_in = bt - have_in;
-      flag = 0;
+    while (flag){
+        int rem = width-nowx;
+        if (rem > len/4-num){
+            rem = len/4-num;
+            flag = 0;
+        }
+        draw_rect((uint32_t*)buf,nowx,nowy,rem,1);
+        nowx = 0;  nowy++;
+        num += rem;
+        offset += 4*rem;
     }
-    draw_rect((uint32_t *)buf, x, y, to_in, 1);
-    x = 0;
-    y++;
-    have_in += to_in;
-  }
-  return len;
+    return len;
 }
 
 void init_device() {
   Log("Initializing devices...");
   _ioe_init();
-  sprintf(dispinfo, "WIDTH:%d\nHEIGHT:%d\n", screen_width(), screen_height());
-  // Log("the content of dispinfo: %s", dispinfo);
+
   // TODO: print the string to array `dispinfo` with the format
   // described in the Navy-apps convention
+  
+  sprintf(dispinfo,"WIDTH:%d\nHEIGHT:%d",width=screen_width(),height=screen_height());
+  //FINISHED();
 }
