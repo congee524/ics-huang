@@ -5,7 +5,7 @@
 
 int printf(const char *fmt, ...) {
   va_list ap;
-  char out[105];
+  char out[128];
   va_start(ap, fmt);
   vsprintf(out, fmt, ap);
   va_end(ap);
