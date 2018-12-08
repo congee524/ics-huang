@@ -1,15 +1,14 @@
 #include "common.h"
 #include <amdev.h>
-
-int screen_width();
-int screen_height();
-void draw_rect(uint32_t*,int,int,int,int);
-
-static int width;
-static int height;
+#include "klib.h"
 
 size_t serial_write(const void *buf, size_t offset, size_t len) {
-  return 0;
+	//Log("call serial write!");
+	char* buff = (char*) buf;
+	for(int i = 0; i < len; ++i){
+		_putc(buff[i]);
+	}
+  return len;
 }
 
 #define NAME(key) \
@@ -20,71 +19,65 @@ static const char *keyname[256] __attribute__((used)) = {
   _KEYS(NAME)
 };
 
-extern int read_key();
-extern uint32_t uptime();
-
 size_t events_read(void *buf, size_t offset, size_t len) {
-    char mybuf[128];
-    int key = read_key();
-    size_t ret = 0;
-    
-    if (key){
-        if (key & 0x8000) ret = sprintf(mybuf,"kd %s\n",keyname[key^0x8000]);
-        else ret = sprintf(mybuf,"ku %s\n",keyname[key]);
-    }else{
-        ret = sprintf(mybuf,"t %d\n",uptime());
-    }
-    
-    if (ret>len)
-      ret = len;
-    
-    char* ch = (char*) buf;
-    for (int i=0;i<ret;i++)
-	ch[i] = mybuf[i];
-    return ret;
+	//Log("events_read! len = %d", len);
+	int keytemp = read_key() & 0xffff;
+	char temp[128]; 
+	if(keytemp != 0) {
+		//Log("get key: %d", keytemp ^ 0x8000);
+		if((keytemp & 0x8000) != 0){
+			sprintf(temp, "kd %s\n", keyname[keytemp ^ 0x8000]);
+			strncpy(buf, temp, len);
+		}
+		else {
+			sprintf(temp, "ku %s\n", keyname[keytemp]);
+			strncpy(buf, temp, len);
+		}
+	}
+	else{
+		uint32_t time_now = uptime();
+		sprintf(temp, "t %d\n", time_now);
+		strncpy(buf, temp, len);
+	}
+
+	//Log("get events: %s", temp);
+	if(strlen(temp) < len) len = strlen(temp);
+  return len;
 }
 
-#define DISPINFO_SIZE 128
-static char dispinfo[DISPINFO_SIZE] __attribute__((used));
+
+static char dispinfo[128] __attribute__((used));
+
 
 size_t dispinfo_read(void *buf, size_t offset, size_t len) {
-  size_t real_len = DISPINFO_SIZE-offset;
-  if (real_len>len)
-	  real_len = len;
-  char* ch = (char*)buf;
-  for (int i=0;i<real_len;i++) ch[i] = dispinfo[i];
-
-  return real_len;
+	//Log("dipinfo_read: offset = %d, len = %d", offset, len);
+	memcpy(buf, (void*)dispinfo + offset, len);
+  return len;
 }
 
 size_t fb_write(const void *buf, size_t offset, size_t len) {
-    int nowy = (offset/4)/width;
-    int nowx = (offset/4)%width;
-    int num = 0;
-    
-    int flag = 1;
-
-    while (flag){
-        int rem = width-nowx;
-        if (rem > len/4-num){
-            rem = len/4-num;
-            flag = 0;
-        }
-        draw_rect((uint32_t*)buf,nowx,nowy,rem,1);
-        nowx = 0;  nowy++;
-        num += rem;
-        offset += 4*rem;
-    }
-    return len;
+	//Log("fb_write: offset = %d, len = %d",offset, len);
+	//assert(0);
+	int W = screen_width();
+	/*for(int i = 0; i < len; i += 4){
+		int x = (offset + i) % W;
+		int y = (offset + i) / W;
+		draw_rect((uint32_t*)(buf + i), x, y, 1, 1);
+	}*/
+	int x = (offset / 4) % W;
+	int y = (offset / 4) / W;
+	draw_rect((uint32_t*)buf, x, y, len/4, 1);
+  return len;
 }
 
 void init_device() {
   Log("Initializing devices...");
   _ioe_init();
-
+	int W = screen_width();
+	int H = screen_height();
+	int j = sprintf(dispinfo, "WIDTH:%d\n", W);
+	sprintf(dispinfo + j, "HEIGHT:%d\n", H);
+	//Log("dispinfo = %s", dispinfo);
   // TODO: print the string to array `dispinfo` with the format
   // described in the Navy-apps convention
-  
-  sprintf(dispinfo,"WIDTH:%d\nHEIGHT:%d",width=screen_width(),height=screen_height());
-  //FINISHED();
 }

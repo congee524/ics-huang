@@ -2,11 +2,11 @@
 
 #define MAX_NR_PROC 4
 
-void naive_uload(PCB*,const char*);
-
 static PCB pcb[MAX_NR_PROC] __attribute__((used));
 static PCB pcb_boot;
 PCB *current;
+
+void naive_uload(PCB *pcb, const char *filename);
 
 void switch_boot_pcb() {
   current = &pcb_boot;
@@ -21,8 +21,8 @@ void hello_fun(void *arg) {
   }
 }
 
-void init_proc(const char* filename /* FINISHED PA3.3 */) {
-  naive_uload(NULL, "/bin/pal");
+void init_proc() {
+	naive_uload(NULL, "/bin/pal");
 }
 
 _Context* schedule(_Context *prev) {
