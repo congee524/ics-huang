@@ -117,6 +117,7 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
           break;
 
         default:
+          printf("unknow case %c", *(fmt - 1));
           assert(0);
       }
     } else {
