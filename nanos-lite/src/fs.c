@@ -46,6 +46,7 @@ void init_fs() {
   // TODO: initialize the size of /dev/fb
   //Log("tmp: %d", screen_width());
   //assert(0);
+  Log("w %d h %d", screen_width(), screen_height);
   file_table[FD_FB].size = screen_width() * screen_height() * 4;
 }
 
