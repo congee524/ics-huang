@@ -3,7 +3,7 @@
 make_EHelper(add) {
   //TODO();
   rtl_add(&t2, &id_dest->val, &id_src->val);
-  //rtl_setrelop(RELOP_LTU, &t3, &t2, &id_dest->val);
+  rtl_setrelop(RELOP_LTU, &t3, &t2, &id_dest->val);
   operand_write(id_dest, &t2);
 
   rtl_update_ZFSF(&t2, id_dest->width);
