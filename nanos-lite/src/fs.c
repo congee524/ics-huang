@@ -87,7 +87,8 @@ ssize_t fs_read(int fd, void *buf, size_t len){
   } else {
     //return file_table[fd].read(buf, fo.disk_offset + fo.open_offset, len);
     Log("read: %d", fd);
-    return file_table[fd].read(buf, 0, len);
+    file_table[fd].open_offset += len;
+    return file_table[fd].read(buf, fo.open_offset, len);
   }
 
 }
