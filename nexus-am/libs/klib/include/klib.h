@@ -32,8 +32,6 @@
 extern "C" {
 #endif
 
-//#define TODO() panic("please implement the lib function")
-
 // am devices
 
 uint32_t uptime();

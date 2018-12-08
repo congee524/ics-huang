@@ -11,39 +11,19 @@ void vecsys();
 _Context* irq_handle(_Context *tf) {
   _Context *next = tf;
   //printf("tf->irq = 0x%x\n", tf->irq);
-  /* 
-  printf("tf 0x%x\n", tf);
-  printf("tf->eflags = 0x%x\n", tf->eflags);
-  printf("ef->cs = 0x%x\n", tf->cs);
-  printf("tf->prot = 0x%x\n", *(tf->prot));
-  printf("tf->eax = 0x%x\n", tf->eax);
-  printf("tf->ecx = 0x%x\n", tf->ecx);
-  printf("tf->edx = 0x%x\n", tf->edx);
-  printf("tf->ebx = 0x%x\n", tf->ebx);
-  printf("tf->esp = 0x%x\n", tf->esp);
-  printf("tf->ebp = 0x%x\n", tf->ebp);
-  printf("tf->esi = 0x%x\n", tf->esi);
-  printf("tf->edi = 0x%x\n", tf->edi);
-  printf("tf->eip = 0x%x\n", tf->eip);
-  */
-
+  
   if (user_handler) {
     _Event ev = {0};
-    //printf("1");
     switch (tf->irq) {
-      case 0x80: ev.event = _EVENT_SYSCALL; break;
-      case 0x81: ev.event = _EVENT_YIELD; break;
-      default: ev.event = _EVENT_ERROR; break;
+      case 0x80:  ev.event = _EVENT_SYSCALL;  break;
+      case 0x81:  ev.event = _EVENT_YIELD;    break;
+      default:    ev.event = _EVENT_ERROR;    break;
     }
-    //printf("2");
     next = user_handler(ev, tf);
-    //printf("3");
     if (next == NULL) {
       next = tf;
     }
   }
-
-  //printf("tf 0x%x\n", tf);
 
   return next;
 }
