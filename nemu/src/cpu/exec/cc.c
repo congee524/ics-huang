@@ -3,7 +3,6 @@
 /* Condition Code */
 
 void rtl_setcc(rtlreg_t* dest, uint8_t subcode) {
-  //printf("invert is %u\n", subcode & 0x1);
   bool invert = subcode & 0x1;
   enum {
     CC_O, CC_NO, CC_B,  CC_NB,
@@ -14,33 +13,46 @@ void rtl_setcc(rtlreg_t* dest, uint8_t subcode) {
 
   // TODO: Query EFLAGS to determine whether the condition code is satisfied.
   // dest <- ( cc is satisfied ? 1 : 0)
-  //printf("switch is %u\n", subcode & 0xe);
   switch (subcode & 0xe) {
     case CC_O:
-        *dest = cpu.eflags.OF;
-        break;
+			rtl_get_OF(&t0);
+			*dest = t0 ? 1 : 0;
+			break;
+			//set byte if overflow (OF = 1)
     case CC_B:
-        *dest = cpu.eflags.CF;
-        break;
+			rtl_get_CF(&t0);
+			*dest = t0 ? 1 : 0;
+			break;		
+			//set byte if below (CF = 1)
     case CC_E:
-        *dest = cpu.eflags.ZF;
-        break;
-    case CC_NE:
-        *dest = !cpu.eflags.ZF;
-        break;
+			rtl_get_ZF(&t0);
+			*dest = t0 ? 1 : 0;
+			break;
+			//set byte if equal (ZF = 1)
     case CC_BE:
-        *dest = cpu.eflags.CF | cpu.eflags.ZF;
-        break;
+			rtl_get_ZF(&t0);
+			rtl_get_CF(&t1);
+			*dest = (t0 || t1) ? 1 : 0;
+			break;
+			//set byte if below or equal (CF = 1 or ZF = 1)
     case CC_S:
-        *dest = cpu.eflags.SF;
-        break;
+			rtl_get_SF(&t0);
+			*dest = t0 ? 1 : 0;
+		  break;
+			//set byte if sign (SF = 1) 	
     case CC_L:
-        *dest = (cpu.eflags.SF != cpu.eflags.OF ? 1 : 0);
-        break;
+			rtl_get_SF(&t0);
+			rtl_get_OF(&t1);
+			*dest = (t0 != t1) ? 1 : 0;
+			break;
+			//set byte if less (SF != OF)
     case CC_LE:
-      //TODO();
-        *dest = (cpu.eflags.ZF) || (cpu.eflags.SF != cpu.eflags.OF);
-        break;
+			rtl_get_SF(&t0);
+			rtl_get_OF(&t1);
+			rtl_get_ZF(&t2);
+			*dest = ((t0 != t1) || t2) ? 1 : 0;
+			break;
+			//set byte if less or equal (ZF = 1 or SF != OF)
     default: panic("should not reach here");
     case CC_P: panic("n86 does not have PF");
   }

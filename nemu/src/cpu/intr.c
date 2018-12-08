@@ -5,34 +5,26 @@ void raise_intr(uint8_t NO, vaddr_t ret_addr) {
   /* TODO: Trigger an interrupt/exception with ``NO''.
    * That is, use ``NO'' to index the IDT.
    */
+
   //TODO();
-
-  //printf("NO is 0x%x, ret_addr is 0x%x\n", NO, ret_addr);
-  // push eflags
-  rtl_push(&cpu.eflags.val);
-  // push CS
-  rtl_push(&cpu.cs);
-  // push eip
-  rtl_push(&ret_addr);
-  //cpu.eflags.IF = cpu.eflags.TF = 0;
-    
-  union {
-    GateDesc gate;
-    uint32_t val[2];
-  } GD;
-
-  //Log("0x%x", cpu.IDTR.base);
-  //Log("%d", NO);
-
-  GD.val[0] = vaddr_read(cpu.IDTR.base + NO * 8, 4);
-  GD.val[1] = vaddr_read(cpu.IDTR.base + NO * 8 + 4, 4);
-  
-  //Log("15_0 = 0x%x", GD.gate.offset_15_0);
-  //Log("31_16 = 0x%x", GD.gate.offset_31_16);
-  //Log("eip = 0x%x", cpu.eip);
-
-  decoding.jmp_eip = GD.gate.offset_15_0 + (GD.gate.offset_31_16 << 16);
-  rtl_j(decoding.jmp_eip);
+	rtl_push(&cpu.eflag);
+	rtl_push(&cpu.cs);
+	rtl_push(&ret_addr);
+	//push eflags,cs,next eip
+	//assert(NO <= cpu.idtr.limit);
+	//GateDesc = (GateDescriptor) vaddr_read(ret_addr + NO * 8 , 8);
+	//memcpy(&GateDesc, cpu.idtr.base + NO * 8, 8);
+	GateDesc gate_desc;
+	gate_desc.val1 = vaddr_read(cpu.idtr.base + NO * 8, 4);
+	gate_desc.val2 = vaddr_read(cpu.idtr.base + NO * 8 + 4, 4);
+	if(gate_desc.present == 0){
+		panic("Invalid gate descriptor!");
+		assert(0);
+	}
+	//vaddr_t target = (gate_desc.offset_31_16 << 16) + (gate_desc.offset_15_0);
+	vaddr_t target = (gate_desc.val1 & 0x0000ffff) + (gate_desc.val2 & 0xffff0000);
+	//Log("The jump target is 0x%08x", target);
+	rtl_j(target);
 }
 
 void dev_raise_intr() {

@@ -4,25 +4,25 @@
 #include "common.h"
 
 typedef struct watchpoint {
-    int NO;
-    struct watchpoint *next;
-    uint32_t nv;        // new value
-    uint32_t ov;        // old value
-    bool open;          // to judge whether the watchpoint is open
-    char expr[65536];         // put the expression
-    /* TODO: Add more members if necessary */
+  int NO;
+	char expr[200];
+	long long old_value;
+	long long new_value;
+	bool change_flag;
+  struct watchpoint *next;
+
+  /* TODO: Add more members if necessary */
 
 
 } WP;
 
-void init_wp_pool();
-
-WP* new_wp(char *, uint32_t);
-
-void free_wp(char *);
-
-WP* check_watchpoint(WP *);
-
-void print_watchpoint(void);
+WP* new_wp();
+void add_wp(WP* target_wp, char *exp);
+WP* search_wp(int wp_NO);
+void free_wp(int wp_NO);
+void info_wp();
+bool check_wp();
+void print_wp();
+void update_wp();
 
 #endif
