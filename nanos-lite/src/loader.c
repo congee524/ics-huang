@@ -3,9 +3,7 @@
 #define DEFAULT_ENTRY 0x4000000
 
 static uintptr_t loader(PCB *pcb, const char *filename) {
-  //TODO();
-  //printf("1\n\n");
-  //ramdisk_read((void*)DEFAULT_ENTRY, 0, get_ramdisk_size());
+  //TODO(); PA3.2: ramdisk_read((void*)DEFAULT_ENTRY, 0, get_ramdisk_size());
   int fd = fs_open(filename, 0, 0);
   fs_read(fd, (void*)DEFAULT_ENTRY, fs_filesz(fd));
   fs_close(fd);

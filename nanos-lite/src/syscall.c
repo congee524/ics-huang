@@ -4,13 +4,6 @@
 int sys_yield();
 int sys_write(int fd, void *buf, size_t count);
 int sys_brk(intptr_t newbrk);
-int fs_open(const char *pathname, int flags, int mode);
-ssize_t fs_read(int fd, void *buf, size_t len);
-ssize_t fs_write(int fd, const void *buf, size_t len);
-off_t fs_lseek(int fd, off_t offset, int whence);
-int fs_close(int fd);
-size_t fs_filesz(int fd);
-// size_t serial_write(const void *buf, size_t offset, size_t len);
 
 _Context* do_syscall(_Context *c) {
   uintptr_t a[4];
@@ -18,12 +11,7 @@ _Context* do_syscall(_Context *c) {
   a[1] = c->GPR2;
   a[2] = c->GPR3;
   a[3] = c->GPR4;
-  /*
-     printf("a[0]: %p\n", a[0]);
-     printf("a[1]: %p\n", a[1]);
-     printf("a[2]: %p\n", a[2]);
-     printf("a[3]: %p\n", a[3]);
-     */
+
   switch (a[0]) {
     // SPEC.md say code should be 0, since return value is put in eax, we may use a[1]
     // _yield() return nothing, therefore, complete a funciton sys_yield
@@ -32,16 +20,8 @@ _Context* do_syscall(_Context *c) {
     case SYS_yield:         c->GPRx=sys_yield(); 
                             break;
     case SYS_brk:           c->GPRx=sys_brk((intptr_t)a[1]);
-                            // printf("newbrk %p\n", a[1]);
                             break;
-    case SYS_write:         /*
-                               if (a[1] == 1 || a[1] == 2) {
-                               c->GPRx=sys_write((int)a[1],(void *)a[2],(size_t)a[3]);
-                               } else {
-                               c->GPRx=fs_write((int)a[1],(void *)a[2],(size_t)a[3]);
-                               }
-                               */
-                            c->GPRx=fs_write((int)a[1],(void *)a[2],(size_t)a[3]);
+    case SYS_write:         c->GPRx=fs_write((int)a[1],(const void *)a[2],(size_t)a[3]);
                             break;
     case SYS_open:          c->GPRx=fs_open((const char *)a[1],(int)a[2],(int)a[3]);
                             break;
@@ -51,18 +31,6 @@ _Context* do_syscall(_Context *c) {
                             break;
     case SYS_lseek:         c->GPRx=fs_lseek((int)a[1],(off_t)a[2],(int)a[3]);
                             break;
-    case SYS_kill:          assert(0); break;
-    case SYS_getpid:        assert(0); break;
-    case SYS_fstat:         assert(0); break;
-    case SYS_time:          assert(0); break;
-    case SYS_signal:        assert(0); break;
-    case SYS_execve:        assert(0); break;
-    case SYS_fork:          assert(0); break;
-    case SYS_link:          assert(0); break;
-    case SYS_unlink:        assert(0); break;
-    case SYS_wait:          assert(0); break;
-    case SYS_times:         assert(0); break;
-    case SYS_gettimeofday:  assert(0); break;
     default: panic("Unhandled syscall ID = %d", a[0]);
   }
   return c;
@@ -73,16 +41,10 @@ int sys_yield() {
   return 0;
 }
 
-/*
-   size_t sys_write(int fd, void *buf, size_t len) {
-   if(file_table[fd].write == NULL){
-   return fs_write(fd, buf, len);
-   } else {
-   Finfo fo = file_table[fd];
-   return serial_write(fd, , len);
-   }
-   }
-   */
+int sys_brk(intptr_t newbrk){
+  return 0;
+}
+
 /*
    int sys_write(int fd, void *buf, size_t count){
    if (fd == 1 || fd == 2) {
@@ -97,7 +59,4 @@ int sys_yield() {
    }
    */
 
-int sys_brk(intptr_t newbrk){
-  // i should judge the range of newbrk, but    return dirctly;
-  return 0;
-}
+
