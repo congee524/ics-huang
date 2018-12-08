@@ -15,19 +15,7 @@ void raise_intr(uint8_t NO, vaddr_t ret_addr) {
   // push eip
   rtl_push(&ret_addr);
   //cpu.eflags.IF = cpu.eflags.TF = 0;
-  /*
-  Log("eip = 0x%x", ret_addr);
-  Log("eax = 0x%x", cpu.eax);
-  Log("ebx = 0x%x", cpu.ebx);
-  Log("ecx = 0x%x", cpu.ecx);
-  Log("edx = 0x%x", cpu.edx);
-  Log("esp = 0x%x", cpu.esp);
-  Log("ebp = 0x%x", cpu.ebp);
-  Log("esi = 0x%x", cpu.esi);
-  Log("edi = 0x%x", cpu.edi);
-  Log("cs = 0x%x", cpu.cs);
-  Log("eflags = 0x%x", cpu.eflags.val);
-  */  
+    
   union {
     GateDesc gate;
     uint32_t val[2];
@@ -43,11 +31,8 @@ void raise_intr(uint8_t NO, vaddr_t ret_addr) {
   //Log("31_16 = 0x%x", GD.gate.offset_31_16);
   //Log("eip = 0x%x", cpu.eip);
 
-  decoding.seq_eip = GD.gate.offset_15_0 + (GD.gate.offset_31_16 << 16);
-  //cpu.eip = GD.gate.offset_15_0;
-
-  //Log("after eip = 0x%x", cpu.eip);
-  //assert(0);
+  decoding.jmp_eip = GD.gate.offset_15_0 + (GD.gate.offset_31_16 << 16);
+  rtl_j(decoding.jmp_eip);
 }
 
 void dev_raise_intr() {
