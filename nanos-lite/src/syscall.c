@@ -1,9 +1,11 @@
 #include "common.h"
 #include "syscall.h"
+#include "proc.h"
 
 int sys_yield();
 int sys_write(int fd, void *buf, size_t count);
 int sys_brk(intptr_t newbrk);
+void naive_uload(PCB *pcb, const char *filename);
 
 _Context* do_syscall(_Context *c) {
   uintptr_t a[4];
@@ -15,7 +17,7 @@ _Context* do_syscall(_Context *c) {
   switch (a[0]) {
     // SPEC.md say code should be 0, since return value is put in eax, we may use a[1]
     // _yield() return nothing, therefore, complete a funciton sys_yield
-    case SYS_exit:          _halt(a[1]); 
+    case SYS_exit:          naive_uload(NULL, "/bin/init");// _halt(a[1]); 
                             break;
     case SYS_yield:         c->GPRx=sys_yield(); 
                             break;
@@ -30,6 +32,9 @@ _Context* do_syscall(_Context *c) {
     case SYS_close:         c->GPRx=fs_close((int)a[1]);
                             break;
     case SYS_lseek:         c->GPRx=fs_lseek((int)a[1],(off_t)a[2],(int)a[3]);
+                            break;
+    case SYS_execve:        naive_uload(NULL, (char *)a[1]);
+                            c->GPRx=0;
                             break;
     default: panic("Unhandled syscall ID = %d", a[0]);
   }
