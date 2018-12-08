@@ -44,7 +44,7 @@ size_t fb_write(const void *buf, size_t offset, size_t len) {
   //int h = screen_height();
   int x = (offset / 4) % w;
   int y = (offset / 4) / w;
-  Log("w %d coordinate %d %d", w, x, y);
+  // Log("w %d coordinate %d %d", w, x, y);
   // it should be the actual height and width to write in
   draw_rect((uint32_t *)buf, x, y, len / 4, 1); 
   return len;
