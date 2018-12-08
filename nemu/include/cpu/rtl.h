@@ -79,9 +79,6 @@ static inline void interpret_rtl_idiv64_r(rtlreg_t* dest,
 }
 
 static inline void interpret_rtl_lm(rtlreg_t *dest, const rtlreg_t* addr, int len) {
-//inline void interpret_rtl_lm(rtlreg_t *dest, const rtlreg_t* addr, int len) {
-//static void interpret_rtl_lm(rtlreg_t *dest, const rtlreg_t* addr, int len) {
-//void interpret_rtl_lm(rtlreg_t *dest, const rtlreg_t* addr, int len) {
 *dest = vaddr_read(*addr, len);
 }
 
@@ -169,18 +166,18 @@ static inline void rtl_sext(rtlreg_t* dest, const rtlreg_t* src1, int width) {
 static inline void rtl_push(const rtlreg_t* src1) {
   // esp <- esp - 4
   // M[esp] <- src1
-  cpu.esp -= 4;
+  rtl_subi(&cpu.esp, &cpu.esp, 4);
   //paddr_write(reg_l(4), src1, 4);
-  rtl_sm(&reg_l(4), src1, 4);
+  rtl_sm(&cpu.esp, src1, 4);
 }
 
   
 static inline void rtl_pop(rtlreg_t* dest) {
   // dest <- M[esp]
   // esp <- esp + 4
-  *dest = vaddr_read(cpu.esp, 4);
+  rtl_lm(dest, &cpu.esp, 4);
   // rtl_lm(dest, cpu.esp, 4);
-  cpu.esp += 4;
+  rtl_addi(&cpu.esp, &cpu.esp, 4);
 }
 
 static inline void rtl_setrelopi(uint32_t relop, rtlreg_t *dest,
