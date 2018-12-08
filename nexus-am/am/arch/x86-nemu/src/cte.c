@@ -1,6 +1,9 @@
 #include <am.h>
 #include <x86.h>
-#include <klib.h>
+#include "klib.h"
+
+#define YIELD 0x81
+#define SYSCALL 0x80
 
 static _Context* (*user_handler)(_Event, _Context*) = NULL;
 
@@ -10,15 +13,24 @@ void vecsys();
 
 _Context* irq_handle(_Context *tf) {
   _Context *next = tf;
-  //printf("tf->irq = 0x%x\n", tf->irq);
-  
+	/*printf("$eax = %d\n", tf->eax);
+	printf("$ecx = %d\n", tf->ecx);
+	printf("$edx = %d\n", tf->edx);
+	printf("$ebx = %d\n", tf->ebx);
+	printf("$esp = %d\n", tf->esp);
+	printf("$ebp = %d\n", tf->ebp);
+	printf("$esi = %d\n", tf->esi);
+	printf("$edi = %d\n", tf->edi);
+	*/
+	//printf("#irq = %d\n", tf-> irq);
   if (user_handler) {
-    _Event ev = {0};
+    _Event ev;
     switch (tf->irq) {
-      case 0x80:  ev.event = _EVENT_SYSCALL;  break;
-      case 0x81:  ev.event = _EVENT_YIELD;    break;
-      default:    ev.event = _EVENT_ERROR;    break;
+			case YIELD: ev.event = _EVENT_YIELD; break; 
+			case SYSCALL: ev.event = _EVENT_SYSCALL; break;
+      default: ev.event = _EVENT_ERROR; break;
     }
+
     next = user_handler(ev, tf);
     if (next == NULL) {
       next = tf;
@@ -28,7 +40,9 @@ _Context* irq_handle(_Context *tf) {
   return next;
 }
 
-static GateDesc idt[NR_IRQ]; // NR_IRQ = 256
+static GateDesc idt[NR_IRQ];	//NR_IRQ:IDT size
+
+
 
 int _cte_init(_Context*(*handler)(_Event, _Context*)) {
   // initialize IDT
@@ -38,10 +52,9 @@ int _cte_init(_Context*(*handler)(_Event, _Context*)) {
 
   // -------------------- system call --------------------------
   idt[0x81] = GATE(STS_TG32, KSEL(SEG_KCODE), vectrap, DPL_KERN);
-  idt[0x80] = GATE(STS_TG32, KSEL(SEG_KCODE), vecsys, DPL_KERN);
-  // 0x81 field function enter
+	idt[0x80] = GATE(STS_TG32, KSEL(SEG_KCODE), vecsys, DPL_KERN);
 
-  set_idt(idt, sizeof(idt)); // set the first address and lenght of idt
+  set_idt(idt, sizeof(idt));
 
   // register event handler
   user_handler = handler;
@@ -54,6 +67,7 @@ _Context *_kcontext(_Area stack, void (*entry)(void *), void *arg) {
 }
 
 void _yield() {
+	//printf("call _yield!\n");
   asm volatile("int $0x81");
 }
 
