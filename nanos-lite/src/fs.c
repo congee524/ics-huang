@@ -59,6 +59,7 @@ int fs_open(const char *pathname, int flags, int mode){
   for (int i = 0; i < NR_FILES; i++) {
     Log("pre file name: %s", file_table[i].name);
     if (strcmp(pathname, file_table[i].name) == 0) {
+      Log("%d", i);
       file_table[i].open_offset = 0;
       return i;
     }
