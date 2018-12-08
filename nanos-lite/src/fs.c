@@ -12,7 +12,7 @@ typedef struct {
   off_t open_offset;
 } Finfo;
 
-enum {FD_STDIN, FD_STDOUT, FD_STDERR, FD_FB};
+enum {FD_STDIN, FD_STDOUT, FD_STDERR, FD_FB, FD_DISPINFO};
 
 size_t serial_write(const void *buf, size_t offset, size_t len);
 
@@ -78,7 +78,7 @@ ssize_t fs_read(int fd, void *buf, size_t len){
     //  printf("out of file_size!\n");
     //  return 0;
     //}
-    Log("%d", fd);
+    //Log("%d", fd);
     if(fo.open_offset + len > fo.size){
       len = fo.size - fo.open_offset;
     }
