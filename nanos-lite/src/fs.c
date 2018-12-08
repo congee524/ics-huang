@@ -68,13 +68,17 @@ int fs_open(const char *pathname, int flags, int mode){
     }
   }
   panic("file doesn't exist!!!!!!!");
+  assert(0);
   return 0;
 }
 
 ssize_t fs_read(int fd, void *buf, size_t len){
   // Log("fd is %d", fd);
   Finfo fo = file_table[fd];
-    if(file_table[fd].read == NULL){
+  if(fo.open_offset + len > fo.size){
+      len = fo.size - fo.open_offset;
+  }
+  if(file_table[fd].read == NULL){
     // Log("0x%x 0x%x %d", fo.open_offset, fo.size, len);
     //if(fo.open_offset >= fo.size){
     //  printf("out of file_size!\n");
