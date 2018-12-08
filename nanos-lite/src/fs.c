@@ -86,12 +86,11 @@ ssize_t fs_read(int fd, void *buf, size_t len){
 
 ssize_t fs_write(int fd, const void *buf, size_t len){
   Finfo fo = file_table[fd];
-  if(fo.open_offset + len >= fo.size){
+  if(file_table[fd].write == NULL) {
+    if(fo.open_offset + len >= fo.size){
       len = fo.size - fo.open_offset;
-  }
-  if (fd != FD_STDIN && fd != FD_STDOUT)
+    }
     file_table[fd].open_offset += len;
-  if(file_table[fd].write == NULL) {  
     return ramdisk_write(buf, fo.disk_offset + fo.open_offset, len);
   } else {
     // serial_write | fb_write
