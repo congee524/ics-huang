@@ -41,27 +41,23 @@ size_t dispinfo_read(void *buf, size_t offset, size_t len) {
 
 size_t fb_write(const void *buf, size_t offset, size_t len) {
   int w = screen_width();
-  //int h = screen_height();
+  int bt = len / 4;
   int x = (offset / 4) % w;
   int y = (offset / 4) / w;
-  int cnt = 0;
-  int bt = len / 4;
 
-  int flag = 1;
+  // maybe input multi lines
+  int flag = 1, have_in = 0, to_in = 0;
   while(flag){
-    int tmp = w - x;
-    if (tmp > bt - cnt) {
-      tmp = bt - cnt;
+    to_in = w - x;
+    if (to_in > bt - have_in) {
+      to_in = bt - have_in;
       flag = 0;
     }
-    draw_rect((uint32_t *)buf, x, y, tmp, 1);
+    draw_rect((uint32_t *)buf, x, y, to_in, 1);
     x = 0;
     y++;
-    cnt += tmp;
+    have_in += to_in;
   }
-  // Log("w %d coordinate %d %d", w, x, y);
-  // it should be the actual height and width to write in
-  //draw_rect((uint32_t *)buf, x, y, len / 4, 1); 
   return len;
 }
 
