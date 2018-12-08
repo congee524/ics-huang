@@ -48,6 +48,7 @@ void init_fs() {
   //assert(0);
   Log("w %d h %d", screen_width(), screen_height);
   file_table[FD_FB].size = screen_width() * screen_height() * 4;
+  Log("size 0x%x", file_table[FD_FB].size);
 }
 
 // we ignore flags and mode
