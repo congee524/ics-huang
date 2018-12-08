@@ -4,7 +4,6 @@
 #include "monitor/monitor.h"
 #include "diff-test.h"
 
-
 static void (*ref_difftest_memcpy_from_dut)(paddr_t dest, void *src, size_t n);
 static void (*ref_difftest_getregs)(void *c);
 static void (*ref_difftest_setregs)(const void *c);
@@ -15,23 +14,6 @@ static bool is_skip_dut;
 
 void difftest_skip_ref() { is_skip_ref = true; }
 void difftest_skip_dut() { is_skip_dut = true; }
-
-
-void reg_num_to_name(int i,char *name){
-	switch(i){
-		case 0: strncpy(name,"eax",4); break;
-		case 1: strncpy(name,"ecx",4); break;
-		case 2: strncpy(name,"edx",4); break;
-		case 3: strncpy(name,"ebx",4); break;
-		case 4: strncpy(name,"esp",4); break;
-		case 5: strncpy(name,"ebp",4); break;
-		case 6: strncpy(name,"esi",4); break;
-		case 7: strncpy(name,"edi",4); break;
-		default: Assert(0,"Undefined register number.\n");
-	} 
-}
-
-
 
 void init_difftest(char *ref_so_file, long img_size) {
 #ifndef DIFF_TEST
@@ -87,41 +69,48 @@ void difftest_step(uint32_t eip) {
   ref_difftest_exec(1);
   ref_difftest_getregs(&ref_r);
 
-	for(int i = 0; i < 8; ++i){
-		//Log("Compare reg NO.%d",i);	
-		if(cpu.gpr[i]._32 != ref_r.gpr[i]._32){
-			char reg_name[7]="";
-			reg_num_to_name(i,reg_name);
-			printf("Different value of %s\nDUT:0x%08x\nShould be:0x%08x\n",reg_name,cpu.gpr[i]._32,ref_r.gpr[i]._32);
-			nemu_state = NEMU_ABORT;
-		}
-	}
-
-	if(cpu.eip != ref_r.eip){
-		printf("Different value of eip\nDUT:0x%8x\nShould be:0x%8x\n",cpu.eip,ref_r.eip);
-		nemu_state = NEMU_ABORT;
-	
-	if(ref_r.eflags.CF != cpu.eflags.CF){
-		printf("Different value of CF\nDUT:%d\nShould be:%d\n",cpu.eflags.CF,ref_r.eflags.CF);
-		nemu_state = NEMU_ABORT;
-	}	
-
-	if(ref_r.eflags.OF != cpu.eflags.OF){
-		printf("Different value of OF\nDUT:%d\nShould be:%d\n",cpu.eflags.OF,ref_r.eflags.OF);
-		nemu_state = NEMU_ABORT;
-	}	
-
-	if(ref_r.eflags.SF != cpu.eflags.SF){
-		printf("Different value of SF\nDUT:%d\nShould be:%d\n",cpu.eflags.SF,ref_r.eflags.SF);
-		nemu_state = NEMU_ABORT;
-	}	
-
-	if(ref_r.eflags.ZF != cpu.eflags.ZF){
-		printf("Different value of ZF\nDUT:%d\nShould be:%d\n",cpu.eflags.ZF,ref_r.eflags.ZF);
-		nemu_state = NEMU_ABORT;
-	}	
-	}
   // TODO: Check the registers state with the reference design.
   // Set `nemu_state` to `NEMU_ABORT` if they are not the same.
   //TODO();
+  bool diff_judge = 0;
+  if (ref_r.eax != cpu.eax) {
+      printf("NEMU eax is 0x%08x; QEMU eax is 0x%08x.\n", cpu.eax, ref_r.eax); 
+      diff_judge = 1;
+  }
+  if (ref_r.ecx != cpu.ecx) {
+      printf("NEMU ecx is 0x%08x; QEMU ecx is 0x%08x.\n", cpu.ecx, ref_r.ecx);
+      diff_judge = 1;
+  }
+  if (ref_r.edx != cpu.edx) {
+      printf("NEMU edx is 0x%08x; QEMU edx is 0x%08x.\n", cpu.edx, ref_r.edx); 
+      diff_judge = 1;
+  }
+  if (ref_r.ebx != cpu.ebx) {
+      printf("NEMU ebx is 0x%08x; QEMU ebx is 0x%08x.\n", cpu.ebx, ref_r.ebx); 
+      diff_judge = 1;
+  }
+  if (ref_r.esp != cpu.esp) {
+      printf("NEMU esp is 0x%08x; QEMU esp is 0x%08x.\n", cpu.esp, ref_r.esp); 
+      diff_judge = 1;
+  }
+  if (ref_r.ebp != cpu.ebp) {
+      printf("NEMU ebp is 0x%08x; QEMU ebp is 0x%08x.\n", cpu.ebp, ref_r.ebp); 
+      diff_judge = 1;
+  }
+  if (ref_r.esi != cpu.esi) {
+      printf("NEMU esi is 0x%08x; QEMU esi is 0x%08x.\n", cpu.esi, ref_r.esi); 
+      diff_judge = 1;
+  }
+  if (ref_r.edi != cpu.edi) {
+      printf("NEMU edi is 0x%08x; QEMU edi is 0x%08x.\n", cpu.edi, ref_r.edi); 
+      diff_judge = 1;
+  }
+  if (ref_r.eip != cpu.eip) {
+      printf("NEMU eip is 0x%08x; QEMU eip is 0x%08x.\n", cpu.eip, ref_r.eip); 
+      diff_judge = 1;
+  }
+  
+  if (diff_judge) {
+      nemu_state = NEMU_ABORT;
+  }
 }

@@ -35,20 +35,20 @@ static inline make_DopHelper(SI) {
   assert(op->width == 1 || op->width == 4);
 
   op->type = OP_TYPE_IMM;
-	op->simm = 1; // initialize for imul
-  //op->simm =(int32_t)instr_fetch(eip, op->width);
-	t0 = instr_fetch(eip, op->width);
-	rtl_sext(&t0, &t0, op->width);
-	op->simm = t0;
-	//Log("fetch simm: %d", op->simm);
+
   /* TODO: Use instr_fetch() to read `op->width' bytes of memory
    * pointed by `eip'. Interpret the result as a signed immediate,
    * and assign it to op->simm.
    *
    op->simm = ???
    */
-  //TODO();
-
+  op->simm = instr_fetch(eip, op->width);
+  //printf("before op->simm is 0x%x\n", op->simm);
+  if (op->width == 1) {
+    op->simm = (op->simm << 24) >> 24;
+    //printf("now op->simm is 0x%x\n", op->simm);
+  }
+  //printf("op->val is 0x%x\n", op->val);
   rtl_li(&op->val, op->simm);
 
 #ifdef DEBUG
@@ -149,7 +149,6 @@ make_DHelper(I2a) {
   decode_op_I(eip, id_src, true);
 }
 
-
 /* Gv <- EvIb
  * Gv <- EvIv
  * use for imul */
@@ -214,6 +213,7 @@ make_DHelper(SI2E) {
   assert(id_dest->width == 2 || id_dest->width == 4);
   decode_op_rm(eip, id_dest, true, NULL, false);
   id_src->width = 1;
+  //printf("id_src is 0x%x\n", id_src->val);
   decode_op_SI(eip, id_src, true);
   if (id_dest->width == 2) {
     id_src->val &= 0xffff;
@@ -290,7 +290,6 @@ make_DHelper(J) {
   decode_op_SI(eip, id_dest, false);
   // the target address can be computed in the decode stage
   decoding.jmp_eip = id_dest->simm + *eip;
-	//Log("Calculated jmp addr: 0x%x=%d+0x%x", decoding.jmp_eip,id_dest->simm,*eip);
 }
 
 make_DHelper(push_SI) {

@@ -5,6 +5,7 @@
 #include "util/c_op.h"
 #include "cpu/relop.h"
 #include "cpu/rtl-wrapper.h"
+#include "cpu/reg.h"
 
 extern rtlreg_t t0, t1, t2, t3, at;
 
@@ -78,7 +79,7 @@ static inline void interpret_rtl_idiv64_r(rtlreg_t* dest,
 }
 
 static inline void interpret_rtl_lm(rtlreg_t *dest, const rtlreg_t* addr, int len) {
-  *dest = vaddr_read(*addr, len);
+*dest = vaddr_read(*addr, len);
 }
 
 static inline void interpret_rtl_sm(const rtlreg_t* addr, const rtlreg_t* src1, int len) {
@@ -150,78 +151,102 @@ static inline void rtl_sr(int r, const rtlreg_t* src1, int width) {
 
 static inline void rtl_not(rtlreg_t *dest, const rtlreg_t* src1) {
   // dest <- ~src1
-	*dest = ~(*src1);
+  *dest = ~(*src1);
 }
 
 static inline void rtl_sext(rtlreg_t* dest, const rtlreg_t* src1, int width) {
   // dest <- signext(src1[(width * 8 - 1) .. 0])
-	rtl_shli(dest, src1, 32 - width * 8);
-	//Log("shift width: %d", 32 - 8 *width);
-	//Log("After shl:0x%08x -> 0x%08x", *dest, *src1);
-	rtl_sari(dest, dest, 32 - width * 8);
-	//Log("After sar:0x%08x", *dest);
+  //printf("sext: src1: 0x%08x\n", *src1);
+  int tmp = *src1;
+  uint32_t cnt = 32 - width * 8;
+  *dest = (int)(tmp << cnt) >> cnt;
+  //printf("sext: dest: 0x%08x\n", *dest);
 }
 
 static inline void rtl_push(const rtlreg_t* src1) {
   // esp <- esp - 4
-	rtl_subi(&cpu.esp,&cpu.esp,4);
   // M[esp] <- src1
-	rtl_sm(&cpu.esp,src1,4);
+  rtl_subi(&cpu.esp, &cpu.esp, 4);
+  //paddr_write(reg_l(4), src1, 4);
+  rtl_sm(&cpu.esp, src1, 4);
 }
 
+  
 static inline void rtl_pop(rtlreg_t* dest) {
   // dest <- M[esp]
-	//*dest = vaddr_read(cpu.esp,4);
-	rtl_lm(dest,&cpu.esp,4);
   // esp <- esp + 4
-	//cpu.esp += 4;
-	rtl_addi(&cpu.esp,&cpu.esp,4);
+  rtl_lm(dest, &cpu.esp, 4);
+  // rtl_lm(dest, cpu.esp, 4);
+  rtl_addi(&cpu.esp, &cpu.esp, 4);
 }
 
 static inline void rtl_setrelopi(uint32_t relop, rtlreg_t *dest,
     const rtlreg_t *src1, int imm) {
   // dest <- (src1 relop imm ? 1 : 0)
-	rtl_li(&at, imm);
-  *dest = interpret_relop(relop, *src1, at);
+  TODO();
 }
 
 static inline void rtl_msb(rtlreg_t* dest, const rtlreg_t* src1, int width) {
   // dest <- src1[width * 8 - 1]
-	/*switch(width){
-		case 1: rtl_andi(dest, src1, 0x80); break;
-		case 2: rtl_andi(dest, src1, 0x8000); break;
-		case 4: rtl_andi(dest, src1, 0x80000000); break;
-		default: Assert(0, "Wrong msb!");
-	}*/
-	//Log("after rtl_andi:0x%08x -> 0x%08x\n", *src1, *dest);
-	rtl_shri(dest, src1, width * 8 - 1);
-	//Log("0x%08x shr to 0x%08x\n", *src1,*dest);
+  assert(width);
+  uint32_t cnt = width * 8 - 1;
+  *dest = (*src1 >> cnt) & 1;
 }
 
+// i find that ## doesn't work, because cpu.eflags.OF has a '.' seperating the token.
+// therefore, i have to write seperatly.
+/*
 #define make_rtl_setget_eflags(f) \
   static inline void concat(rtl_set_, f) (const rtlreg_t* src) { \
-    cpu.eflags.f = *src; \
+    concat(cpu.eflags., f) = *src; \
   } \
   static inline void concat(rtl_get_, f) (rtlreg_t* dest) { \
-		*dest = cpu.eflags.f; \
+    *dest = concat(cpu.eflags., f); \
   }
 
 make_rtl_setget_eflags(CF)
 make_rtl_setget_eflags(OF)
 make_rtl_setget_eflags(ZF)
 make_rtl_setget_eflags(SF)
+*/
+
+static inline void rtl_set_CF (const rtlreg_t* src) {
+    cpu.eflags.CF = *src;
+}
+static inline void rtl_get_CF (rtlreg_t* dest) {
+    *dest = cpu.eflags.CF;
+}
+static inline void rtl_set_OF (const rtlreg_t* src) {
+    cpu.eflags.OF = *src;
+}
+static inline void rtl_get_OF (rtlreg_t* dest) {
+    *dest = cpu.eflags.OF;
+} 
+static inline void rtl_set_ZF (const rtlreg_t* src) {
+    cpu.eflags.ZF = *src;
+}
+static inline void rtl_get_ZF (rtlreg_t* dest) {
+    *dest = cpu.eflags.ZF;
+} 
+static inline void rtl_set_SF (const rtlreg_t* src) {
+    cpu.eflags.SF = *src;
+}
+static inline void rtl_get_SF (rtlreg_t* dest) {
+    *dest = cpu.eflags.SF;
+} 
 
 static inline void rtl_update_ZF(const rtlreg_t* result, int width) {
   // eflags.ZF <- is_zero(result[width * 8 - 1 .. 0])
-	rtl_shli(&at, result, 32 - width * 8);
-	if(at == 0) cpu.eflags.ZF = 1;
-	else cpu.eflags.ZF = 0;
+    if ((*result << (32 - width * 8)) == 0) {
+        cpu.eflags.ZF = 1;
+    } else {
+        cpu.eflags.ZF = 0;
+    }
 }
 
 static inline void rtl_update_SF(const rtlreg_t* result, int width) {
   // eflags.SF <- is_sign(result[width * 8 - 1 .. 0])
-	rtl_msb(&at, result, width);
-	cpu.eflags.SF = at;	
+  cpu.eflags.SF = (*result >> (width * 8 - 1)) & 1; 
 }
 
 static inline void rtl_update_ZFSF(const rtlreg_t* result, int width) {
