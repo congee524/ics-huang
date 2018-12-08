@@ -36,7 +36,7 @@ static char dispinfo[128] __attribute__((used));
 size_t dispinfo_read(void *buf, size_t offset, size_t len) {
   //assert(0);
   Log();
-  memcpy(buf, dispinfo + offset, len);
+  memcpy(buf, (void *)dispinfo + offset, len);
   return len;
 }
 
