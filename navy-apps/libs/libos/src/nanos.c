@@ -34,7 +34,7 @@ void _exit(int status) {
 int _open(const char *path, int flags, mode_t mode) {
   //_exit(SYS_open);
   //return 0;
-  return _syscall_(SYS_open, (intptr_t)path, flags, (intptr_t)mode);
+  return _syscall_(SYS_open, (intptr_t)path, (intptr_t)flags, (intptr_t)mode);
 }
 
 int _write(int fd, void *buf, size_t count){
@@ -45,7 +45,7 @@ int _write(int fd, void *buf, size_t count){
 void *_sbrk(intptr_t increment){
   intptr_t oldbrk = pro_brk;
   intptr_t newbrk = oldbrk + increment;
-  if(_syscall_(SYS_brk, newbrk, 0, 0) == 0){
+  if(_syscall_(SYS_brk, (intptr_t)newbrk, 0, 0) == 0){
     //assert(0);
     pro_brk = newbrk;
     return (void *)oldbrk;
@@ -57,19 +57,19 @@ void *_sbrk(intptr_t increment){
 int _read(int fd, void *buf, size_t count) {
   //_exit(SYS_read);
   //return 0;
-  return _syscall_(SYS_read, fd, (intptr_t)buf, (intptr_t)count);
+  return _syscall_(SYS_read, (intptr_t)fd, (intptr_t)buf, (intptr_t)count);
 }
 
 int _close(int fd) {
   //_exit(SYS_close);
   //return 0;
-  return _syscall_(SYS_close, fd, 0, 0);
+  return _syscall_(SYS_close, (intptr_t)fd, 0, 0);
 }
 
 off_t _lseek(int fd, off_t offset, int whence) {
   //_exit(SYS_lseek);
   //return 0;
-  return _syscall_(SYS_lseek, fd, (intptr_t)offset, whence);
+  return _syscall_(SYS_lseek, (intptr_t)fd, (intptr_t)offset, (intptr_t)whence);
 }
 
 int _execve(const char *fname, char * const argv[], char *const envp[]) {
