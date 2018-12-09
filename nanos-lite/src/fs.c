@@ -55,7 +55,7 @@ void init_fs() {
 int fs_open(const char *pathname, int flags, int mode){
   // we ignore flags and mode
   // return open(pathname, flags, mode);
-  Log("%s", pathname);
+  // Log("%s", pathname);
   for (int i = 0; i < NR_FILES; i++) {
     if (strcmp(pathname, file_table[i].name) == 0) {
       file_table[i].open_offset = 0;
