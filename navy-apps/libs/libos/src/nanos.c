@@ -8,6 +8,12 @@
 
 extern char _etext, _edata, _end;
 intptr_t pro_brk = (intptr_t)&_end;
+pid_t _fork(void) {
+  return 0;
+}
+pid_t _wait(int *wstatus) {
+  return 0;
+}
 
 #if defined(__ISA_X86__)
 intptr_t _syscall_(int type, intptr_t a0, intptr_t a1, intptr_t a2){
