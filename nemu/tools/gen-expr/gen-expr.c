@@ -7,99 +7,111 @@
 
 // this should be enough
 static char buf[65536];
-static int buf_len = 0;
 
-static int choose(int x){
-  int num = (rand())%x;
-	return num;	
+uint32_t choose(uint32_t n) {
+    return rand() % n;
 }
 
-static inline void gen_space(){
-	if(buf_len > 60000) return;
-	int num = (rand())%50;
-	for (int i = 1; i <= num; ++i){
-		buf_len += sprintf(buf + buf_len, " ");
-	}
+void gen_num(void) {
+    uint32_t tmp = rand() % 1000;
+    char s[31];
+    sprintf(s, "%u", tmp);
+    strcat(buf, s);
 }
 
-static inline void gen_num(){
-	if(buf_len > 60000) return;
-	int num = (rand())%10000;
-	if(num == 0) num++;
-  buf_len += sprintf(buf + buf_len, "%d", num);
+void gen(char *s) {
+    strcat(buf, s);
 }
 
-static inline void gen(char c){
-	if(buf_len > 60000) return;
-	buf_len += sprintf(buf + buf_len, "%c", c);
+void gen_rand_op(void) {
+    switch (choose(4)) {
+        case 0:
+            strcat(buf, "+");
+            break;
+        case 1:
+            strcat(buf, "-");
+            break;
+        case 2:
+            strcat(buf, "*");
+            break;
+        case 3:
+            strcat(buf, "/");
+            break;
+        default:
+            strcat(buf, "+");
+    }
 }
 
-static inline void gen_op(){
-	int num = choose(4);
-	switch(num){
-		case 0: gen('+'); break;
-		case 1: gen('-'); break;
-		case 2: gen('*'); break;
-		default: gen('/'); break;
-	} 
+void gen_blank(void) {
+    int cnt = rand() % 3;
+    for (int i = 0; i < cnt; i++) {
+        strcat(buf, " ");
+    }
 }
 
 static inline void gen_rand_expr() {
-	switch (choose(3)){
-		case 0: gen_num(); break;
-		case 1: gen('('); gen_rand_expr(); gen(')');break;
-		default: gen_rand_expr(); gen_op(); gen_rand_expr(); break;
-	}
-	if(buf[0] == '\0') gen_rand_expr();
+    switch (choose(3)) {
+        case 0: 
+            gen_num();
+            break;
+        case 1: 
+            gen("("); 
+            gen_blank();
+            gen_rand_expr();
+            gen_blank();
+            gen(")");
+            break;
+        default: 
+            gen_rand_expr();
+            gen_blank();
+            gen_rand_op();
+            gen_blank();
+            gen_rand_expr();
+            break;
+    }
 }
 
 static char code_buf[65536];
 static char *code_format =
 "#include <stdio.h>\n"
 "int main() { "
-"  long long result = %s; "
-"  printf(\"%%lld\", result); "
+"  unsigned result = %s; "
+"  printf(\"%%u\", result); "
 "  return 0; "
 "}";
 
 int main(int argc, char *argv[]) {
-  int seed = time(0);
-  srand(seed);
-	//buf[0] = '\0';
-  int loop = 1;
-  if (argc > 1) {
-    sscanf(argv[1], "%d", &loop);
-  }
-	// input the number of loops by command line
-  int i;
-  for (i = 0; i < loop; i ++) {
-		buf[0] = '\0';
-		buf_len = 0;
-    gen_rand_expr();
-		if(buf_len > 60000) {
-			loop ++;
-			continue;
-		}
+    int seed = time(0);
+    srand(seed);
+    int loop = 1;
+    if (argc > 1) {
+        sscanf(argv[1], "%d", &loop);
+    }
+    int i;
+    for (i = 0; i < loop; i ++) {
+        do {
+            buf[0] = '\0';
+            gen_rand_expr();
+        } while (strlen(buf) >= 65530);
 
-    sprintf(code_buf, code_format, buf);
+        sprintf(code_buf, code_format, buf);
 
-    FILE *fp = fopen(".code.c", "w");
-    assert(fp != NULL);
-    fputs(code_buf, fp);
-    fclose(fp);
+        FILE *fp = fopen(".code.c", "w");
+        assert(fp != NULL);
+        fputs(code_buf, fp);
+        fclose(fp);
 
-    int ret = system("gcc .code.c -o .expr");
-		//system() is used the execute the command line
-    if (ret != 0) continue;
+        int ret = system("gcc .code.c -o .expr");
+        if (ret != 0) continue;
 
-    fp = popen("./.expr", "r");
-    assert(fp != NULL);
+        fp = popen("./.expr", "r");
+        assert(fp != NULL);
 
-    long long result;
-    fscanf(fp, "%lld", &result);
-    pclose(fp);
+        int result;
+        fscanf(fp, "%d", &result);
+        pclose(fp);
 
-    printf("%lld %s\n", result, buf);
-  }
-  return 0;
+        printf("%u %s\n", result, buf);
+    }
+    return 0;
 }

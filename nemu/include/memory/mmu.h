@@ -76,11 +76,9 @@ typedef union GateDescriptor {
     uint32_t present          : 1;
     uint32_t offset_31_16     : 16;
   };
-  //uint32_t val;
-	struct{
-		uint32_t val1;
-		uint32_t val2;
-	};
+  uint32_t val;
+  //uint32_t val2;// !!! val2 is added by me
+  // nothing useful... uninitial
 } GateDesc;
 
 #endif

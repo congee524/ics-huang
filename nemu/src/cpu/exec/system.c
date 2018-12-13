@@ -3,18 +3,20 @@
 
 void difftest_skip_ref();
 void difftest_skip_dut();
-void raise_intr(uint8_t NO, vaddr_t ret_addr);
+
+void raise_intr();
 
 make_EHelper(lidt) {
   //TODO();
-	//id_dest -- nanos/data[3];
-	rtl_li(&t0,id_dest->addr); //load the addr of data[3] into t0
-	//Log("get addr of data: %d\n",id_dest->addr);
-	rtl_li(&cpu.idtr.limit, vaddr_read(t0,2)); //load data[0] to idtr.limit 
-	//Log("load idtr.limit:%d\n",vaddr_read(t0,2));
-	rtl_li(&cpu.idtr.base, vaddr_read(t0+2,4)); //load data[1-2] to idtr.base
-	//Log("load idtr.base: %d\n", vaddr_read(t0+2,4));
-
+  assert(id_dest->width == 2 || id_dest->width == 4);
+  cpu.IDTR.limit = vaddr_read(id_dest->addr, 2);
+  if (id_dest->width == 2) {
+    cpu.IDTR.base = vaddr_read(id_dest->addr + 2, 4) & 0x00ffffff;
+    // about this, i think if we need 16 bit address, then we need data[1];
+    assert(0);
+  } else if (id_dest->width == 4) {
+    cpu.IDTR.base = vaddr_read(id_dest->addr + 2, 4);
+  }
   print_asm_template1(lidt);
 }
 
@@ -36,17 +38,7 @@ make_EHelper(mov_cr2r) {
 
 make_EHelper(int) {
   //TODO();
-	switch(decoding.opcode){
-		case 0xcc: raise_intr((uint8_t)0x3, decoding.seq_eip); break;
-		case 0xcd: raise_intr(id_dest->val, decoding.seq_eip); break;
-		/*case 0xcd:
-			Log("id_dest of int is 0x%x\n", id_dest->val);
-			raise_intr((uint8_t)id_dest->val, decoding.seq_eip);
-			break;*/
-		case 0xce: raise_intr((uint8_t)0x4, decoding.seq_eip); break;
-		default: raise_intr((uint8_t)id_dest->val, decoding.seq_eip);
-	}
-
+  raise_intr(id_dest->val, decoding.seq_eip);
   print_asm("int %s", id_dest->str);
 
 #if defined(DIFF_TEST) && defined(DIFF_TEST_QEMU)
@@ -56,23 +48,22 @@ make_EHelper(int) {
 
 make_EHelper(iret) {
   //TODO();
-	rtl_pop(&decoding.jmp_eip);
-	rtl_pop(&cpu.cs);
-	rtl_pop(&cpu.eflag);
-	rtl_j(decoding.jmp_eip);
-	//Log("iret addr: 0x%x",decoding.jmp_eip);
+  //rtl_pop(&decoding.jmp_eip);
+  rtl_pop(&decoding.seq_eip);
+  rtl_pop(&cpu.cs);
+  rtl_pop(&cpu.eflags.val);
+  //rtl_j(decoding.jmp_eip);
   print_asm("iret");
 }
 
 make_EHelper(in) {
- // TODO();
-	switch(id_dest->width){
-		case 4: rtl_li(&t0, pio_read_l(id_src->val)); break; 
-		case 2: rtl_li(&t0, pio_read_w(id_src->val)); break; 
-		case 1: rtl_li(&t0, pio_read_b(id_src->val)); break; 
-	}
-	operand_write(id_dest,&t0);
-
+  //TODO();
+  switch(id_dest->width) {
+    case 4: id_dest->val = pio_read_l(id_src->val); break;
+    case 2: id_dest->val = pio_read_w(id_src->val); break;
+    case 1: id_dest->val = pio_read_b(id_src->val); break;
+  }
+  operand_write(id_dest, &id_dest->val);
   print_asm_template2(in);
 
 #if defined(DIFF_TEST)
@@ -82,12 +73,11 @@ make_EHelper(in) {
 
 make_EHelper(out) {
   //TODO();
-	switch(id_dest->width){
-		case 4: pio_write_l(id_dest->val, id_src->val); break;
-		case 2: pio_write_w(id_dest->val, id_src->val); break;
-		case 1: pio_write_b(id_dest->val, id_src->val); break;
-	}
-
+  switch(id_dest->width) {
+    case 4: pio_write_l(id_dest->val, id_src->val); break;
+    case 2: pio_write_w(id_dest->val, id_src->val); break;
+    case 1: pio_write_b(id_dest->val, id_src->val); break;
+  }
   print_asm_template2(out);
 
 #if defined(DIFF_TEST)
