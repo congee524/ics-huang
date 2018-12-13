@@ -1,74 +1,73 @@
 #include "cpu/exec.h"
-#include "cpu/rtl.h"
 
 make_EHelper(mov) {
-  //printf("mov: id_src->val 0x%08x\n", id_src->val);
   operand_write(id_dest, &id_src->val);
   print_asm_template2(mov);
 }
 
 make_EHelper(push) {
-  rtl_push(&id_dest->val); 
+	rtl_push(&id_dest->val);
+	//Log("Successful push!");
+  //TODO();
+
   print_asm_template1(push);
 }
 
 make_EHelper(pop) {
-  rtl_pop(&id_dest->val);
-  operand_write(id_dest, &id_dest->val);
+	rtl_pop(&id_src->val);
+	operand_write(id_dest,&id_src->val);
+	//Log("Successful pop!");
+  //TODO();
+
   print_asm_template1(pop);
 }
 
 make_EHelper(pusha) {
+	rtl_li(&t0, cpu.esp);	
+	rtl_push(&cpu.eax);
+	rtl_push(&cpu.ecx);
+	rtl_push(&cpu.edx);
+	rtl_push(&cpu.ebx);
+	rtl_push(&t0);
+	rtl_push(&cpu.ebp);
+	rtl_push(&cpu.esi);
+	rtl_push(&cpu.edi);
   //TODO();
-  t2 = cpu.esp;
-  rtl_push(&cpu.eax);
-  rtl_push(&cpu.ecx);
-  rtl_push(&cpu.edx);
-  rtl_push(&cpu.ebx);
-  rtl_push(&t2);
-  rtl_push(&cpu.ebp);
-  rtl_push(&cpu.esi);
-  rtl_push(&cpu.edi);
+
   print_asm("pusha");
 }
 
 make_EHelper(popa) {
+	rtlreg_t throwaway = 0;
+	rtl_pop(&cpu.edi);
+	rtl_pop(&cpu.esi);
+	rtl_pop(&cpu.ebp);
+	rtl_pop(&throwaway);
+	rtl_pop(&cpu.ebx);
+	rtl_pop(&cpu.edx);
+	rtl_pop(&cpu.ecx);
+	rtl_pop(&cpu.eax);
   //TODO();
-  rtl_pop(&cpu.edi);
-  rtl_pop(&cpu.esi);
-  rtl_pop(&cpu.ebp);
-  rtl_pop(&t3);
-  rtl_pop(&cpu.ebx);
-  rtl_pop(&cpu.edx);
-  rtl_pop(&cpu.ecx);
-  rtl_pop(&cpu.eax);
+
   print_asm("popa");
 }
 
 make_EHelper(leave) {
-  //TODO();
-  rtl_mv(&reg_l(4), &reg_l(5));
-  rtl_pop(&t0);
-  rtl_mv(&reg_l(5), &t0);
+	rtl_mv(&cpu.esp, &cpu.ebp);
+	rtl_pop(&cpu.ebp);	
   print_asm("leave");
 }
 
 make_EHelper(cltd) {
   if (decoding.is_operand_size_16) {
-    //TODO();
-      if ((cpu.eax >> 15) & 1) {
-          cpu.edx = 0xFFFF;
-      } else {
-          cpu.edx = 0;
-      }
+		rtl_sext(&t0,&reg_l(R_EAX),2);
+		rtl_mv(&reg_l(R_EDX), (&t0)+2);
+		//DX:AX <- sign-ext of AX
   }
   else {
-    //TODO();
-      if ((cpu.eax >> 31) & 1) {
-          cpu.edx = 0xFFFFFFFF;
-      } else {
-          cpu.edx = 0;
-      }
+		//rtl_andi(&t0, &reg_l(R_EAX), 0x80000000);
+		rtl_sari(&reg_l(R_EDX), &reg_l(R_EAX), 31);
+		//EDX:EAX <- sign-ext of EAX
   }
 
   print_asm(decoding.is_operand_size_16 ? "cwtl" : "cltd");
@@ -76,13 +75,18 @@ make_EHelper(cltd) {
 
 make_EHelper(cwtl) {
   if (decoding.is_operand_size_16) {
-    rtl_sext(&at, &reg_l(0), 2);
-    //to ensure that the high bit keep still
-    cpu.eax = (at & 0xffff) | cpu.eax;
+    //TODO();
+		rtl_sext(&t0, &reg_l(R_EAX), 1);
+		rtl_mv(&reg_l(R_EAX), &t0);
+		//AX <- sign-ext of AL
   }
   else {
-    rtl_sext(&reg_l(0), &reg_l(0), 4);
+    //TODO();
+		rtl_sext(&t0, &reg_l(R_EAX), 2);
+		rtl_mv(&reg_l(R_EAX), &t0);
+		//EAX <- sign-ext of AX
   }
+
   print_asm(decoding.is_operand_size_16 ? "cbtw" : "cwtl");
 }
 
@@ -95,7 +99,6 @@ make_EHelper(movsx) {
 
 make_EHelper(movzx) {
   id_dest->width = decoding.is_operand_size_16 ? 2 : 4;
-  //printf("dest width is %d, src width is %d\n", id_dest->width, id_src->width);
   operand_write(id_dest, &id_src->val);
   print_asm_template2(movzx);
 }

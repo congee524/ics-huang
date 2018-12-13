@@ -23,7 +23,7 @@ CFLAGS   += -O2 -MMD -Wall -Werror -ggdb3 $(INCLUDES) -fomit-frame-pointer
 CFLAGS   += -DDIFF_TEST_QEMU
 
 # Files to be compiled
-SRCS = $(shell find src/ -name "*.c")
+SRCS = $(shell find src/ -name "*.c") #find all the .c files in the src/
 OBJS = $(SRCS:src/%.c=$(OBJ_DIR)/%.o)
 
 # Compilation patterns
@@ -64,8 +64,3 @@ clean:
 	-rm -rf $(BUILD_DIR)
 	$(MAKE) -C tools/gen-expr clean
 	$(MAKE) -C tools/qemu-diff clean
-
-count:
-	@echo $(shell find . -name *.[ch] | xargs cat | grep -v ^$$ | wc -l)
-
-
