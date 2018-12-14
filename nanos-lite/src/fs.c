@@ -70,18 +70,17 @@ ssize_t fs_read(int fd, void *buf, size_t len){
   if(fo.open_offset + len > fo.size){
       len = fo.size - fo.open_offset;
   }
+  int ret = 0;
   if(file_table[fd].read == NULL){
-        file_table[fd].open_offset += len;
-    return ramdisk_read(buf, fo.disk_offset + fo.open_offset, len);
+    ret = ramdisk_read(buf, fo.disk_offset + fo.open_offset, len);
   } else {
     // events_read | dispinfo_read 
     // events_read return strlen(buf) instead of len
     // so we cannot use open_offset += len
-    int res = file_table[fd].read(buf, fo.open_offset, len);
-    file_table[fd].open_offset += res;
-    return res;
+    ret = file_table[fd].read(buf, fo.open_offset, len);
   }
-
+  file_table[fd].open_offset += ret;
+  return ret;
 }
 
 ssize_t fs_write(int fd, const void *buf, size_t len){
