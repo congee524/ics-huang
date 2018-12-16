@@ -1,4 +1,5 @@
 #include <x86.h>
+#include "klib.h"
 
 #define PG_ALIGN __attribute((aligned(PGSIZE)))
 
@@ -80,5 +81,26 @@ int _map(_Protect *p, void *va, void *pa, int mode) {
 }
 
 _Context *_ucontext(_Protect *p, _Area ustack, _Area kstack, void *entry, void *args) {
-  return NULL;
+  // native/src/vme.c
+  // main(argc, argv, env)  three parameters, the address of pointer
+  void *stack_args = ustack.end - 3 * sizeof(void *);
+  memset(stack_args, 0, 3 * sizeof(void *));
+  // ustack.end -= 1 * sizeof(uintptr_t);
+  // uintptr_t *ret = stack_args - sizeof(void *);
+  // *(uintptr_t *)ret = 0;
+
+  _Context *c = (_Context*)ustack.end - 1;
+  memset(c, 0, sizeof(_Context));
+  c->cs = 0x8;
+  c->eflags = 0x2;
+  c->eip = (uintptr_t)entry;
+  c->prot = p;
+
+  /*
+     c->uc.uc_mcontext.gregs[REG_EDI] = 0;
+     c->uc.uc_mcontext.gregs[REG_ESI] = ret; // ???
+     c->uc.uc_mcontext.gregs[REG_EDX] = ret; // ??? native use the same value
+     */
+  return c;
+  // return NULL;
 }
