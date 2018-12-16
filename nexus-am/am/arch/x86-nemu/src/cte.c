@@ -53,6 +53,8 @@ _Context *_kcontext(_Area stack, void (*entry)(void *), void *arg) {
   printf("entry is 0x%x\n", entry);
   _Context *c = (_Context*)stack.end - 1;
   c->eip = (uintptr_t)entry;
+  c->cs = 0x8;
+
   return c;
 }
 
