@@ -29,8 +29,8 @@ void init_proc() {
 
 _Context* schedule(_Context *prev) {
   // return the context of the following process
-  Log("schedule");
   current->cp = prev;
+
   Log("eflags 0x %x", current->cp->eflags);
   Log("cs 0x%x", current->cp->cs);
   Log("eip 0x%x", current->cp->eip);
@@ -43,8 +43,11 @@ _Context* schedule(_Context *prev) {
   Log("edi 0x%x", current->cp->edi);
   Log("esi 0x%x", current->cp->esi);
   Log("ebp 0x%x", current->cp->ebp);
+  
   Log("change!!!!\n");
+  
   current = &pcb[0];
+  
   Log("eflags 0x %x", current->cp->eflags);
   Log("cs 0x%x", current->cp->cs);
   Log("eip 0x%x", current->cp->eip);
@@ -57,6 +60,7 @@ _Context* schedule(_Context *prev) {
   Log("edi 0x%x", current->cp->edi);
   Log("esi 0x%x", current->cp->esi);
   Log("ebp 0x%x", current->cp->ebp);
+  
   return current->cp;
   // return NULL;
 }
