@@ -9,6 +9,7 @@
 typedef union {
   uint8_t stack[STACK_SIZE] PG_ALIGN;
   struct {
+    // cp is context pointer, point the current context
     _Context *cp;
     _Protect as;
     uintptr_t cur_brk;
