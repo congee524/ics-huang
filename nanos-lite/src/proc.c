@@ -31,7 +31,9 @@ _Context* schedule(_Context *prev) {
   // return the context of the following process
   Log("schedule");
   current->cp = prev;
+  Log("before, 0x%x", current->cp->eip);
   current = &pcb[0];
+  Log("after, 0x%x", current->cp->eip);
   return current->cp;
   // return NULL;
 }
