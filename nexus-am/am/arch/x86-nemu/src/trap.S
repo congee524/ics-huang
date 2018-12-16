@@ -10,11 +10,18 @@ asm_trap:
   pushl $0       # for prot
 
   pushl %esp
+	// esp -=4
+	// esp = eip
+	// jmp irq_handle
   call irq_handle
 
 	//movl $current.cp->esp, %esp
 
   addl $4, %esp
+
+  // the value of esp originated from eax(return value)?
+	// then we may need not initial esp
+	movl %eax, %esp
 
   addl $4, %esp
   popal
