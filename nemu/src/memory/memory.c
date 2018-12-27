@@ -39,8 +39,8 @@ uint32_t vaddr_read(vaddr_t addr, int len) {
   if (0) { // data cross the page boundary
     assert(0);
   } else {
-    paddr_t paddr = page_translate(addr);
-    return paddr_read(paddr, len);
+    //paddr_t paddr = page_translate(addr);
+    return paddr_read(addr, len);
   }
 }
 
