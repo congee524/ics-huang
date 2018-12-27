@@ -20,6 +20,8 @@
 #define PGADDR(d, t, o) ((uint32_t)((d) << PDXSHFT | (t) << PTXSHFT | (o)))
 #define PTE_ADDR(pte)   ((uint32_t)(pte) & ~0xfff)
 
+#define len2mask(len) ((1 << (len * 8 + 1)) - 1)
+
 uint8_t pmem[PMEM_SIZE];
 
 paddr_t page_translate(vaddr_t addr) {
@@ -74,7 +76,18 @@ uint32_t vaddr_read(vaddr_t addr, int len) {
   if (cpu.cr0.pg == 1) {
     //assert(0);
     if (((addr & 0xfff) + len) > 0x1000) {
-      panic("data cross the page boundaty");
+      // panic("data cross the page boundaty");
+      uint32_t ret  = 0;
+      uint32_t len1 = 0x1000 - (addr & 0xfff);
+      uint32_t len2 = len - len1;
+      
+      paddr = page_translate(addr);
+      ret = paddr_read(paddr, len1);
+
+      paddr = page_translate((addr + 0x1000) & (~0xfff));
+      ret |= paddr_read(paddr, len2) << (8 * len1);
+
+      return ret;
     } else {
       paddr = page_translate(addr);
     }
@@ -88,8 +101,17 @@ void vaddr_write(vaddr_t addr, uint32_t data, int len) {
   if (cpu.cr0.pg == 1) {
     //assert(0);
     if (((addr & 0xfff) + len) > 0x1000) {
-      Log("data cross the page boundary");
-      assert(0);
+      panic("data cross the page boundary");
+      uint32_t len1 = 0x1000 - (addr & 0xfff);
+      uint32_t len2 = len - len1;
+      
+      paddr = page_translate(addr);
+      paddr_write(paddr, len1, data & len2mask(len1));
+
+      paddr = page_translate((addr + 0x1000) & (~0xfff));
+      paddr_write(paddr, len2, data >> (len1 * 8));
+
+      return;
     } else {
       paddr = page_translate(addr);
     }
