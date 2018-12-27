@@ -15,61 +15,80 @@ enum { R_AL, R_CL, R_DL, R_BL, R_AH, R_CH, R_DH, R_BH };
  */
 
 typedef struct {
+  union {
     union {
-        union {
-            uint32_t _32;
-            uint16_t _16;
-            uint8_t _8[2];
-        } gpr[8];
+      uint32_t _32;
+      uint16_t _16;
+      uint8_t _8[2];
+    } gpr[8];
 
-        /* Do NOT change the order of the GPRs' definitions. */
+    /* Do NOT change the order of the GPRs' definitions. */
 
-        /* In NEMU, rtlreg_t is exactly uint32_t. This makes RTL instructions
-         * in PA2 able to directly access these registers.
-         */
-        struct {
-            rtlreg_t eax, ecx, edx, ebx, esp, ebp, esi, edi;
-        }; 
-    };
-    vaddr_t eip;
-    union {
-        uint32_t val;
-        struct {
-            uint8_t CF    : 1;
-            uint8_t E1    : 1; // should be 1
-            uint8_t PF    : 1;
-            uint8_t E2    : 1;
-            uint8_t AF    : 1;
-            uint8_t E3    : 1;
-            uint8_t ZF    : 1;
-            uint8_t SF    : 1;
-            uint8_t TF    : 1;
-            uint8_t IF    : 1;
-            uint8_t DF    : 1;
-            uint8_t OF    : 1;
-            uint8_t IOPL  : 2;
-            uint8_t NT    : 1;
-            uint8_t E4    : 1;
-            uint8_t RF    : 1;
-            uint8_t VM    : 1;
-            uint16_t E5   : 14;
-        };
-    }eflags;
-    
+    /* In NEMU, rtlreg_t is exactly uint32_t. This makes RTL instructions
+     * in PA2 able to directly access these registers.
+     */
     struct {
-        uint32_t base;  // the first address of IDT
-        uint16_t limit; // the length of IDT
-    } IDTR;
+      rtlreg_t eax, ecx, edx, ebx, esp, ebp, esi, edi;
+    }; 
+  };
+  vaddr_t eip;
+  union {
+    uint32_t val;
+    struct {
+      uint8_t CF    : 1;
+      uint8_t E1    : 1; // should be 1
+      uint8_t PF    : 1;
+      uint8_t E2    : 1;
+      uint8_t AF    : 1;
+      uint8_t E3    : 1;
+      uint8_t ZF    : 1;
+      uint8_t SF    : 1;
+      uint8_t TF    : 1;
+      uint8_t IF    : 1;
+      uint8_t DF    : 1;
+      uint8_t OF    : 1;
+      uint8_t IOPL  : 2;
+      uint8_t NT    : 1;
+      uint8_t E4    : 1;
+      uint8_t RF    : 1;
+      uint8_t VM    : 1;
+      uint16_t E5   : 14;
+    };
+  }eflags;
 
-    rtlreg_t cs, ss, ds, es, fs, gs;
-    rtlreg_t cr0, cr3; // to realize paging
+  struct {
+    uint32_t base;  // the first address of IDT
+    uint16_t limit; // the length of IDT
+  } IDTR;
+
+  rtlreg_t cs, ss, ds, es, fs, gs;
+
+  union {
+    struct {
+      uint32_t pe : 1;
+      uint32_t mp : 1;
+      uint32_t em : 1;
+      uint32_t ts : 1;
+      uint32_t reserved : 26;
+      uint32_t pg : 1; // ONLY pg is needed
+    };
+    uint32_t val;
+  } cr0;
+
+  union {
+    struct {
+      uint32_t reserved : 12;
+      uint32_t PDBR : 20;
+    };
+    uint32_t val;
+  } cr3;
 } CPU_state;
 
 extern CPU_state cpu;
 
 static inline int check_reg_index(int index) {
-    assert(index >= 0 && index < 8);
-    return index;
+  assert(index >= 0 && index < 8);
+  return index;
 }
 
 #define reg_l(index) (cpu.gpr[check_reg_index(index)]._32)
@@ -81,13 +100,13 @@ extern const char* regsw[];
 extern const char* regsb[];
 
 static inline const char* reg_name(int index, int width) {
-    assert(index >= 0 && index < 8);
-    switch (width) {
-        case 4: return regsl[index];
-        case 1: return regsb[index];
-        case 2: return regsw[index];
-        default: assert(0);
-    }
+  assert(index >= 0 && index < 8);
+  switch (width) {
+    case 4: return regsl[index];
+    case 1: return regsb[index];
+    case 2: return regsw[index];
+    default: assert(0);
+  }
 }
 
 #endif
