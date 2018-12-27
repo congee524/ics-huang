@@ -74,8 +74,7 @@ uint32_t vaddr_read(vaddr_t addr, int len) {
   if (cpu.cr0.pg == 1) {
     //assert(0);
     if (((addr & 0xfff) + len) > 0x1000) {
-      Log("data cross the page boundaty");
-      assert(0);
+      panic("data cross the page boundaty");
     } else {
       paddr = page_translate(addr);
     }
