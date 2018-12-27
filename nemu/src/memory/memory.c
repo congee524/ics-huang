@@ -23,7 +23,7 @@
 uint8_t pmem[PMEM_SIZE];
 
 paddr_t page_translate(vaddr_t addr) {
-  Log("addr: 0x%x", addr);
+  //Log("addr: 0x%x", addr);
   //assert(0);
   PDE pde;
   PTE pte;
