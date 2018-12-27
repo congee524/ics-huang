@@ -17,7 +17,8 @@ _Context* do_syscall(_Context *c) {
   switch (a[0]) {
     // SPEC.md say code should be 0, since return value is put in eax, we may use a[1]
     // _yield() return nothing, therefore, complete a funciton sys_yield
-    case SYS_exit:          naive_uload(NULL, "/bin/init");// _halt(a[1]); 
+    case SYS_exit:          //naive_uload(NULL, "/bin/init");
+                            _halt(a[1]); 
                             break;
     case SYS_yield:         c->GPRx=sys_yield(); 
                             break;
