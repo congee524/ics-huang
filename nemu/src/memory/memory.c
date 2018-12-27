@@ -38,7 +38,7 @@ void paddr_write(paddr_t addr, uint32_t data, int len) {
 
 uint32_t vaddr_read(vaddr_t addr, int len) {
   paddr_t paddr = addr;
-  printf("cpu.cr0 0x%x\n", cpu.cr0.val);
+  //Log("cpu.cr0 0x%x", cpu.cr0.val);
   if (cpu.cr0.pg == 1) {
     assert(0);
     if (((addr & 0xfff) + len) > 0x1000) {
@@ -53,7 +53,7 @@ uint32_t vaddr_read(vaddr_t addr, int len) {
 
 void vaddr_write(vaddr_t addr, uint32_t data, int len) {
   paddr_t paddr = addr;
-  printf("cpu.cr0 0x%x\n", cpu.cr0.val);
+  //Log("cpu.cr0 0x%x", cpu.cr0.val);
   if (cpu.cr0.pg == 1) {
     assert(0);
     if (((addr & 0xfff) + len) > 0x1000) {
