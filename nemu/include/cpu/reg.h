@@ -78,7 +78,10 @@ typedef struct {
 
   union {
     struct {
-      uint32_t reserved : 12;
+      uint32_t pad0 : 3;
+      uint32_t page_write_through : 1;
+      uint32_t page_cache_disable : 1;
+      uint32_t pad1 : 7;
       uint32_t PDBR : 20;
     };
     uint32_t val;
