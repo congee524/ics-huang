@@ -48,7 +48,7 @@ void vaddr_write(vaddr_t addr, uint32_t data, int len) {
   if (0) {
     assert(0);
   } else {
-    paddr_t paddr = page_translate(addr);
-    paddr_write(paddr, data, len);
+    //paddr_t paddr = page_translate(addr);
+    paddr_write(addr, data, len);
   }
 }
