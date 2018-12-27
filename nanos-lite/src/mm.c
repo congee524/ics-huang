@@ -19,6 +19,7 @@ int mm_brk(uintptr_t new_brk) {
 }
 
 void init_mm() {
+  // the inital position of page at the start of heap
   pf = (void *)PGROUNDUP((uintptr_t)_heap.start);
   Log("free physical pages starting from %p", pf);
 

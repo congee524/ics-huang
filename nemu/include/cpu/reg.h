@@ -61,8 +61,8 @@ typedef struct {
         uint16_t limit; // the length of IDT
     } IDTR;
 
-    uint32_t cs, ss, ds, es, fs, gs;
-
+    rtlreg_t cs, ss, ds, es, fs, gs;
+    rtlreg_t cr0, cr3; // to realize paging
 } CPU_state;
 
 extern CPU_state cpu;
