@@ -39,6 +39,7 @@ void paddr_write(paddr_t addr, uint32_t data, int len) {
 uint32_t vaddr_read(vaddr_t addr, int len) {
   paddr_t paddr = addr;
   if (cpu.cr0.pg == 1) {
+    assert(0);
     if (((addr & 0xfff) + len) > 0x1000) {
       Log("data cross the page boundaty");
       assert(0);
@@ -52,6 +53,7 @@ uint32_t vaddr_read(vaddr_t addr, int len) {
 void vaddr_write(vaddr_t addr, uint32_t data, int len) {
   paddr_t paddr = addr;
   if (cpu.cr0.pg == 1) {
+    assert(0);
     if (((addr & 0xfff) + len) > 0x1000) {
       Log("data cross the page boundary");
       assert(0);
