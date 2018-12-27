@@ -69,6 +69,7 @@ typedef struct {
       uint32_t mp : 1;
       uint32_t em : 1;
       uint32_t ts : 1;
+      uint32_t et : 1;
       uint32_t reserved : 26;
       uint32_t pg : 1; // ONLY pg is needed
     };
