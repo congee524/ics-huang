@@ -93,9 +93,6 @@ make_EHelper(cwtl) {
   else {
     rtl_sext(&reg_l(0), &reg_l(0), 2);
   }
-
-
-
   print_asm(decoding.is_operand_size_16 ? "cbtw" : "cwtl");
 }
 
@@ -117,3 +114,32 @@ make_EHelper(lea) {
   operand_write(id_dest, &id_src->addr);
   print_asm_template2(lea);
 }
+
+make_EHelper(mov_r2cr) {
+  switch(id_dest->reg) {
+    case 0:
+      cpu.cr0.val = id_src->val;
+      break;
+    case 3:
+      cpu.cr3.val = id_src->val;
+      break;
+    default:
+      Log("wrong reg type %d", id_dest->reg);
+  }
+  print_asm_template2(mov_r2cr);
+}
+
+make_EHelper(mov_cr2r) {
+  switch(id_src->reg) {
+    case 0:
+      operand_write(id_dest, &cpu.cr0.val);
+      break;
+    case 3:
+      operand_write(id_dest, &cpu.cr3.val);
+      break;
+    default:
+      Log("wrong reg type %d", id_src->reg);
+  }
+  print_asm_template2(mov_cr2r);
+}
+

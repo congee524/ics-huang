@@ -11,6 +11,8 @@ make_EHelper(cltd);
 make_EHelper(movsx);
 make_EHelper(cwtl);
 make_EHelper(popa);
+make_EHelper(mov_r2cr);
+make_EHelper(mov_cr2r);
 
 // control.c
 make_EHelper(call);// maybe exist effect on eflags
