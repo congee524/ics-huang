@@ -3,6 +3,8 @@
 
 #define PG_ALIGN __attribute((aligned(PGSIZE)))
 
+typedef uint32_t paddr_t;
+
 static PDE kpdirs[NR_PDE] PG_ALIGN;
 static PTE kptabs[PMEM_SIZE / PGSIZE] PG_ALIGN;
 static void* (*pgalloc_usr)(size_t);
@@ -77,6 +79,30 @@ void _switch(_Context *c) {
 }
 
 int _map(_Protect *p, void *va, void *pa, int mode) {
+  PDE pde_val;
+  // PTE pte_val;
+  uint32_t pgdx = PDX(va);
+  uint32_t pgtx = PTX(va);
+  // uint32_t off  = OFF(va);
+
+  // base addr(p->addr) | pagedirectory index
+  paddr_t pde_addr = PTE_ADDR(p->ptr) | (pgdx << 2);
+  pde_val = *((PDE *)pde_addr);
+  if ((pde_val & PTE_P) == 0) {
+    // if the address is not present, allocate a new page
+    paddr_t pte_base_addr = (paddr_t)pgalloc_usr(1);
+    pde_val = pte_base_addr | PTE_P;
+    *((PDE *)pde_addr) = pde_val;
+  }
+
+  if ((mode & PTE_P) == 0) {
+    // if prot.present == 0, the mapping is valid
+    assert(0);
+    return 0;
+  }
+
+  paddr_t pte_addr = PTE_ADDR(pde_val) | (pgtx << 2);
+  *((PTE *)pte_addr) = PTE_ADDR((paddr_t)pa) | PTE_P;
   return 0;
 }
 
