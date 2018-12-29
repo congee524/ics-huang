@@ -7,6 +7,7 @@ static PCB pcb_boot;
 PCB *current;
 
 int fg_pcb = 1;
+int time_pcb = 0;
 
 void context_kload(PCB *pcb, void *entry);
 void context_uload(PCB *pcb, const char *filename);
@@ -47,6 +48,13 @@ _Context* schedule(_Context *prev) {
     fg_pcb = 2;
   } else if (strcmp(buf, "kd F3\n") == 0) {
     fg_pcb = 3;
+  }
+  if (time_pcb > 200) {
+    current = &pcb[0];
+    time_pcb = 0;
+  } else {
+    current = &pcb[fg_pcb];
+    time_pcb++;
   }
   current = (current == &pcb[0] ? &pcb[fg_pcb] : &pcb[0]);
   //current = &pcb[1];
