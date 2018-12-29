@@ -8,10 +8,14 @@ void vectrap();
 void vecnull();
 void vecsys();
 
+// vme.c
+extern void get_cur_as(_Context *c);
+extern void _switch(_Context *c);
+
 _Context* irq_handle(_Context *tf) {
   _Context *next = tf;
   //printf("tf->irq = 0x%x\n", tf->irq);
-  
+  get_cur_as(next);  
   if (user_handler) {
     _Event ev = {0};
     switch (tf->irq) {
@@ -24,7 +28,7 @@ _Context* irq_handle(_Context *tf) {
       next = tf;
     }
   }
-
+  _switch(next);
   return next;
 }
 
