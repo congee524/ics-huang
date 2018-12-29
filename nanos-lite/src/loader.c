@@ -22,7 +22,7 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
     fs_read(fd, pa, PGSIZE);
     fsize -= PGSIZE;
     va += PGSIZE;
-    Log("aft 0x%x", fsize);
+    // Log("aft 0x%x", fsize);
   }
   fs_close(fd);
   return DEFAULT_ENTRY;
