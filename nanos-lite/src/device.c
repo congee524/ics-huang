@@ -2,6 +2,8 @@
 #include <amdev.h>
 #include "klib.h"
 
+extern int fg_pcb;
+
 size_t serial_write(const void *buf, size_t offset, size_t len) {
   //_yield();
   char *tmp = (char*) buf;
@@ -31,6 +33,11 @@ size_t events_read(void *buf, size_t offset, size_t len) {
   } else {
     sprintf(buf, "t %d\n", uptime());
   }
+
+  if (strcmp(buf, "kd F1\n") == 0) fg_pcb = 1;
+  if (strcmp(buf, "kd F2\n") == 0) fg_pcb = 2;
+  if (strcmp(buf, "kd F3\n") == 0) fg_pcb = 3;
+
   return strlen(buf);
 }
 
