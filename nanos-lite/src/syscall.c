@@ -6,6 +6,7 @@ int sys_yield();
 int sys_write(int fd, void *buf, size_t count);
 int sys_brk(intptr_t newbrk);
 void naive_uload(PCB *pcb, const char *filename);
+int mm_brk(uintptr_t new_brk);
 
 _Context* do_syscall(_Context *c) {
   uintptr_t a[4];
@@ -22,7 +23,7 @@ _Context* do_syscall(_Context *c) {
                             break;
     case SYS_yield:         c->GPRx=sys_yield(); 
                             break;
-    case SYS_brk:           c->GPRx=sys_brk((intptr_t)a[1]);
+    case SYS_brk:           c->GPRx=mm_brk((uintptr_t)a[1]);
                             break;
     case SYS_write:         c->GPRx=fs_write((int)a[1],(const void *)a[2],(size_t)a[3]);
                             break;
@@ -47,11 +48,11 @@ int sys_yield() {
   return 0;
 }
 
+/*
 int sys_brk(intptr_t newbrk){
-  _heap.end = (void *)newbrk;
   return 0;
 }
-
+*/
 /*
    int sys_write(int fd, void *buf, size_t count){
    if (fd == 1 || fd == 2) {
