@@ -17,7 +17,9 @@ _Area segments[] = {      // Kernel memory mappings
 #define NR_KSEG_MAP (sizeof(segments) / sizeof(segments[0]))
 
 int _vme_init(void* (*pgalloc_f)(size_t), void (*pgfree_f)(void*)) {
+  printf("1\n");
   pgalloc_usr = pgalloc_f;
+  printf("2\n");
   pgfree_usr = pgfree_f;
 
   int i;
