@@ -24,9 +24,9 @@ int main() {
 #endif
 
   init_fs();
-
+  Log("2");
   init_proc();
-
+  Log("3");
 #ifdef HAS_CTE
   _yield();
 #endif
