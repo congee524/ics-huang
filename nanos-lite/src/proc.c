@@ -37,8 +37,8 @@ void init_proc() {
 _Context* schedule(_Context *prev) {
   // return the context of the following process
   current->cp = prev;
-  current = (current == &pcb[0] ? &pcb[1] : &pcb[0]);
-  //current = &pcb[0];
+  //current = (current == &pcb[0] ? &pcb[1] : &pcb[0]);
+  current = &pcb[1];
   return current->cp;
   // return NULL;
 }
