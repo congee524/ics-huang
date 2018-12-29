@@ -25,7 +25,7 @@
 uint8_t pmem[PMEM_SIZE];
 
 paddr_t page_translate(vaddr_t addr) {
-  Log("page_t addr: 0x%x", addr);
+  //Log("page_t addr: 0x%x", addr);
   //assert(0);
   PDE pde;
   PTE pte;
@@ -37,13 +37,13 @@ paddr_t page_translate(vaddr_t addr) {
   paddr_t pgdir_addr = cpu.cr3.PDBR << 12;
   pde.val = paddr_read(pgdir_addr + (pgdx << 2), 4);
   if (pde.present == 0) {
-    panic("addr 0x%x -- no such pde", addr);
+    panic("eip: 0x%x addr 0x%x -- no such pde", cpu.eip, addr);
   }
   
   paddr_t pgtable_addr = pde.page_frame << 12;
   pte.val = paddr_read(pgtable_addr + (pgtx << 2), 4);
   if (pte.present == 0) {
-    panic("addr 0x%x, table addr 0x%x -- no such pte", addr, pde.page_frame);
+    panic("eip: 0x%x addr 0x%x, table addr 0x%x -- no such pte", cpu.eip, addr, pde.page_frame);
   }
   
   paddr = (pte.page_frame << 12) + off;
