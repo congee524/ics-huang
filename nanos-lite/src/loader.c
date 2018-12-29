@@ -6,7 +6,7 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
   //TODO(); PA3.2: ramdisk_read((void*)DEFAULT_ENTRY, 0, get_ramdisk_size());
   int fd = fs_open(filename, 0, 0);
   //fs_read(fd, (void*)DEFAULT_ENTRY, fs_filesz(fd));
-  uint32_t fsize = fs_filesz(fd);
+  int fsize = (int)fs_filesz(fd);
 
   // int _map(_Protect *p, void *va, void *pa, int prot) {
   // void* new_page(size_t nr_page) 
