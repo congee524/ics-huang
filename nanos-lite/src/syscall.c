@@ -48,6 +48,7 @@ int sys_yield() {
 }
 
 int sys_brk(intptr_t newbrk){
+  _heap.end = (void *)newbrk;
   return 0;
 }
 
