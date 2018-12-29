@@ -121,7 +121,7 @@ _Context *_ucontext(_Protect *p, _Area ustack, _Area kstack, void *entry, void *
   c->eflags = 0x2;
   c->eip = (uintptr_t)entry;
   c->esp = c->ebp = (uintptr_t)ustack.end;
-  c->irq = 0x81;
+  // c->irq = 0x81;
   c->prot = p;
 
   /*
