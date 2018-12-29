@@ -23,8 +23,8 @@ _Context* do_syscall(_Context *c) {
                             break;
     case SYS_yield:         c->GPRx=sys_yield(); 
                             break;
-    case SYS_brk:           //c->GPRx=mm_brk((uintptr_t)a[1]);
-                            c->GPRx = 0;
+    case SYS_brk:           c->GPRx=mm_brk((uintptr_t)a[1]);
+                            // c->GPRx = 0;
                             break;
     case SYS_write:         c->GPRx=fs_write((int)a[1],(const void *)a[2],(size_t)a[3]);
                             break;
