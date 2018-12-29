@@ -20,6 +20,7 @@ void free_page(void *p) {
 int mm_brk(uintptr_t new_brk) {
   Log("mm_brk");
   current->cur_brk = new_brk;
+  Log("new_brk 0x%x cur_brk 0x%x max_brk 0x%x", new_brk, current->cur_brk, current->max_brk);
   if (new_brk > current->max_brk) {
     int nr_page = current->max_brk / PGSIZE + 1;
     void *va = (void *)(nr_page * PGSIZE);
