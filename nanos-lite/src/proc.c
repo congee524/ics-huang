@@ -6,10 +6,11 @@ static PCB pcb[MAX_NR_PROC] __attribute__((used));
 static PCB pcb_boot;
 PCB *current;
 
-int pre_game = 0;
+int fg_pcb = 1;
 
 void context_kload(PCB *pcb, void *entry);
 void context_uload(PCB *pcb, const char *filename);
+size_t events_read(void *buf, size_t offset, size_t len);
 
 void switch_boot_pcb() {
   current = &pcb_boot;
@@ -28,17 +29,27 @@ void init_proc() {
   //naive_uload(NULL, "/bin/init");
   //context_kload(&pcb[0], (void *)hello_fun);
   context_uload(&pcb[0], "/bin/hello");
-  context_uload(&pcb[1], "/bin/events");
-  //context_uload(&pcb[2], "/bin/pal");
-  //context_uload(&pcb[3], "/bin/pal");
+  //context_uload(&pcb[1], "/bin/events");
+  context_uload(&pcb[1], "/bin/pal");
+  context_uload(&pcb[2], "/bin/pal");
+  context_uload(&pcb[3], "/bin/pal");
   switch_boot_pcb();
 }
 
 _Context* schedule(_Context *prev) {
   // return the context of the following process
   current->cp = prev;
-  //current = (current == &pcb[0] ? &pcb[1] : &pcb[0]);
-  current = &pcb[1];
+  char buf[128];
+  events_read(buf, 0, 128);
+  if (strcmp(buf, "kd F1\n") == 0) {
+    fg_pcb = 1;
+  } else if (strcmp(buf, "kd F2\n") == 0) {
+    fg_pcb = 2;
+  } else if (strcmp(buf, "kd F3\n") == 0) {
+    fg_pcb = 3;
+  }
+  current = (current == &pcb[0] ? &pcb[fg_pcb] : &pcb[0]);
+  //current = &pcb[1];
   return current->cp;
   // return NULL;
 }
