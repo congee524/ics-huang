@@ -58,7 +58,7 @@ _Context* schedule(_Context *prev) {
     current = &pcb[0];
     time_pcb = 0;
   } else {
-    current = &pcb[1];
+    current = &pcb[fg_pcb];
     time_pcb++;
   }
   
