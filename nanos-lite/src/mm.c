@@ -19,7 +19,7 @@ void free_page(void *p) {
 /* The brk() system call handler. */
 int mm_brk(uintptr_t new_brk) {
   current->cur_brk = new_brk;
-  if (new_brk > current->max_brk) {
+  if (new_brk - current->max_brk > 0) {
     Log("1");
     int nr_page = current->max_brk / PGSIZE + 1;
     void *va = (void *)(nr_page * PGSIZE);
