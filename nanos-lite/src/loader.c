@@ -8,7 +8,7 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
   //fs_read(fd, (void*)DEFAULT_ENTRY, fs_filesz(fd));
   int fsize = (int)fs_filesz(fd);
 
-  pcb->max_brk = DEFAULT_ENTRY + fsize;
+  pcb->max_brk = DEFAULT_ENTRY + (int)(fsize / PGSIZE + 1) * PGSIZE;
   // int _map(_Protect *p, void *va, void *pa, int prot) {
   // void* new_page(size_t nr_page) 
   // pgalloc_usr ???
