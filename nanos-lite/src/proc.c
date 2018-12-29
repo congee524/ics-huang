@@ -56,7 +56,7 @@ _Context* schedule(_Context *prev) {
     current = &pcb[fg_pcb];
     time_pcb++;
   }
-  current = (current == &pcb[0] ? &pcb[fg_pcb] : &pcb[0]);
+  //current = (current == &pcb[0] ? &pcb[fg_pcb] : &pcb[0]);
   //current = &pcb[1];
   return current->cp;
   // return NULL;
