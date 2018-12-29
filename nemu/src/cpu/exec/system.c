@@ -32,7 +32,7 @@ make_EHelper(mov_r2cr) {
     default:
       Log("wrong reg type %d in mov_r2cr", id_dest->reg);
   }
-  printf("cpu.cr0: 0x%x\ncpu.cr3: 0x%x\n", cpu.cr0.val, cpu.cr3.val);
+  //printf("cpu.cr0: 0x%x\ncpu.cr3: 0x%x\n", cpu.cr0.val, cpu.cr3.val);
   print_asm("movl %%%s,%%cr%d", reg_name(id_src->reg, 4), id_dest->reg);
 }
 
