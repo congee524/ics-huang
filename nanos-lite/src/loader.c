@@ -24,6 +24,7 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
     va += PGSIZE;
     // Log("aft 0x%x", fsize);
   }
+  Log("???");
   fs_close(fd);
   return DEFAULT_ENTRY;
 }
