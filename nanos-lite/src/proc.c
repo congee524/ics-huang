@@ -24,47 +24,17 @@ void hello_fun(void *arg) {
 
 void init_proc() {
   //naive_uload(NULL, "/bin/init");
-  //context_kload(&pcb[0], (void *)hello_fun);
+  context_kload(&pcb[0], (void *)hello_fun);
+  //context_uload(&pcb[1], "/bin/init");
   //context_uload(&pcb[0], "/bin/hello");
-  context_uload(&pcb[0], "/bin/hello");
   switch_boot_pcb();
 }
 
 _Context* schedule(_Context *prev) {
   // return the context of the following process
   current->cp = prev;
-  /*
-     Log("eflags 0x %x", current->cp->eflags);
-     Log("cs 0x%x", current->cp->cs);
-     Log("eip 0x%x", current->cp->eip);
-     Log("err 0x%x", current->cp->err);
-     Log("irq 0x%x", current->cp->irq);
-     Log("eax 0x%x", current->cp->eax);
-     Log("ebx 0x%x", current->cp->ebx);
-     Log("ecx 0x%x", current->cp->ecx);
-     Log("edx 0x%x", current->cp->edx);
-     Log("edi 0x%x", current->cp->edi);
-     Log("esi 0x%x", current->cp->esi);
-     Log("ebp 0x%x", current->cp->ebp);
-
-     Log("change!!!!\n");
-     */
   //current = (current == &pcb[0] ? &pcb[1] : &pcb[0]);
   current = &pcb[0];
-  /*
-     Log("eflags 0x %x", current->cp->eflags);
-     Log("cs 0x%x", current->cp->cs);
-     Log("eip 0x%x", current->cp->eip);
-     Log("err 0x%x", current->cp->err);
-     Log("irq 0x%x", current->cp->irq);
-     Log("eax 0x%x", current->cp->eax);
-     Log("ebx 0x%x", current->cp->ebx);
-     Log("ecx 0x%x", current->cp->ecx);
-     Log("edx 0x%x", current->cp->edx);
-     Log("edi 0x%x", current->cp->edi);
-     Log("esi 0x%x", current->cp->esi);
-     Log("ebp 0x%x", current->cp->ebp);
-     */
   return current->cp;
   // return NULL;
 }
