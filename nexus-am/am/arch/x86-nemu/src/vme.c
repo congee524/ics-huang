@@ -118,7 +118,7 @@ _Context *_ucontext(_Protect *p, _Area ustack, _Area kstack, void *entry, void *
   // uintptr_t *ret = stack_args - sizeof(void *);
   // *(uintptr_t *)ret = 0;
 
-  _Context *c = (_Context*)stack_args - 1;
+  _Context *c = (_Context*)stack_args - sizeof(_Context);
   memset(c, 0, sizeof(_Context));
   c->cs = 0x8;
   c->eflags = 0x2;
