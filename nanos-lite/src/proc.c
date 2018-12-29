@@ -49,6 +49,7 @@ _Context* schedule(_Context *prev) {
   } else if (strcmp(buf, "kd F3\n") == 0) {
     fg_pcb = 3;
   }
+  /*
   if (time_pcb > 200) {
     current = &pcb[0];
     time_pcb = 0;
@@ -56,8 +57,9 @@ _Context* schedule(_Context *prev) {
     current = &pcb[fg_pcb];
     time_pcb++;
   }
+  */
   //current = (current == &pcb[0] ? &pcb[fg_pcb] : &pcb[0]);
-  //current = &pcb[1];
+  current = &pcb[1];
   return current->cp;
   // return NULL;
 }
