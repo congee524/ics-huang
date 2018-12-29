@@ -13,9 +13,10 @@ extern void get_cur_as(_Context *c);
 extern void _switch(_Context *c);
 
 _Context* irq_handle(_Context *tf) {
+  get_cur_as(tf);
   _Context *next = tf;
-  //printf("tf->irq = 0x%x\n", tf->irq);
-  get_cur_as(next);  
+  // printf("tf->irq = 0x%x\n", tf->irq);
+  // get_cur_as(next);  
   if (user_handler) {
     _Event ev = {0};
     switch (tf->irq) {
