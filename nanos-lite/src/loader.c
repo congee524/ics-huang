@@ -14,6 +14,7 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
   void *va = (void *)DEFAULT_ENTRY;
   void *pa = NULL;
   while(fsize > 0) {
+    Log("before %d", fsize);
     // nr_page indicate the num of allocated free pages
     // but if there exist no such many pages, maybe wrong?
     // so i allocate one page each time
@@ -22,6 +23,7 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
     fs_read(fd, pa, PGSIZE);
     fsize -= PGSIZE;
     va += PGSIZE;
+    Log("after %d", fsize);
   }
   fs_close(fd);
   return DEFAULT_ENTRY;
