@@ -40,7 +40,7 @@ void init_proc() {
 _Context* schedule(_Context *prev) {
   // return the context of the following process
   current->cp = prev;
-  /*
+  
   char buf[128];
   events_read(buf, 0, 128);
   if (strcmp(buf, "kd F1\n") == 0) {
@@ -50,7 +50,7 @@ _Context* schedule(_Context *prev) {
   } else if (strcmp(buf, "kd F3\n") == 0) {
     fg_pcb = 3;
   }
-  */
+  
   /*
   if (time_pcb > 200) {
     current = &pcb[0];
@@ -61,7 +61,7 @@ _Context* schedule(_Context *prev) {
   }
   */
   //current = (current == &pcb[0] ? &pcb[fg_pcb] : &pcb[0]);
-  current = &pcb[1];
+  current = &pcb[fg_pcb];
   return current->cp;
   // return NULL;
 }
