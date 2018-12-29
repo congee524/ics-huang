@@ -23,7 +23,7 @@ int mm_brk(uintptr_t new_brk) {
     Log("1");
     int nr_page = current->max_brk / PGSIZE + 1;
     void *va = (void *)(nr_page * PGSIZE);
-    int diff_size = new_brk - (int)va + 1;
+    int diff_size = new_brk - (int)va - 1;
     void *pa = NULL;
     while (diff_size > 0) {
       pa = new_page(1);
