@@ -121,7 +121,8 @@ _Context *_ucontext(_Protect *p, _Area ustack, _Area kstack, void *entry, void *
   _Context *c = (_Context*)(stack_args - sizeof(_Context));
   memset(c, 0, sizeof(_Context));
   c->cs = 0x8;
-  c->eflags = 0x2;
+  //c->eflags = 0x2;
+  c->eflags = (1 << 9);
   c->eip = (uintptr_t)entry;
   c->esp = c->ebp = (uintptr_t)ustack.end;
   c->irq = 0x81;

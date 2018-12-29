@@ -10,6 +10,7 @@ void raise_intr(uint8_t NO, vaddr_t ret_addr) {
   //printf("NO is 0x%x, ret_addr is 0x%x\n", NO, ret_addr);
   // push eflags
   rtl_push(&cpu.eflags.val);
+  cpu.eflags.IF = 0;
   // push CS
   rtl_push(&cpu.cs);
   // push eip
@@ -36,4 +37,5 @@ void raise_intr(uint8_t NO, vaddr_t ret_addr) {
 }
 
 void dev_raise_intr() {
+  cpu.INTR = true;
 }
