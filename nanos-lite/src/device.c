@@ -20,7 +20,7 @@ static const char *keyname[256] __attribute__((used)) = {
 };
 
 size_t events_read(void *buf, size_t offset, size_t len) {
-  _yield();
+  //_yield();
   int scan_code = read_key() & 0xffff;
   if (scan_code) {
     if (scan_code & 0x8000) {
